@@ -6,7 +6,18 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>R2TMC — The Grind</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -3847,7 +3858,7 @@ function logWeight() {
   const weighQuest = BASE_QUESTS.find(q => q.id === 'weigh');
   if (weighQuest) {
     const streak = xpData.streak || 0;
-    const mult = Math.min(2.0, 1 + Math.floor(streak / 7) * 0.15);
+    const mult = Math.min(1.5, 1 + Math.floor(streak / 7) * 0.05);
     const xpEarned = Math.round(weighQuest.xp * mult);
     const coinsEarned = Math.round(weighQuest.xp / 10);
     xpData.totalXP = (xpData.totalXP || 0) + xpEarned;
@@ -4046,12 +4057,12 @@ const LEVEL_TITLES = [
   { minXP:2000,   title:'Built in the Dark'            },  // no audience, still doing it
   { minXP:2800,   title:'The Quiet Work'               },  // silent consistent grind
   // ── D Rank (3,500–9,999) ──
-  { minXP:3500,   title:'Not Stopping Here'            },  // first real rank
+  { minXP:4200,   title:'Not Stopping Here'            },  // first real rank
   { minXP:5000,   title:'Mr. Consistent'               },  // showing up every day
   { minXP:6500,   title:'Built Different'              },  // people are noticing
   { minXP:8500,   title:'Hooper Mentality'             },  // applies to everything
   // ── C Rank (10,000–24,999) ──
-  { minXP:10000,  title:'The Work Ethic'               },  // C rank, real now
+  { minXP:12600,  title:'The Work Ethic'               },  // C rank, real now
   { minXP:13000,  title:'Pre-Dawn Club'                },  // up before everyone
   { minXP:16500,  title:'They Slept On Me'             },  // underestimated era
   { minXP:20000,  title:'Six Eyes Unlocked'            },  // JJK — see everything
@@ -4065,11 +4076,11 @@ const LEVEL_TITLES = [
   { minXP:55000,  title:'10K Is the Next Step'         },  // A rank — France range
   { minXP:68000,  title:'The Marathon Is Real'         },  // fully committed
   { minXP:82000,  title:'Copacabana Ready'             },  // beach body active
-  { minXP:100000, title:'I Became What I Chased'       },  // THE line — replaces Arise
+  { minXP:52837, title:'I Became What I Chased'       },  // THE line — replaces Arise
   // ── S Rank (110,000–199,999) ──
-  { minXP:110000, title:'Half Marathon Is Loading'     },  // S rank — Brazil prep
+  { minXP:33245, title:'Half Marathon Is Loading'     },  // S rank — Brazil prep
   { minXP:135000, title:'The Long Game Paid Off'       },  // vindicated
-  { minXP:165000, title:'Running Is Who I Am'          },  // identity
+  { minXP:134340, title:'Running Is Who I Am'          },  // identity
   { minXP:190000, title:'Almost Untouchable'           },  // closing in on SS
   // ── SS+ ──
   { minXP:200000, title:'Gear 5 Activated'       },  // SS rank
@@ -5095,13 +5106,13 @@ const RANKS = [
   // A→S in 7 weeks, S→S+ in 11 weeks, S+→NL by Sept (~17 weeks)
   // Streak mult 2x makes this very achievable for locked-in play
   { rank:'E',   title:'Weakest Hunter of All Mankind', minXP:0,       color:'#e74c3c', glow:'rgba(231,76,60,0.6)',    barColor:'linear-gradient(90deg,#c0392b,#e74c3c)' },
-  { rank:'D',   title:'Iron-Willed Fighter',            minXP:5500,    color:'#e67e22', glow:'rgba(230,126,34,0.6)',   barColor:'linear-gradient(90deg,#d35400,#e67e22)' },
-  { rank:'C',   title:'The Unbroken One',               minXP:16000,   color:'#f1c40f', glow:'rgba(241,196,15,0.6)',   barColor:'linear-gradient(90deg,#d4ac0d,#f1c40f)' },
-  { rank:'B',   title:'King of the Court',               minXP:50000,   color:'#2ecc71', glow:'rgba(46,204,113,0.6)',   barColor:'linear-gradient(90deg,#27ae60,#2ecc71)' },
-  { rank:'A',   title:'Monarch in Training',            minXP:110000,  color:'#1abc9c', glow:'rgba(26,188,156,0.6)',   barColor:'linear-gradient(90deg,#16a085,#1abc9c)' },
-  { rank:'S',   title:'Elite Hunter',                   minXP:170000,  color:'#3498db', glow:'rgba(52,152,219,0.6)',   barColor:'linear-gradient(90deg,#2980b9,#3498db)' },
-  { rank:'S+',  title:'Monarch of the Marathon',        minXP:230000,  color:'#a855f7', glow:'rgba(168,85,247,0.7)',  barColor:'linear-gradient(90deg,#7c3aed,#a855f7)' },
-  { rank:'NL',  title:'National Level Hunter',          minXP:290000,  color:'#ffffff', glow:'rgba(255,255,255,0.9)', barColor:'linear-gradient(90deg,#ccc,#fff,#ccc)',
+  { rank:'D',   title:'Iron-Willed Fighter',            minXP:4200,    color:'#e67e22', glow:'rgba(230,126,34,0.6)',   barColor:'linear-gradient(90deg,#d35400,#e67e22)' },
+  { rank:'C',   title:'The Unbroken One',               minXP:12600,   color:'#f1c40f', glow:'rgba(241,196,15,0.6)',   barColor:'linear-gradient(90deg,#d4ac0d,#f1c40f)' },
+  { rank:'B',   title:'King of the Court',               minXP:21000,   color:'#2ecc71', glow:'rgba(46,204,113,0.6)',   barColor:'linear-gradient(90deg,#27ae60,#2ecc71)' },
+  { rank:'A',   title:'Monarch in Training',            minXP:33245,   color:'#1abc9c', glow:'rgba(26,188,156,0.6)',   barColor:'linear-gradient(90deg,#16a085,#1abc9c)' },
+  { rank:'S',   title:'Elite Hunter',                   minXP:52837,  color:'#3498db', glow:'rgba(52,152,219,0.6)',   barColor:'linear-gradient(90deg,#2980b9,#3498db)' },
+  { rank:'S+',  title:'Monarch of the Marathon',        minXP:84184,  color:'#a855f7', glow:'rgba(168,85,247,0.7)',  barColor:'linear-gradient(90deg,#7c3aed,#a855f7)' },
+  { rank:'NL',  title:'National Level Hunter',          minXP:134340,  color:'#ffffff', glow:'rgba(255,255,255,0.9)', barColor:'linear-gradient(90deg,#ccc,#fff,#ccc)',
     lore:'National Level. The highest tier. There is no rank above this — only the ones who earned it. You are no longer training toward something. You became it. The Marathon built this.' },
 ];
 
@@ -5146,7 +5157,7 @@ function getNextRank(xp) {
 }
 // XP needed per level: starts ~351, grows to ~1550 at L100
 // Max 2 levels per day. ~6 levels/week early. Level 100 reachable by Dec 31 at 80% consistency.
-function xpForLevel(level) { return Math.floor(300 + 1.5 * Math.pow(level, 1.6)); }
+function xpForLevel(level) { return Math.floor(220 + 1.459 * Math.pow(level, 1.7)); }
 function getLevelFromXP(xp) {
   let level = 1, remaining = xp;
   while (remaining >= xpForLevel(level)) {
@@ -5232,15 +5243,15 @@ function updateHunterCard() {
   // Stats
   const ss = document.getElementById('statStreak');
   if (ss) {
-    const smult = Math.min(2.0, 1 + Math.floor(((data.streak||0)) / 7) * 0.15);
+    const smult = Math.min(1.5, 1 + Math.floor(((data.streak||0)) / 7) * 0.05);
     ss.textContent = (data.streak || 0);
-    ss.title = smult > 1 ? smult.toFixed(1) + 'x XP multiplier active (max 2.0x at 7 weeks)' : 'Build a streak to multiply XP — max 2.0x';
+    ss.title = smult > 1 ? smult.toFixed(1) + 'x XP multiplier active (max 1.5x at 10 weeks)' : 'Build a streak to multiply XP — max 1.5x';
   }
   const navSt = document.getElementById('navStreak');
   if (navSt) navSt.textContent = '🔥 ' + (data.streak || 0);
   const smEl = document.getElementById('streakMultDisplay');
   if (smEl) {
-    const smult = Math.min(2.0, 1 + Math.floor(((data.streak||0)) / 7) * 0.15);
+    const smult = Math.min(1.5, 1 + Math.floor(((data.streak||0)) / 7) * 0.05);
     smEl.textContent = smult > 1 ? smult.toFixed(1) + 'x' : '1.0x';
     smEl.style.color = smult >= 1.8 ? '#f0d878' : smult >= 1.4 ? '#2ecc71' : smult > 1 ? '#1abc9c' : 'var(--muted)';
   }
@@ -5348,7 +5359,7 @@ const BASE_QUESTS = [
   { id:'longrun',      label:'Long Run',        icon:'🏔️', xp:600,  type:'cardio',   row:'cardio' },
   { id:'halfmarathon', label:'Half Marathon',   icon:'🥇', xp:1000, type:'cardio',   row:'cardio' },
   // ── Movement ──
-  { id:'steps',        label:'10K Steps',       icon:'🚶', xp:120,  type:'movement', row:'movement' },
+  { id:'steps',        label:'10K Steps',       icon:'🚶', xp:175,  type:'movement', row:'movement' },
   { id:'ballprac',      label:'Hoop Practice',   icon:'🏀', xp:120,  type:'movement', row:'movement'    },
   { id:'outdoor',      label:'Outdoor Walk',    icon:'🌳', xp:90,   type:'movement', row:'movement' },
   // ── Wellness ──
@@ -5529,7 +5540,7 @@ function earnQuestXP(questId, type, e) {
   const prevLevel = getLevelFromXP(data.totalXP);
   // Streak multiplier: 1.0x base → 1.5x at 30+ days (smooth ramp)
   const streak = data.streak || 0;
-  const streakMult = Math.min(2.0, 1 + Math.floor(streak / 7) * 0.15);
+  const streakMult = Math.min(1.5, 1 + Math.floor(streak / 7) * 0.05);
   const bonusXP = Math.round(quest.xp * streakMult);
   data.totalXP += bonusXP;
   data.level = getLevelFromXP(data.totalXP);
@@ -5643,7 +5654,7 @@ function resetDailyQuests(e) {
   const doneIds = Object.keys(todayDone).filter(k => todayDone[k]);
   const allQ = [...BASE_QUESTS, ...WEEKLY_QUEST_POOL];
   const streak = data.streak || 0;
-  const mult = Math.min(2.0, 1 + Math.floor(streak / 7) * 0.15);
+  const mult = Math.min(1.5, 1 + Math.floor(streak / 7) * 0.05);
   let xpToRemove = 0, coinsToRemove = 0;
   doneIds.forEach(id => { const q = allQ.find(x => x.id === id); if (q) { xpToRemove += Math.round(q.xp * mult); coinsToRemove += Math.round(q.xp / 10); } });
 
@@ -5672,7 +5683,7 @@ function resetWeeklyQuests(e) {
   const doneIds = Object.keys(weekDone).filter(k => weekDone[k]);
   const allQ = [...BASE_QUESTS, ...WEEKLY_QUEST_POOL];
   const streak = data.streak || 0;
-  const mult = Math.min(2.0, 1 + Math.floor(streak / 7) * 0.15);
+  const mult = Math.min(1.5, 1 + Math.floor(streak / 7) * 0.05);
   let xpToRemove = 0, coinsToRemove = 0;
   doneIds.forEach(id => { const q = allQ.find(x => x.id === id); if (q) { xpToRemove += Math.round(q.xp * mult); coinsToRemove += Math.round(q.xp / 8); } });
 
@@ -5809,7 +5820,7 @@ function cashReward(rewardId) {
   if (!data.redeemedRewards) data.redeemedRewards = {};
   data.redeemedRewards[rewardId] = timesRedeemed + 1;
   if (!data.coinHistory) data.coinHistory = [];
-  data.coinHistory.unshift({ icon: reward.icon || '🎁', label: reward.label, amount: -reward.cost, date: new Date().toLocaleDateString() });
+  data.coinHistory.unshift({ icon: reward.icon || '🎁', label: reward.name, amount: -reward.cost, date: new Date().toLocaleDateString(), redeemed: true });
   if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
   saveXPData(data);
   buildRewardShop();
@@ -5831,15 +5842,21 @@ function buildCoinHistory() {
     const isNeg = (h.amount || 0) < 0;
     const color = isNeg ? '#e74c3c' : '#f0d878';
     const prefix = isNeg ? '−' : '+';
-    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1a1a1a;">'
+    const tag = isNeg
+      ? '<span style="font-family:Space Mono,monospace;font-size:7px;letter-spacing:1px;color:#e74c3c;opacity:0.7;text-transform:uppercase;">redeemed</span>'
+      : '<span style="font-family:Space Mono,monospace;font-size:7px;letter-spacing:1px;color:#555;text-transform:uppercase;">earned</span>';
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid #1a1a1a;">'
       + '<div style="display:flex;align-items:center;gap:8px;">'
-      + '<span style="font-size:13px;">' + (h.icon || '🪙') + '</span>'
-      + '<div style="display:flex;flex-direction:column;gap:1px;">'
-      + '<span style="color:#ccc;font-size:9px;">' + (h.label || '') + '</span>'
-      + '<span style="color:var(--muted);font-size:8px;letter-spacing:1px;">' + (h.date || '') + '</span>'
+      + '<span style="font-size:14px;flex-shrink:0;">' + (h.icon || '🪙') + '</span>'
+      + '<div style="display:flex;flex-direction:column;gap:2px;">'
+      + '<span style="font-family:Bebas Neue,sans-serif;font-size:13px;color:' + (isNeg ? '#ddd' : '#ccc') + ';letter-spacing:0.5px;line-height:1;">' + (h.label || '') + '</span>'
+      + '<div style="display:flex;align-items:center;gap:6px;">'
+      + tag
+      + '<span style="color:var(--muted);font-size:7px;letter-spacing:1px;">· ' + (h.date || '') + '</span>'
       + '</div>'
       + '</div>'
-      + '<span style="color:' + color + ';font-family:Bebas Neue,sans-serif;font-size:14px;">' + prefix + Math.abs(h.amount || 0) + ' 🪙</span>'
+      + '</div>'
+      + '<span style="color:' + color + ';font-family:Bebas Neue,sans-serif;font-size:15px;flex-shrink:0;">' + prefix + Math.abs(h.amount || 0) + ' 🪙</span>'
       + '</div>';
   }).join('');
 }
@@ -6862,7 +6879,7 @@ function initXPSystem() {
     data.dailyQuests['2026-3-18'] = { weigh: true, hydrate: true, outdoor: true };
     data.dailyQuests['2026-3-19'] = { steps: true, hydrate: true, weigh: true, outdoor: true };
     data.dailyQuests['2026-3-20'] = { outdoor: true, ballprac: true, hydrate: true };
-    if (data.totalXP < 2340) { data.totalXP = 2340; data.level = 7; }
+    if (data.totalXP < 949) { data.totalXP = 949; data.level = getLevelFromXP(949); }
     if ((data.coins || 0) < 324) data.coins = 324;
     if ((data.streak || 0) < 4) { data.streak = 4; data.lastActiveDate = '2026-3-20'; }
     // Fresh coin history — only log from today forward
@@ -6894,7 +6911,7 @@ function initXPSystem() {
     // Mar 20 (Friday): outdoor walk + hoop practice + hydrate
     data.dailyQuests['2026-3-20'] = { outdoor: true, ballprac: true, hydrate: true };
     data.totalXP  = 2340;
-    data.level    = 7;
+    data.level    = getLevelFromXP(2340);
     data.coins    = 324;
     data.redeemedRewards = {};
     data.coinHistory = [
@@ -7626,7 +7643,7 @@ function buildStakesOverlay() {
 
   // ── STREAK BLOCK ──
   const streak = data.streak || 0;
-  const mult = Math.min(2.0, 1 + Math.floor(streak / 7) * 0.15);
+  const mult = Math.min(1.5, 1 + Math.floor(streak / 7) * 0.05);
   const multColor = mult >= 1.8 ? '#f0d878' : mult >= 1.4 ? '#2ecc71' : mult > 1 ? '#1abc9c' : 'var(--muted)';
   document.getElementById('stakes-streak-block').innerHTML =
     '<div>'
