@@ -6,7 +6,18 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>R2TMC — The Grind</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -5808,8 +5819,12 @@ function cashReward(rewardId) {
   data.coins -= reward.cost;
   if (!data.redeemedRewards) data.redeemedRewards = {};
   data.redeemedRewards[rewardId] = timesRedeemed + 1;
+  if (!data.coinHistory) data.coinHistory = [];
+  data.coinHistory.unshift({ icon: reward.icon || '🎁', label: reward.label, amount: -reward.cost, date: new Date().toLocaleDateString() });
+  if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
   saveXPData(data);
   buildRewardShop();
+  buildCoinHistory();
   updateHunterCard();
 }
 
@@ -5823,23 +5838,19 @@ function buildCoinHistory() {
     return;
   }
   // Group by date
-  const grouped = {};
-  history.forEach(h => {
-    const d = h.date || 'Unknown';
-    if (!grouped[d]) grouped[d] = { entries: [], total: 0 };
-    grouped[d].entries.push(h);
-    grouped[d].total += h.amount || 0;
-  });
-  const days = Object.keys(grouped).slice(0, 10);
-  el.innerHTML = days.map(date => {
-    const { entries, total } = grouped[date];
-    const icons = entries.slice(0, 6).map(e => e.icon).join('');
+  el.innerHTML = history.map(h => {
+    const isNeg = (h.amount || 0) < 0;
+    const color = isNeg ? '#e74c3c' : '#f0d878';
+    const prefix = isNeg ? '−' : '+';
     return '<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1a1a1a;">'
       + '<div style="display:flex;align-items:center;gap:8px;">'
-      + '<span style="font-size:13px;">' + icons + '</span>'
-      + '<span style="color:var(--muted);font-size:9px;letter-spacing:1px;">' + date + '</span>'
+      + '<span style="font-size:13px;">' + (h.icon || '🪙') + '</span>'
+      + '<div style="display:flex;flex-direction:column;gap:1px;">'
+      + '<span style="color:#ccc;font-size:9px;">' + (h.label || '') + '</span>'
+      + '<span style="color:var(--muted);font-size:8px;letter-spacing:1px;">' + (h.date || '') + '</span>'
       + '</div>'
-      + '<span style="color:#f0d878;font-family:Bebas Neue,sans-serif;font-size:14px;">+' + total + ' 🪙</span>'
+      + '</div>'
+      + '<span style="color:' + color + ';font-family:Bebas Neue,sans-serif;font-size:14px;">' + prefix + Math.abs(h.amount || 0) + ' 🪙</span>'
       + '</div>';
   }).join('');
 }
