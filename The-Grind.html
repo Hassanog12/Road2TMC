@@ -6,7 +6,14 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>R2TMC — The Grind</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
 <!-- If you want a different icon at different sizes:
 <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
 <link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
@@ -81,7 +88,7 @@ body::after {
 .nav-keep-going {
   position: fixed;
   /* sits just below the iPhone status bar, inside the nav zone */
-  top: calc(env(safe-area-inset-top, 0px) + 1px);
+  top: 2px;
   left: 0; right: 0;
   height: 12px;
   display: flex;
@@ -1828,7 +1835,7 @@ html, body {
     </div>
   </div>
   <!-- Centered badge dots in nav -->
-  <div id="navBadgeDots" style="position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:6px;align-items:center;pointer-events:none;top:50%;margin-top:-9px;"></div>
+  <div id="navBadgeDots" style="position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:4px;align-items:center;pointer-events:none;top:50%;transform:translate(-50%,-50%);z-index:502;"></div>
   <div style="display:flex;align-items:center;gap:8px;">
     <!-- Monday recap button — only visible on Mondays -->
     <button id="weeklyRecapBtn" onclick="showWeeklyRecap()" style="display:none;align-items:center;gap:5px;font-family:Space Mono,monospace;font-size:10px;letter-spacing:1px;color:#000;background:var(--gold);border:none;padding:5px 12px;cursor:pointer;text-transform:uppercase;animation:badgePop 0.4s ease both;">📋 Week Recap</button>
@@ -2700,7 +2707,7 @@ html, body {
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#3498db,#9b59b6,#3498db);background-size:200%;animation:badgeShine 3s ease-in-out infinite;"></div>
       <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;">Log a Book</div>
       <div style="display:flex;gap:8px;">
-        <input id="bookTitleInput2" placeholder="Book title (optional)" maxlength="60" autocapitalize="words"
+        <input id="bookTitleInput2" placeholder="Book title" maxlength="60" autocapitalize="words"
           style="flex:1;background:#0d0d0d;border:1px solid #2a2a2a;color:#ccc;font-family:Space Mono,monospace;font-size:10px;padding:10px 12px;outline:none;"
           onkeydown="if(event.key==='Enter')logBookFromPage()"/>
         <button onclick="logBookFromPage()" style="font-family:Space Mono,monospace;font-size:10px;letter-spacing:1px;background:#3498db;color:#000;border:none;padding:10px 16px;cursor:pointer;text-transform:uppercase;white-space:nowrap;font-weight:700;">+ Log Book</button>
@@ -3367,9 +3374,9 @@ function buildBookSkillTree() {
     + '<div style="flex:1;min-width:0;">'
     + '<div style="display:flex;align-items:baseline;gap:8px;">'
     + '<span style="font-family:Bebas Neue,sans-serif;font-size:16px;color:'+(score>0?color:'#666')+';letter-spacing:2px;line-height:1;">Books</span>'
-    + '<span style="font-family:Bebas Neue,sans-serif;font-size:18px;color:'+color+';line-height:1;">'+score+'<span style="font-family:Space Mono,monospace;font-size:7px;color:#444;">/100</span></span>'
+    + '<span style="font-family:Bebas Neue,sans-serif;font-size:18px;color:'+color+';line-height:1;">'+count+' <span style="font-family:Space Mono,monospace;font-size:10px;color:#444;">books</span></span>'
     + '</div>'
-    + '<div style="font-family:Space Mono,monospace;font-size:8px;color:#444;margin-top:2px;">'+count+' / 12 this year · '+log.length+' total read</div>'
+    + '<div style="font-family:Space Mono,monospace;font-size:8px;color:#444;margin-top:2px;">'+count+' / 12 this year</div>'
     + '</div>'
     + '</div>'
     + '<div style="position:relative;height:6px;background:#0d0d0d;border-radius:4px;margin-bottom:14px;overflow:hidden;border:1px solid #1a1a1a;">'
@@ -3549,7 +3556,7 @@ function buildRunnerTierCard() {
   const pc  = document.getElementById('rtcPace');
   const ss  = document.getElementById('rtcSession');
   const btns = document.getElementById('runnerTierOverrideBtns');
-  if (lbl) lbl.textContent = tier.icon + ' ' + tier.label;
+  if (lbl) { lbl.textContent = tier.label; lbl.style.color = 'var(--gold)'; }
   if (wm)  wm.textContent  = tier.weeklyMiles + ' mi/wk';
   if (lr)  lr.textContent  = tier.longRunMiles + ' miles';
   if (pc)  pc.textContent  = 'Sub ' + formatPace(tier.paceSec);
@@ -3565,8 +3572,8 @@ function buildRunnerTierCard() {
       if (userRankIdx < tierMinRankIdx) return; // hide locked tiers
       const isCurrent = (t.ranks.includes(rank.rank) && !localStorage.getItem('runnerTierOverride')) || localStorage.getItem('runnerTierOverride') === key;
       const btn = document.createElement('button');
-      btn.textContent = t.icon + ' ' + t.label;
-      btn.style.cssText = 'font-family:Space Mono,monospace;font-size:8px;padding:3px 8px;cursor:pointer;border:1px solid '+(isCurrent?'var(--gold)':'#333')+';background:'+(isCurrent?'rgba(200,168,75,0.15)':'none')+';color:'+(isCurrent?'var(--gold)':'#555')+';letter-spacing:1px;';
+      btn.textContent = t.label;
+      btn.style.cssText = 'font-family:Space Mono,monospace;font-size:8px;padding:4px 10px;cursor:pointer;transition:all 0.15s;letter-spacing:1px;border:1px solid '+(isCurrent?'var(--gold)':'#2a2a2a')+';background:'+(isCurrent?'var(--gold-dim)':'none')+';color:'+(isCurrent?'var(--gold)':'#444')+';';
       btn.onclick = () => { setRunnerTierOverride(key); buildRunnerTierCard(); buildQuestGrid(); };
       btns.appendChild(btn);
     });
@@ -3574,7 +3581,7 @@ function buildRunnerTierCard() {
     const auto = document.createElement('button');
     const hasOverride = !!localStorage.getItem('runnerTierOverride');
     auto.textContent = '⟳ Auto';
-    auto.style.cssText = 'font-family:Space Mono,monospace;font-size:8px;padding:3px 8px;cursor:pointer;border:1px solid '+(hasOverride?'#333':'var(--gold)')+';background:'+(hasOverride?'none':'rgba(200,168,75,0.15)')+';color:'+(hasOverride?'#555':'var(--gold)')+';letter-spacing:1px;';
+    auto.style.cssText = 'font-family:Space Mono,monospace;font-size:8px;padding:4px 10px;cursor:pointer;transition:all 0.15s;letter-spacing:1px;border:1px solid '+(hasOverride?'#2a2a2a':'var(--gold)')+';background:'+(hasOverride?'none':'var(--gold-dim)')+';color:'+(hasOverride?'#444':'var(--gold)')+';';
     auto.onclick = () => { setRunnerTierOverride(null); buildRunnerTierCard(); buildQuestGrid(); };
     btns.appendChild(auto);
   }
@@ -4790,11 +4797,12 @@ function showBadgeEarned(badge) {
     ? 'background:linear-gradient(90deg,transparent,#a78bfa,transparent);background-size:200%;animation:badgeShine 1.4s ease-in-out infinite'
     : 'background:linear-gradient(90deg,transparent,' + borderColor + ',transparent);background-size:200%;animation:badgeShine 2s ease-in-out infinite';
 
-  // Badge hex (small)
-  const hexSize = '52px';
-  const hexHTML = '<div class="badge-card earned badge-' + badge.tier + '" style="width:' + hexSize + ';flex-shrink:0;">'
-    + '<span style="font-size:18px;display:block;line-height:1;">' + badge.icon + '</span>'
-    + '</div>';
+  // Badge hex — inline outer/inner approach (matches profile badges)
+  const tc = TIER_COLORS[badge.tier] || TIER_COLORS.bronze;
+  const hexHTML = '<div style="width:52px;aspect-ratio:0.866;clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);-webkit-clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);background:' + tc.border + ';display:flex;align-items:center;justify-content:center;flex-shrink:0;animation:badgePop 0.5s cubic-bezier(0.34,1.56,0.64,1) both' + (tc.pulse ? ',' + tc.pulse : '') + ';margin-right:0;">'
+    + '<div style="width:calc(100% - 8px);aspect-ratio:0.866;clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);-webkit-clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);background:' + tc.bg + ';display:flex;align-items:center;justify-content:center;overflow:hidden;">'
+    + '<span style="font-size:18px;line-height:1;display:block;">' + badge.icon + '</span>'
+    + '</div></div>';
 
   // Text content
   const labelColor = isLegend ? '#ff4422' : isHOF ? '#c4b5fd' : tier.text;
@@ -5288,12 +5296,12 @@ function updateHunterCard() {
 // RUNNER TIER SYSTEM
 // ═══════════════════════════════════════
 const RUNNER_TIERS = {
-  rookie:     { icon:'🔴', label:'Fresh Legs',    ranks:['E','D'],    weeklyMiles:8,  longRunMiles:3,  paceSec:720, cardioQuests:['run1','run5k','longrun'] },
-  builder:    { icon:'🟡', label:'In Motion',     ranks:['C'],         weeklyMiles:12, longRunMiles:5,  paceSec:690, cardioQuests:['run1','run5k','longrun'] },
-  runner:     { icon:'🟢', label:'Runner',        ranks:['B'],         weeklyMiles:18, longRunMiles:8,  paceSec:660, cardioQuests:['run5k','run10k','longrun'] },
-  roadwarrior:{ icon:'🔵', label:'Road Warrior',  ranks:['A'],         weeklyMiles:25, longRunMiles:12, paceSec:600, cardioQuests:['run5k','run10k','longrun'] },
-  elite:      { icon:'🟣', label:'Pacer',         ranks:['S','S+'],    weeklyMiles:35, longRunMiles:16, paceSec:540, cardioQuests:['run10k','longrun','halfmarathon'] },
-  nl:         { icon:'⚪', label:'Marathoner',    ranks:['NL'],        weeklyMiles:50, longRunMiles:20, paceSec:480, cardioQuests:['run10k','halfmarathon','longrun'] },
+  rookie:     { icon:'◆', label:'Fresh Legs',    ranks:['E','D'],    weeklyMiles:8,  longRunMiles:3,  paceSec:720, cardioQuests:['run1','run5k','longrun'] },
+  builder:    { icon:'◆', label:'In Motion',     ranks:['C'],         weeklyMiles:12, longRunMiles:5,  paceSec:690, cardioQuests:['run1','run5k','longrun'] },
+  runner:     { icon:'◆', label:'Runner',        ranks:['B'],         weeklyMiles:18, longRunMiles:8,  paceSec:660, cardioQuests:['run5k','run10k','longrun'] },
+  roadwarrior:{ icon:'◆', label:'Road Warrior',  ranks:['A'],         weeklyMiles:25, longRunMiles:12, paceSec:600, cardioQuests:['run5k','run10k','longrun'] },
+  elite:      { icon:'◆', label:'Pacer',         ranks:['S','S+'],    weeklyMiles:35, longRunMiles:16, paceSec:540, cardioQuests:['run10k','longrun','halfmarathon'] },
+  nl:         { icon:'◆', label:'Marathoner',    ranks:['NL'],        weeklyMiles:50, longRunMiles:20, paceSec:480, cardioQuests:['run10k','halfmarathon','longrun'] },
 };
 function getRunnerTier(rankStr) {
   const override = localStorage.getItem('runnerTierOverride');
@@ -6919,27 +6927,34 @@ function initXPSystem() {
 
   // Weight log patch v3 — ensures base entries always exist
   const wdata = getWeightData();
-  if (!localStorage.getItem('grind_weight_patch_v3')) {
-    // Force seed all known entries regardless of existing data
+  if (!localStorage.getItem('grind_weight_patch_v4')) {
+    // v4 — deduplicate by weight+date, keep only one entry per unique timestamp
     const baseEntries = [
       { weight:257.8, date:'3/19/2026', _ts:new Date('2026-03-19').getTime() },
       { weight:259,   date:'3/18/2026', _ts:new Date('2026-03-18').getTime() },
       { weight:261,   date:'3/17/2026', _ts:new Date('2026-03-17').getTime() },
       { weight:268.8, date:'3/8/2026',  _ts:new Date('2026-03-08').getTime() },
     ];
-    // Merge — keep any newer entries the user has logged, add base if missing
-    const existing = (wdata.log || []).filter(e => !e._avg);
-    const existingTs = new Set(existing.map(e => e._ts || 0));
-    baseEntries.forEach(b => {
-      if (!existingTs.has(b._ts)) existing.push(b);
+    // Take all raw (non-avg) entries, deduplicate by _ts then by weight+date
+    const raw = (wdata.log || []).filter(e => !e._avg);
+    const seen = new Set();
+    const deduped = [];
+    raw.forEach(e => {
+      const key = (e._ts || 0) + '_' + e.weight + '_' + e.date;
+      if (!seen.has(key)) { seen.add(key); deduped.push(e); }
     });
-    // Sort newest first
-    existing.sort((a, b) => (b._ts || 0) - (a._ts || 0));
-    wdata.log = existing;
-    wdata.current = existing[0] ? existing[0].weight : 257.8;
+    // Ensure base entries exist
+    baseEntries.forEach(b => {
+      const key = b._ts + '_' + b.weight + '_' + b.date;
+      if (!seen.has(key)) { seen.add(key); deduped.push(b); }
+    });
+    deduped.sort((a, b) => (b._ts || 0) - (a._ts || 0));
+    wdata.log = deduped;
+    wdata.current = deduped[0] ? deduped[0].weight : 257.8;
     saveWeightData(wdata);
+    localStorage.setItem('grind_weight_patch_v4', '1');
     localStorage.setItem('grind_weight_patch_v3', '1');
-    localStorage.setItem('grind_weight_patch_v2', '1'); // mark old patch done too
+    localStorage.setItem('grind_weight_patch_v2', '1');
   } else if (!wdata.log || wdata.log.length === 0) {
     wdata.current = 257.8;
     wdata.log = [
@@ -7306,7 +7321,10 @@ document.addEventListener('mouseover', function(e) {
 document.addEventListener('mouseout', function(e) {
   const wrap = e.target.closest('[data-badge-name]');
   if (!wrap) return;
-  if (wrap.contains(e.relatedTarget)) return;
+  // Only hide if cursor is leaving to something outside the badge wrap
+  const to = e.relatedTarget;
+  if (to && wrap.contains(to)) return;
+  if (to && to.closest('[data-badge-name]') === wrap) return;
   _hideBadgeTip();
 });
 document.addEventListener('touchstart', function(e) {
@@ -7356,7 +7374,10 @@ document.addEventListener('mouseover', function(e) {
 document.addEventListener('mouseout', function(e) {
   const el = e.target.closest('[data-st-label]');
   if (!el) return;
-  if (!el.contains(e.relatedTarget)) _hideSkillTip();
+  const to = e.relatedTarget;
+  if (to && el.contains(to)) return;
+  if (to && to.closest('[data-st-label]') === el) return;
+  _hideSkillTip();
 });
 document.addEventListener('touchstart', function(e) {
   const el = e.target.closest('[data-st-label]');
