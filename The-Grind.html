@@ -6,7 +6,18 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>R2TMC — The Grind</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -76,16 +87,14 @@ body::after {
 /* "KEEP. GOING" — fixed below the safe-area, never overlaps the iPhone bar */
 .nav-keep-going {
   position: fixed;
-  /* sits just below the iPhone status bar, inside the nav zone */
-  top: 2px;
+  top: 0;
   left: 0; right: 0;
-  height: 12px;
+  height: max(env(safe-area-inset-top, 14px), 14px);
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  z-index: 501;
-  /* Clip so nothing can creep upward into the bar */
+  z-index: 502;
   overflow: hidden;
 }
 .nav-keep-going span {
@@ -198,13 +207,13 @@ body::after {
 }
 
 /* ── PAGES ── */
-.page { display: none; padding: calc(96px + env(safe-area-inset-top)) 0 60px; min-height: 100vh; }
+.page { display: none; padding: calc(56px + env(safe-area-inset-top)) 0 60px; min-height: 100vh; }
 .page.active { display: block; }
 
 /* ── HERO TITLE STRIP ── */
 .hero-strip {
   position: fixed;
-  top: calc(47px + env(safe-area-inset-top)); left: 0; right: 0;
+  top: calc(49px + env(safe-area-inset-top)); left: 0; right: 0;
   z-index: 490;
   background: #000;
   border-bottom: 2px solid rgba(200,168,75,0.5);
@@ -1726,11 +1735,13 @@ html, body {
 @media (max-width: 600px) {
   /* Nav */
   .nav {
-    padding: 0 10px;
+    padding: 0 8px;
     height: calc(48px + env(safe-area-inset-top));
     padding-top: env(safe-area-inset-top);
     justify-content: space-between;
   }
+  #navBadgeDots { gap: 2px !important; }
+  #navBadgeDots > div { width: 16px !important; height: 18px !important; }
   .nav-brand { font-size: 14px !important; letter-spacing: 0.5px !important; }
   .nav-day { display: none !important; }
   #navStreak { font-size: 13px !important; }
@@ -1741,7 +1752,7 @@ html, body {
 
   /* Page padding: nav(48) + hero(~46) + accent(2) = ~96px */
   .page {
-    padding-top: calc(170px + env(safe-area-inset-top)) !important;
+    padding-top: calc(120px + env(safe-area-inset-top)) !important;
     padding-bottom: 24px !important;
   }
   .container {
@@ -1811,11 +1822,15 @@ html, body {
 
 <!-- "Keep. Going" label — sits just below the iPhone black bar -->
 <div class="nav-keep-going">
-  <span id="statusBrandText">KEEP.GOING.</span>
+  <span id="statusBrandText">Keep. Going.</span>
 </div>
 
 <!-- TOP BAR -->
 <nav class="nav" style="justify-content:space-between;">
+  <!-- Badge dots centered in nav content area (below safe-area) -->
+  <div style="position:absolute;left:50%;bottom:0;height:49px;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:502;padding:0 80px;box-sizing:border-box;width:100%;">
+    <div id="navBadgeDots" style="display:flex;gap:4px;align-items:center;justify-content:center;flex-wrap:nowrap;"></div>
+  </div>
   <div style="display:flex;align-items:center;gap:8px;">
     <button class="sidebar-toggle" onclick="toggleSidebar()" style="font-size:18px;background:none;border:none;color:var(--gold);cursor:pointer;padding:0 4px;line-height:1;">☰</button>
     <div>
@@ -1823,8 +1838,6 @@ html, body {
       <div id="navSubtitle" style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-top:0;">R2TMC 🏁</div>
     </div>
   </div>
-  <!-- Centered badge dots in nav -->
-  <div id="navBadgeDots" style="position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:4px;align-items:center;pointer-events:none;top:50%;transform:translate(-50%,-50%);z-index:502;"></div>
   <div style="display:flex;align-items:center;gap:8px;">
     <!-- Monday recap button — only visible on Mondays -->
     <button id="weeklyRecapBtn" onclick="showWeeklyRecap()" style="display:none;align-items:center;gap:5px;font-family:Space Mono,monospace;font-size:10px;letter-spacing:1px;color:#000;background:var(--gold);border:none;padding:5px 12px;cursor:pointer;text-transform:uppercase;animation:badgePop 0.4s ease both;">📋 Week Recap</button>
@@ -4881,8 +4894,8 @@ function buildHeroBadgeStrip(earnedList) {
     const hex = document.createElement('div');
     hex.title = b.name;
     hex.style.cssText = [
-      'width:18px',
-      'height:21px',
+      'width:20px',
+      'height:23px',
       'clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)',
       'background:' + col + '33',
       'box-shadow:0 0 5px ' + col + '66',
