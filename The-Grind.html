@@ -7,7 +7,18 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
 <title>R2TMC — The Grind</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -3174,8 +3185,8 @@ function logBook() {
   const title = (input ? input.value.trim() : '') || 'Untitled';
   const log = getBookLog();
   const count = log.length + 1;
-  // XP scales: 1st book 200, then 150 each
-  const xp = count === 1 ? 200 : 150;
+  // XP scales: 1st book 400, then 300 each
+  const xp = count === 1 ? 400 : 300;
   const coins = Math.round(xp / 10);
   const today = new Date();
   log.unshift({ title, date: today.toLocaleDateString(), xp, coins, num: count });
@@ -3188,7 +3199,7 @@ function logBook() {
   // Mark book activity in tracker
   const _bDStr = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
   if (!data.dailyQuests[_bDStr]) data.dailyQuests[_bDStr] = {};
-  data.dailyQuests[_bDStr]['book'] = true;
+  data.dailyQuests[_bDStr]['book'] = { done: true, xp, coins, icon: '📖' };
   if (!data.coinHistory) data.coinHistory = [];
   data.coinHistory.unshift({ icon:'📖', label:'"' + title + '"', amount:coins, date:today.toLocaleDateString() });
   if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
@@ -3444,7 +3455,7 @@ function logRace(type) {
       // Also mark race quest AND the run distance quest for streak + badges
       const dStr = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
       if (!data.dailyQuests[dStr]) data.dailyQuests[dStr] = {};
-      data.dailyQuests[dStr]['race'] = true;
+      data.dailyQuests[dStr]['race'] = { done: true, xp: rt.xp, coins: rt.coins, icon: rt.icon };
       // Map race type to run quest so it counts toward Ghost/Road Runner badge + streak
       const runQuestMap = { '5k':'run5k', '10k':'run10k', 'half':'longrun', 'full':'longrun' };
       if (runQuestMap[type]) data.dailyQuests[dStr][runQuestMap[type]] = true;
@@ -3864,7 +3875,7 @@ function logWeight() {
     // Mark weigh quest in activity tracker
     const _wToday = new Date(); const _wdStr = _wToday.getFullYear() + '-' + (_wToday.getMonth()+1) + '-' + _wToday.getDate();
     if (!xpData.dailyQuests[_wdStr]) xpData.dailyQuests[_wdStr] = {};
-    xpData.dailyQuests[_wdStr]['weigh'] = true;
+    xpData.dailyQuests[_wdStr]['weigh'] = { done: true, xp: xpEarned, coins: coinsEarned, icon: '⚖️' };
     if (!xpData.coinHistory) xpData.coinHistory = [];
     xpData.coinHistory.unshift({ icon:'⚖️', label:'Weight Logged', amount: coinsEarned, date: new Date().toLocaleDateString() });
     if (xpData.coinHistory.length > 50) xpData.coinHistory = xpData.coinHistory.slice(0, 50);
@@ -3878,9 +3889,8 @@ function logWeight() {
     }
     buildRewardShop();
     updateHunterCard();
+    buildQuestGrid();
   }
-
-  renderWeightProfile();
     buildProfileStats(getXPData());
   updateResetButtonStates();
 }
@@ -5250,6 +5260,9 @@ function updateHunterCard() {
   }
   const navSt = document.getElementById('navStreak');
   if (navSt) navSt.textContent = '🔥 ' + (data.streak || 0);
+  // Nav coin balance
+  const navCoin = document.getElementById('topCoinBalance');
+  if (navCoin) navCoin.textContent = '🪙 ' + (data.coins || 0);
   const smEl = document.getElementById('streakMultDisplay');
   if (smEl) {
     const smult = Math.min(1.5, 1 + Math.floor(((data.streak||0)) / 7) * 0.05);
@@ -5370,6 +5383,7 @@ const BASE_QUESTS = [
   { id:'mobility',     label:'Mobility Work',   icon:'🧘', xp:80,   type:'wellness', row:'wellness' },
   // ── Hidden ──
   { id:'weigh',        label:'Weigh In',        icon:'⚖️', xp:50,   type:'wellness', row:'hidden' },
+  { id:'book',         label:'Book Logged',     icon:'📖', xp:0,    type:'wellness', row:'hidden' },
   { id:'fasted',       label:'Fasted Workout',  icon:'⚡', xp:180,  type:'lifting',  row:'hidden' },
   { id:'steps15',      label:'15K Steps',       icon:'👟', xp:150,  type:'movement', row:'hidden' },
   { id:'ball',         label:'Hoop Session',    icon:'🏀', xp:200,  type:'cardio',   row:'hidden' },
@@ -5898,7 +5912,13 @@ function buildActivityCalendar() {
     const dayDone = data.dailyQuests[dStr] || {};
     const questIds = Object.keys(dayDone).filter(k => dayDone[k]);
     const allQuests = [...BASE_QUESTS, ...WEEKLY_QUESTS];
-    const icons = questIds.map(id => allQuests.find(q => q.id === id)).filter(Boolean).slice(0,4).map(q => q.icon).join(' ');
+    // Support both boolean (true) and object ({done,xp,coins,icon}) formats
+    const icons = questIds.map(id => {
+      const entry = dayDone[id];
+      if (entry && typeof entry === 'object' && entry.icon) return entry.icon;
+      const q = allQuests.find(q => q.id === id);
+      return q ? q.icon : null;
+    }).filter(Boolean).slice(0,4).join(' ');
     const hasActivity = questIds.length > 0;
     const cell = document.createElement('div');
     cell.style.cssText = 'background:' + (isFuture ? 'var(--gray1)' : hasActivity ? 'rgba(46,204,113,0.12)' : isToday ? 'rgba(200,168,75,0.08)' : 'var(--gray1)') + ';'
@@ -5907,8 +5927,18 @@ function buildActivityCalendar() {
     cell.innerHTML = '<div style="font-family:Space Mono,monospace;font-size:10px;letter-spacing:1px;color:' + (isToday ? 'var(--gold)' : 'var(--muted)') + ';margin-bottom:2px;">' + dayNames[i] + '</div>'
       + '<div style="font-family:Bebas Neue,sans-serif;font-size:16px;color:' + (isToday ? 'var(--gold)' : 'var(--white)') + ';line-height:1;margin-bottom:4px;">' + d.getDate() + '</div>'
       + (hasActivity ? '<div style="font-size:11px;">' + icons + '</div>' + (function(){
-      const rawXP = questIds.reduce((s,id) => { const q2 = allQuests.find(x=>x.id===id); return s+(q2?q2.xp:0); },0);
-      const rawCoins = questIds.reduce((s,id) => { const q2 = allQuests.find(x=>x.id===id); return s+(q2?Math.round(q2.xp/10):0); },0);
+      const rawXP = questIds.reduce((s,id) => {
+        const entry = dayDone[id];
+        if (entry && typeof entry === 'object' && entry.xp) return s + entry.xp;
+        const q2 = allQuests.find(x => x.id === id);
+        return s + (q2 ? q2.xp : 0);
+      }, 0);
+      const rawCoins = questIds.reduce((s,id) => {
+        const entry = dayDone[id];
+        if (entry && typeof entry === 'object' && entry.coins) return s + entry.coins;
+        const q2 = allQuests.find(x => x.id === id);
+        return s + (q2 ? Math.round(q2.xp/10) : 0);
+      }, 0);
       return '<div style="font-family:Space Mono,monospace;font-size:9px;color:#2ecc71;margin-top:2px;line-height:1.4;">+' + rawXP.toLocaleString() + ' xp</div>'
            + '<div style="font-family:Space Mono,monospace;font-size:9px;color:#f0d878;">+' + rawCoins + ' 🪙</div>';
     })()
