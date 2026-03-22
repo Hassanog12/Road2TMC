@@ -6,8 +6,19 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
-<title>Road to the Marathon Continues</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<title>R2TMC — The Grind</title>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -3184,14 +3195,21 @@ function logBook() {
   const data = getXPData();
   data.totalXP = (data.totalXP||0) + xp;
   data.coins   = (data.coins||0) + coins;
+  data.level   = getLevelFromXP(data.totalXP);
+  // Mark book activity in tracker
+  const _bDStr = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
+  if (!data.dailyQuests[_bDStr]) data.dailyQuests[_bDStr] = {};
+  data.dailyQuests[_bDStr]['book'] = true;
   if (!data.coinHistory) data.coinHistory = [];
   data.coinHistory.unshift({ icon:'📖', label:'"' + title + '"', amount:coins, date:today.toLocaleDateString() });
+  if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
   saveXPData(data);
 
   if (input) input.value = '';
   buildBookLog();
   updateHunterCard();
   buildBadges();
+  buildActivityCalendar();
 
   const toast = document.createElement('div');
   toast.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#0a0a0a;border:1px solid #3498db;padding:12px 24px;font-family:Bebas Neue,sans-serif;font-size:16px;color:#3498db;letter-spacing:2px;z-index:9999;white-space:nowrap;box-shadow:0 0 24px #3498db44;transition:opacity 0.4s;text-align:center;';
@@ -3267,6 +3285,11 @@ function logBookFromPage() {
   const data = getXPData();
   data.totalXP = (data.totalXP||0) + xp;
   data.coins   = (data.coins||0) + coins;
+  data.level   = getLevelFromXP(data.totalXP);
+  // Mark book activity in tracker
+  const _bpDStr = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
+  if (!data.dailyQuests[_bpDStr]) data.dailyQuests[_bpDStr] = {};
+  data.dailyQuests[_bpDStr]['book'] = true;
   if (!data.coinHistory) data.coinHistory = [];
   data.coinHistory.unshift({ icon:'📖', label:'"' + title + '"', amount:coins, date:today.toLocaleDateString() });
   if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
@@ -3277,6 +3300,7 @@ function logBookFromPage() {
   buildBookLog(); // sync profile section too
   updateHunterCard();
   buildBadges();
+  buildActivityCalendar();
   const toast = document.createElement('div');
   toast.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#0a0a0a;border:1px solid #3498db;padding:12px 24px;font-family:Bebas Neue,sans-serif;font-size:16px;color:#3498db;letter-spacing:2px;z-index:9999;white-space:nowrap;box-shadow:0 0 24px #3498db44;transition:opacity 0.4s;';
   toast.textContent = '📖 Book #' + count + ' · +' + xp + ' XP · +' + coins + ' 🪙';
@@ -3848,6 +3872,10 @@ function logWeight() {
     xpData.totalXP = (xpData.totalXP || 0) + xpEarned;
     xpData.coins = (xpData.coins || 0) + coinsEarned;
     xpData.level = getLevelFromXP(xpData.totalXP);
+    // Mark weigh quest in activity tracker
+    const _wToday = new Date(); const _wdStr = _wToday.getFullYear() + '-' + (_wToday.getMonth()+1) + '-' + _wToday.getDate();
+    if (!xpData.dailyQuests[_wdStr]) xpData.dailyQuests[_wdStr] = {};
+    xpData.dailyQuests[_wdStr]['weigh'] = true;
     if (!xpData.coinHistory) xpData.coinHistory = [];
     xpData.coinHistory.unshift({ icon:'⚖️', label:'Weight Logged', amount: coinsEarned, date: new Date().toLocaleDateString() });
     if (xpData.coinHistory.length > 50) xpData.coinHistory = xpData.coinHistory.slice(0, 50);
