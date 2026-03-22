@@ -6,7 +6,18 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>R2TMC — The Grind</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -196,7 +207,7 @@ body::after {
 }
 
 /* ── PAGES ── */
-.page { display: none; padding: calc(56px + env(safe-area-inset-top)) 0 60px; min-height: 100vh; }
+.page { display: none; padding: calc(96px + env(safe-area-inset-top)) 0 60px; min-height: 100vh; }
 .page.active { display: block; }
 
 /* ── HERO TITLE STRIP ── */
@@ -1741,7 +1752,7 @@ html, body {
 
   /* Page padding: nav(48) + hero(~46) + accent(2) = ~96px */
   .page {
-    padding-top: calc(120px + env(safe-area-inset-top)) !important;
+    padding-top: calc(160px + env(safe-area-inset-top)) !important;
     padding-bottom: 24px !important;
   }
   .container {
@@ -3760,10 +3771,17 @@ function toggleWeightLog() {
 function compressWeightLog(log) {
   if (!log || log.length < 2) return log;
 
-  // Ensure all entries have a _ts
-  const parsed = log.map(e => {
-    const d = new Date(e.date);
-    return { ...e, _ts: isNaN(d.getTime()) ? 0 : d.getTime() };
+  const nowTs = Date.now();
+  const DAY = 86400000;
+
+  // Ensure all entries have a valid _ts
+  const parsed = log.map((e, i) => {
+    let ts = e._ts || 0;
+    if (!ts) {
+      const d = new Date(e.date);
+      ts = isNaN(d.getTime()) ? (nowTs - (log.length - i) * DAY) : d.getTime();
+    }
+    return { ...e, _ts: ts };
   });
 
   // Sort newest first
@@ -3773,20 +3791,12 @@ function compressWeightLog(log) {
   const startEntry = parsed[parsed.length - 1];
   const withoutStart = parsed.slice(0, parsed.length - 1);
 
-  const now = Date.now();
-  const DAY = 86400000;
-  const cutoff4w  = now - 28  * DAY; // last 4 weeks — keep raw
-  const cutoff3m  = now - 91  * DAY; // last 3 months — weekly avg
-  //                                    older than 3m  — monthly avg
+  const cutoff4w = nowTs - 28 * DAY;
+  const cutoff3m = nowTs - 91 * DAY;
 
-  // Tier 1: raw entries (last 4 weeks)
   const raw = withoutStart.filter(e => e._ts >= cutoff4w);
-
-  // Tier 2: entries between 4 weeks and 3 months → weekly averages
-  const mid = withoutStart.filter(e => e._ts < cutoff4w && e._ts >= cutoff3m && e._ts !== 0);
-
-  // Tier 3: entries older than 3 months → monthly averages
-  const old = withoutStart.filter(e => e._ts < cutoff3m && e._ts !== 0 && e !== startEntry);
+  const mid = withoutStart.filter(e => e._ts < cutoff4w && e._ts >= cutoff3m);
+  const old = withoutStart.filter(e => e._ts < cutoff3m);
 
   function weekKey(ts) {
     const d = new Date(ts);
@@ -3807,26 +3817,21 @@ function compressWeightLog(log) {
     });
     return Object.entries(buckets).map(([k, group]) => {
       const avg = group.reduce((s, e) => s + e.weight, 0) / group.length;
-      const mid = group[Math.floor(group.length / 2)];
-      return {
-        weight: parseFloat(avg.toFixed(1)),
-        date: labelFn ? labelFn(mid._ts) : mid.date,
-        _avg: true,
-        _ts: mid._ts,
-      };
+      const midE = group[Math.floor(group.length / 2)];
+      return { weight: parseFloat(avg.toFixed(1)), date: labelFn ? labelFn(midE._ts) : midE.date, _avg: true, _ts: midE._ts };
     }).sort((a, b) => b._ts - a._ts);
   }
-
   function monthLabel(ts) {
     const d = new Date(ts);
     return d.toLocaleString('default', { month: 'short' }) + ' ' + d.getFullYear();
   }
 
-  const weeklyAvgs  = bucketAvg(mid, weekKey,   null);
-  const monthlyAvgs = bucketAvg(old, monthKey,  monthLabel).map(e => ({ ...e, _monthly: true }));
+  const weeklyAvgs  = bucketAvg(mid, weekKey, null);
+  const monthlyAvgs = bucketAvg(old, monthKey, monthLabel).map(e => ({ ...e, _monthly: true }));
 
   return [...raw, ...weeklyAvgs, ...monthlyAvgs, startEntry];
 }
+
 
 function logWeight() {
   const input = document.getElementById('weightInput');
@@ -3836,7 +3841,7 @@ function logWeight() {
   const data = getWeightData();
   data.current = w;
   if (!data.log) data.log = [];
-  data.log.unshift({ weight: w, date: new Date().toLocaleDateString() });
+  data.log.unshift({ weight: w, date: new Date().toLocaleDateString(), _ts: Date.now() });
   // Compress older entries into weekly averages — keeps log forever
   data.log = compressWeightLog(data.log);
   saveWeightData(data);
@@ -3919,6 +3924,7 @@ function renderWeightProfile() {
     } else {
       const all = data.log; // newest first (after compression)
       const origin = all[all.length - 1]; // oldest — start anchor
+      const innerEntries = all.slice(0, all.length - 1); // everything except start
 
       // ── SVG Line Chart ──
       const chartW = 300, chartH = 80, padL = 8, padR = 8, padT = 8, padB = 8;
@@ -3951,7 +3957,6 @@ function renderWeightProfile() {
       </div>`;
 
       // ── Split entries: raw / weekly avg / monthly avg / start ──
-      const innerEntries = all.slice(0, all.length - 1); // everything except start
       const recentRaw    = innerEntries.filter(e => !e._avg);
       const weeklyAvgs   = innerEntries.filter(e => e._avg && !e._monthly);
       const monthlyAvgs  = innerEntries.filter(e => e._avg && e._monthly);
@@ -5696,10 +5701,12 @@ function resetWeeklyQuests(e) {
 function resetWeightLog() {
   const wdata = getWeightData();
   if (!wdata.log || wdata.log.length === 0) return;
-  // Log is newest-first — find the most recent raw (non-avg) entry
+  // Find the most recent raw (non-avg) entry by _ts — not by array position
   const rawEntries = wdata.log.filter(e => !e._avg);
   if (!rawEntries.length) return;
-  const latest = rawEntries[0]; // newest raw entry
+  // Sort by _ts descending to guarantee we get the actual newest
+  rawEntries.sort((a, b) => (b._ts || 0) - (a._ts || 0));
+  const latest = rawEntries[0];
   showResetConfirm('Remove Last Entry',
     'Remove weight entry: <span style="color:#e74c3c;">' + latest.weight + ' lbs on ' + latest.date + '</span>',
     () => {
@@ -5707,6 +5714,7 @@ function resetWeightLog() {
       wdata.log.splice(idx, 1);
       // Set current to the next most recent raw entry
       const remaining = wdata.log.filter(e => !e._avg);
+      remaining.sort((a, b) => (b._ts || 0) - (a._ts || 0));
       wdata.current = remaining.length > 0 ? remaining[0].weight : (wdata.log[0] ? wdata.log[0].weight : null);
       saveWeightData(wdata);
       // Deduct XP + coins awarded when this entry was logged
@@ -6950,6 +6958,26 @@ function initXPSystem() {
     wdata.current = deduped[0] ? deduped[0].weight : 257.8;
     saveWeightData(wdata);
     localStorage.setItem('grind_weight_patch_v4', '1');
+  }
+
+  // Patch v5 — re-stamp any entries with _ts=0 using date string parse
+  if (!localStorage.getItem('grind_weight_patch_v5')) {
+    const wfix = getWeightData();
+    if (wfix.log) {
+      const DAY = 86400000;
+      wfix.log = wfix.log.map((e, i) => {
+        if (!e._ts || e._ts === 0) {
+          const d = new Date(e.date);
+          const ts = isNaN(d.getTime()) ? (Date.now() - (wfix.log.length - i) * DAY) : d.getTime();
+          return { ...e, _ts: ts };
+        }
+        return e;
+      });
+      wfix.log.sort((a, b) => b._ts - a._ts);
+      wfix.current = wfix.log.filter(e => !e._avg)[0]?.weight || wfix.current;
+      saveWeightData(wfix);
+    }
+    localStorage.setItem('grind_weight_patch_v5', '1');
     localStorage.setItem('grind_weight_patch_v3', '1');
     localStorage.setItem('grind_weight_patch_v2', '1');
   } else if (!wdata.log || wdata.log.length === 0) {
