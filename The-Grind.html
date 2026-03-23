@@ -6,8 +6,19 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
-<title>Road to The Marathon Continues</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<title>R2TMC — The Grind</title>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -157,6 +168,14 @@ body::after {
   color: var(--gold);
   border-bottom: 2px solid var(--gold);
 }
+.nav-tab.nl-active {
+  color: #000 !important;
+  background: #fff !important;
+}
+#sidebar .nav-tab.nl-active {
+  color: #000 !important;
+  background: #fff !important;
+}
 
 /* Sidebar-specific nav tabs */
 #sidebar .nav-tab {
@@ -173,6 +192,7 @@ body::after {
   box-sizing: border-box;
 }
 #sidebar .nav-tab:hover { background: rgba(200,168,75,0.05); color: var(--white); }
+#sidebar .nav-tab.active:hover { color: var(--gold); }
 #sidebar .nav-tab.active {
   background: rgba(200,168,75,0.08);
   border-left: 2px solid var(--gold);
@@ -1898,7 +1918,7 @@ html, body {
           <!-- Rank chips row -->
           <div id="rankChips" style="display:flex;gap:10px;align-items:center;"></div>
         </div>
-        <div style="display:flex;gap:1px;opacity:0.35;margin-left:auto;"><div style="width:2px;height:12px;background:#fff;"></div><div style="width:1px;height:12px;background:#fff;"></div><div style="width:1px;height:12px;background:#fff;"></div><div style="width:2px;height:12px;background:#fff;"></div><div style="width:1px;height:12px;background:#fff;"></div><div style="width:1px;height:12px;background:#fff;"></div><div style="width:2px;height:12px;background:#fff;"></div><div style="width:1px;height:12px;background:#fff;"></div><div style="width:2px;height:12px;background:#fff;"></div><div style="width:1px;height:12px;background:#fff;"></div><div style="width:1px;height:12px;background:#fff;"></div><div style="width:2px;height:12px;background:#fff;"></div></div>
+        <div id="roadmapBarcode" style="display:flex;gap:1px;opacity:0.35;margin-left:auto;"><div style="width:2px;height:12px;background:#fff;"></div><div style="width:1px;height:12px;background:#fff;"></div><div style="width:1px;height:12px;background:#fff;"></div><div style="width:2px;height:12px;background:#fff;"></div><div style="width:1px;height:12px;background:#fff;"></div><div style="width:1px;height:12px;background:#fff;"></div><div style="width:2px;height:12px;background:#fff;"></div><div style="width:1px;height:12px;background:#fff;"></div><div style="width:2px;height:12px;background:#fff;"></div><div style="width:1px;height:12px;background:#fff;"></div><div style="width:1px;height:12px;background:#fff;"></div><div style="width:2px;height:12px;background:#fff;"></div></div>
       </div>
 
       <!-- Diagonal stripe -->
@@ -2136,7 +2156,7 @@ html, body {
      PAGE: PROFILE
 ═══════════════════════════════════════════ -->
 <div id="page-profile" class="page">
-  <div class="container" style="padding-top:20px;padding-bottom:48px;">
+  <div class="container" style="padding-bottom:48px;">
 
     <!-- ── PROFILE HUNTER ID CARD (full-width, more detailed than roadmap card) ── -->
     <div id="profileCard" style="background:#0a0a0a;border:3px solid #333;margin-bottom:12px;position:relative;overflow:hidden;font-family:'Bebas Neue',sans-serif;">
@@ -2151,8 +2171,8 @@ html, body {
       <!-- Top row: rank chips + barcode -->
       <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 24px 0;position:relative;z-index:1;">
         <div id="profileRankChips" style="display:flex;gap:10px;align-items:center;"></div>
-        <div style="display:flex;gap:2px;opacity:0.4;">
-          <div style="width:3px;height:14px;background:#fff;"></div><div style="width:1px;height:14px;background:#fff;"></div><div style="width:1px;height:14px;background:#fff;"></div><div style="width:3px;height:14px;background:#fff;"></div><div style="width:1px;height:14px;background:#fff;"></div><div style="width:2px;height:14px;background:#fff;"></div><div style="width:1px;height:14px;background:#fff;"></div><div style="width:3px;height:14px;background:#fff;"></div><div style="width:1px;height:14px;background:#fff;"></div><div style="width:1px;height:14px;background:#fff;"></div><div style="width:2px;height:14px;background:#fff;"></div><div style="width:1px;height:14px;background:#fff;"></div><div style="width:3px;height:14px;background:#fff;"></div><div style="width:1px;height:14px;background:#fff;"></div><div style="width:2px;height:14px;background:#fff;"></div><div style="width:1px;height:14px;background:#fff;"></div><div style="width:1px;height:14px;background:#fff;"></div><div style="width:3px;height:14px;background:#fff;"></div>
+        <div id="profileBarcode" style="display:flex;gap:1px;opacity:0.3;align-items:center;">
+          <div style="width:2px;height:10px;background:#fff;"></div><div style="width:1px;height:10px;background:#fff;"></div><div style="width:1px;height:10px;background:#fff;"></div><div style="width:2px;height:10px;background:#fff;"></div><div style="width:1px;height:10px;background:#fff;"></div><div style="width:1px;height:10px;background:#fff;"></div><div style="width:2px;height:10px;background:#fff;"></div><div style="width:1px;height:10px;background:#fff;"></div><div style="width:1px;height:10px;background:#fff;"></div><div style="width:2px;height:10px;background:#fff;"></div><div style="width:1px;height:10px;background:#fff;"></div><div style="width:2px;height:10px;background:#fff;"></div>
         </div>
       </div>
 
@@ -2176,24 +2196,24 @@ html, body {
           <!-- Stats row -->
           <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px;">
             <div>
-              <div id="pLevel" style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#fff;line-height:1;">—</div>
-              <div style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px;color:#555;text-transform:uppercase;">Level</div>
+              <div id="pLevel" style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fff;line-height:1;">—</div>
+              <div style="font-family:'Space Mono',monospace;font-size:7px;letter-spacing:1px;color:#555;text-transform:uppercase;">Level</div>
             </div>
             <div>
-              <div id="pXP" style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#fff;line-height:1;">—</div>
-              <div style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px;color:#555;text-transform:uppercase;">Total XP</div>
+              <div id="pXP" style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fff;line-height:1;">—</div>
+              <div style="font-family:'Space Mono',monospace;font-size:7px;letter-spacing:1px;color:#555;text-transform:uppercase;">Total XP</div>
             </div>
             <div>
-              <div id="pStreak" style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#fff;line-height:1;">—</div>
-              <div style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px;color:#555;text-transform:uppercase;">Streak</div>
+              <div id="pStreak" style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fff;line-height:1;">—</div>
+              <div style="font-family:'Space Mono',monospace;font-size:7px;letter-spacing:1px;color:#555;text-transform:uppercase;">Streak</div>
             </div>
             <div>
-              <div id="profileCurrentWeight" style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#2ecc71;line-height:1;">261</div>
-              <div style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px;color:#555;text-transform:uppercase;">lbs</div>
+              <div id="profileCurrentWeight" style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#2ecc71;line-height:1;">261</div>
+              <div style="font-family:'Space Mono',monospace;font-size:7px;letter-spacing:1px;color:#555;text-transform:uppercase;">lbs</div>
             </div>
             <div>
-              <div id="profileWeightLost" style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#e74c3c;line-height:1;">-7.8</div>
-              <div style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px;color:#555;text-transform:uppercase;">lbs lost</div>
+              <div id="profileWeightLost" style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#e74c3c;line-height:1;">-7.8</div>
+              <div style="font-family:'Space Mono',monospace;font-size:7px;letter-spacing:1px;color:#555;text-transform:uppercase;">lbs lost</div>
             </div>
           </div>
 
@@ -2219,24 +2239,24 @@ html, body {
           </div>
         </div>
 
-        <!-- Right: weight tracker panel -->
-        <div style="padding:0 14px 0 14px;border-left:1px solid #222;min-width:140px;max-width:160px;display:flex;flex-direction:column;justify-content:center;gap:8px;">
-          <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:#555;text-transform:uppercase;">Update Weight</div>
-          <div style="display:flex;gap:4px;align-items:center;">
-            <input id="weightInput" type="number" step="0.1" min="150" max="400" placeholder="Weight"
-              style="font-family:'Space Mono',monospace;font-size:12px;background:#111;border:1px solid #333;color:#fff;padding:5px 7px;width:76px;outline:none;"
-              onkeydown="if(event.key==='Enter')logWeight()"
-            />
-            <span style="font-family:'Space Mono',monospace;font-size:9px;color:#555;">lbs</span>
-          </div>
-          <button onclick="logWeight()" id="logWeightBtn" style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px;background:var(--gold);color:#000;border:none;padding:5px 0;cursor:pointer;text-transform:uppercase;width:100%;transition:background 0.3s;">LOG ⚖️</button>
-          <button id="resetWeightBtn" onclick="resetWeightLog()" style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--muted);background:none;border:1px solid var(--gray3);padding:4px 0;cursor:pointer;text-transform:uppercase;width:100%;transition:all 0.2s;">Reset Log</button>
-          <div style="font-family:'Space Mono',monospace;font-size:9px;color:#444;line-height:1.9;">
-            268.8 → start<br>
-            <span id="wg-SoCal" style="color:#1abc9c;">255 → SoCal ✈️</span><br>
-            <span id="wg-france" style="color:#e67e22;">235 → France 🇫🇷</span><br>
-            <span id="wg-brazil" style="color:#f0d878;">225 → S. America 🌊</span>
-          </div>
+      </div>
+
+      <!-- Horizontal weight update strip -->
+      <div style="border-top:1px solid #111;padding:10px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:relative;z-index:1;">
+        <div style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;flex-shrink:0;">Update Weight</div>
+        <div style="display:flex;gap:6px;align-items:center;flex:1;min-width:0;">
+          <input id="weightInput" type="number" step="0.1" min="150" max="400" placeholder="lbs"
+            style="font-family:'Space Mono',monospace;font-size:12px;background:#111;border:1px solid #333;color:#fff;padding:5px 8px;width:80px;outline:none;border-radius:2px;"
+            onkeydown="if(event.key==='Enter')logWeight()"
+          />
+          <button onclick="logWeight()" id="logWeightBtn" style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px;background:var(--gold);color:#000;border:none;padding:6px 14px;cursor:pointer;text-transform:uppercase;transition:background 0.3s;border-radius:2px;white-space:nowrap;">Log ⚖️</button>
+          <button id="resetWeightBtn" onclick="resetWeightLog()" style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--muted);background:none;border:1px solid var(--gray3);padding:6px 14px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;border-radius:2px;white-space:nowrap;">Reset</button>
+        </div>
+        <div style="font-family:'Space Mono',monospace;font-size:8px;color:#333;line-height:1.8;flex-shrink:0;text-align:right;">
+          268.8 → start &nbsp;
+          <span id="wg-SoCal" style="color:#1abc9c;">255 → SoCal ✈️</span> &nbsp;
+          <span id="wg-france" style="color:#e67e22;">235 → France 🇫🇷</span> &nbsp;
+          <span id="wg-brazil" style="color:#f0d878;">225 → S. America 🌊</span>
         </div>
       </div>
 
@@ -2295,8 +2315,9 @@ html, body {
 <!-- ═══════════════════════════════════════════
      PAGE: REWARDS
 ═══════════════════════════════════════════ -->
+
 <div id="page-rewards" class="page">
-  <div class="container" style="padding-top:20px;padding-bottom:48px;">
+  <div class="container" style="padding-bottom:48px;">
 
     <!-- Header -->
     <div style="margin-bottom:20px;">
@@ -2339,7 +2360,7 @@ html, body {
 .wo-title span{color:var(--gold);}
 .wo-sub{font-family:'Space Mono',monospace;font-size:9px;color:#444;margin-top:6px;line-height:1.6;max-width:360px;}
 .wo-badge{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:2px;color:var(--gold);background:rgba(var(--rank-rgb,200,168,75),0.07);border:1px solid rgba(var(--rank-rgb,200,168,75),0.18);padding:5px 12px;white-space:nowrap;}
-.wo-tip{background:rgba(200,168,75,0.06);border-left:3px solid var(--gold);padding:10px 14px;margin-bottom:8px;font-family:'Space Mono',monospace;font-size:9px;color:#888;line-height:1.7;}
+.wo-tip{background:rgba(var(--rank-rgb,200,168,75),0.06);border-left:3px solid var(--gold);padding:10px 14px;margin-bottom:8px;font-family:'Space Mono',monospace;font-size:9px;color:#888;line-height:1.7;}
 .wo-section{background:var(--gray1);border:1px solid var(--gray3);margin-bottom:4px;}
 .wo-section-hdr{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;user-select:none;transition:background 0.2s;background:#0d0d0d;border-bottom:1px solid #222;}
 .wo-section-hdr:hover{background:#181818;}
@@ -3592,6 +3613,11 @@ function showPage(id) {
     if (t.getAttribute('onclick') && t.getAttribute('onclick').includes("'" + id + "'")) {
       t.classList.add('active');
     }
+  });
+  // NL rank: active tab gets black text on white
+  const _r = getRankForXP(getXPData().totalXP);
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    t.classList.toggle('nl-active', t.classList.contains('active') && _r.rank === 'NL');
   });
   setAccentColor(getRankForXP(getXPData().totalXP));
   if (id === 'running') { buildRunnerTierCard(); buildRaceHistory(); }
@@ -5027,27 +5053,49 @@ function buildProfileStats(data) {
   // Profile rank chips
   const chips = document.getElementById('profileRankChips');
   if (chips) {
-    const CC = { E:'#e74c3c', D:'#e67e22', C:'#f1c40f', B:'#2ecc71', A:'#1abc9c', S:'#3498db', 'S+':'#a855f7', NL:'#ffffff' };
-    chips.innerHTML = RANKS.map(r => {
-      const isCurrent = r.rank === rank.rank;
-      const isPast = r.minXP <= rank.minXP;
-      const isFuture = r.minXP > rank.minXP;
-      const chipColor = CC[r.rank] || '#888';
-      let style = 'font-family:Bebas Neue,sans-serif;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;border-radius:3px;transition:all 0.3s;';
-      if (isCurrent) {
-        style += 'font-size:14px;width:33px;height:33px;background:' + chipColor + ';color:#fff;'
-          + 'border:2px solid ' + chipColor + ';transform:scale(1.1);box-shadow:0 0 14px ' + chipColor + ',0 0 28px ' + chipColor + '44;'
-          + 'margin:0 6px;';
-      } else if (isPast) {
-        style += 'font-size:10px;width:25px;height:25px;background:' + chipColor + '22;color:' + chipColor + ';'
-          + 'border:1px solid ' + chipColor + '88;opacity:0.8;';
-      } else {
-        style += 'font-size:10px;width:20px;height:20px;background:' + chipColor + '18;color:' + chipColor + 'aa;'
-          + 'border:1px solid ' + chipColor + '55;opacity:0.55;';
-      }
+    if (rank.rank === 'NL') {
+      // NL: epic full-width takeover — no more chips
+      chips.style.cssText = 'width:100%;justify-content:center;';
+      const _pb = document.getElementById('profileBarcode'); if (_pb) _pb.style.display = 'none';
+      chips.innerHTML =
+        '<div style=\"display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;animation:nlBannerIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both;\">'
+        + '<div style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;">'
+        + '<div style=\"display:flex;gap:3px;align-items:center;\">' + ['E','D','C','B','A','S','S+'].map(r => '<div style=\"width:7px;height:7px;background:#fff;opacity:0.15;border-radius:1px;\"></div>').join('') + '</div>'
+        + '<div style="font-family:Bebas Neue,sans-serif;font-size:16px;color:#fff;letter-spacing:3px;white-space:nowrap;text-shadow:0 0 20px rgba(255,255,255,0.8),0 0 40px rgba(255,255,255,0.4);">NATIONAL LEVEL HUNTER</div>'
+        + '<div style=\"display:flex;gap:3px;align-items:center;\">' + ['E','D','C','B','A','S','S+'].map(r => '<div style=\"width:7px;height:7px;background:#fff;opacity:0.15;border-radius:1px;\"></div>').join('') + '</div>'
+        + '</div>'
+        + '<div style="font-family:Space Mono,monospace;font-size:7px;letter-spacing:2px;color:#555;white-space:nowrap;">MAXIMUM RANK · ' + data.totalXP.toLocaleString('en-US') + ' XP</div>'
+        + '</div>';
 
-      return '<div style="' + style + '">' + r.rank + '</div>';
-    }).join('');
+      // Inject NL banner keyframe if not present
+      if (!document.getElementById('nlKF')) {
+        const s = document.createElement('style');
+        s.id = 'nlKF';
+        s.textContent = '@keyframes nlBannerIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}';
+        document.head.appendChild(s);
+      }
+    } else {
+      chips.style.cssText = '';
+      const _pb2 = document.getElementById('profileBarcode'); if (_pb2) _pb2.style.display = '';
+      const CC = { E:'#e74c3c', D:'#e67e22', C:'#f1c40f', B:'#2ecc71', A:'#1abc9c', S:'#3498db', 'S+':'#a855f7', NL:'#ffffff' };
+      chips.innerHTML = RANKS.map(r => {
+        const isCurrent = r.rank === rank.rank;
+        const isPast = r.minXP <= rank.minXP;
+        const chipColor = CC[r.rank] || '#888';
+        let style = 'font-family:Bebas Neue,sans-serif;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;border-radius:3px;transition:all 0.3s;';
+        if (isCurrent) {
+          style += 'font-size:14px;width:33px;height:33px;background:' + chipColor + ';color:#fff;'
+            + 'border:2px solid ' + chipColor + ';transform:scale(1.1);box-shadow:0 0 14px ' + chipColor + ',0 0 28px ' + chipColor + '44;'
+            + 'margin:0 6px;';
+        } else if (isPast) {
+          style += 'font-size:10px;width:25px;height:25px;background:' + chipColor + '22;color:' + chipColor + ';'
+            + 'border:1px solid ' + chipColor + '88;opacity:0.8;';
+        } else {
+          style += 'font-size:10px;width:20px;height:20px;background:' + chipColor + '11;color:#333;border:1px solid #222;';
+        }
+        return '<div style="' + style + '">' + r.rank + '</div>';
+      }).join('');
+    }
   }
 
   // XP bar
@@ -5060,7 +5108,7 @@ function buildProfileStats(data) {
     xpBar.style.width = pct + '%';
     xpBar.style.background = rank.barColor || rank.color;
     xpBar.style.boxShadow = '0 0 10px ' + rank.glow;
-    if (xpDisp) xpDisp.textContent = data.totalXP.toLocaleString() + ' / ' + rangeEnd.toLocaleString() + ' XP';
+    if (xpDisp) xpDisp.textContent = nextRank ? data.totalXP.toLocaleString('en-US') + ' / ' + rangeEnd.toLocaleString('en-US') + ' XP' : 'MAX RANK';
   }
 
   // Level bar
@@ -5069,11 +5117,11 @@ function buildProfileStats(data) {
   if (lvBar) {
     const prog = xpProgressInLevel(data.totalXP);
     lvBar.style.width = ((prog.current / prog.needed) * 100) + '%';
-    if (lvDisp) lvDisp.textContent = 'LVL ' + level + '  ·  ' + prog.current + '/' + prog.needed + ' XP';
+    if (lvDisp) lvDisp.textContent = 'LVL ' + level + ' · ' + prog.current + '/' + prog.needed + ' XP';
   }
 
   const pLevel = document.getElementById('pLevel'); if (pLevel) pLevel.textContent = level;
-  const pXP = document.getElementById('pXP'); if (pXP) pXP.textContent = data.totalXP.toLocaleString();
+  const pXP = document.getElementById('pXP'); if (pXP) pXP.textContent = data.totalXP.toLocaleString('en-US');
   const pStreak = document.getElementById('pStreak'); if (pStreak) pStreak.textContent = data.streak || 0;
 
   const cnt = document.getElementById('profileBadgeCount');
@@ -5203,26 +5251,42 @@ function updateHunterCard() {
   // Rank chips
   const chipsEl = document.getElementById('rankChips');
   if (chipsEl) {
-    const CC = { E:'#e74c3c', D:'#e67e22', C:'#f1c40f', B:'#2ecc71', A:'#1abc9c', S:'#3498db', 'S+':'#a855f7', NL:'#ffffff' };
-    chipsEl.innerHTML = RANKS.map(r => {
-      const isCurrent = r.rank === rank.rank;
-      const isPast = r.minXP <= rank.minXP;
-      const chipColor = CC[r.rank] || '#555';
-      let chipStyle = 'font-family:Bebas Neue,sans-serif;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;border-radius:3px;transition:all 0.3s;';
-      if (isCurrent) {
-        chipStyle += 'font-size:14px;width:33px;height:33px;background:' + chipColor + ';color:#fff;'
-          + 'border:2px solid ' + chipColor + ';transform:scale(1.1);box-shadow:0 0 14px ' + chipColor + ',0 0 28px ' + chipColor + '44;'
-          + 'margin:0 6px;';
-      } else if (isPast) {
-        chipStyle += 'font-size:10px;width:25px;height:25px;background:' + chipColor + '22;color:#fff;'
-          + 'border:1px solid ' + chipColor + '88;opacity:0.8;';
-      } else {
-        chipStyle += 'font-size:10px;width:20px;height:20px;background:' + chipColor + '18;color:#fff;'
-          + 'border:1px solid ' + chipColor + '55;opacity:0.55;';
-      }
+    if (rank.rank === 'NL') {
+      chipsEl.style.cssText = 'width:100%;justify-content:center;';
+      const _rb = document.getElementById('roadmapBarcode'); if (_rb) _rb.style.display = 'none';
+      chipsEl.innerHTML =
+        '<div style=\"display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;animation:nlBannerIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both;\">'
+        + '<div style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;">'
+        + '<div style=\"display:flex;gap:3px;align-items:center;\">' + ['E','D','C','B','A','S','S+'].map(function(r){ return '<div style=\"width:7px;height:7px;background:#fff;opacity:0.15;border-radius:1px;\"></div>'; }).join('') + '</div>'
+        + '<div style="font-family:Bebas Neue,sans-serif;font-size:16px;color:#fff;letter-spacing:3px;white-space:nowrap;text-shadow:0 0 20px rgba(255,255,255,0.8),0 0 40px rgba(255,255,255,0.4);">NATIONAL LEVEL HUNTER</div>'
+        + '<div style=\"display:flex;gap:3px;align-items:center;\">' + ['E','D','C','B','A','S','S+'].map(function(r){ return '<div style=\"width:7px;height:7px;background:#fff;opacity:0.15;border-radius:1px;\"></div>'; }).join('') + '</div>'
+        + '</div>'
+        + '<div style="font-family:Space Mono,monospace;font-size:7px;letter-spacing:2px;color:#555;white-space:nowrap;">MAXIMUM RANK · ' + data.totalXP.toLocaleString('en-US') + ' XP</div>'
+        + '</div>';
 
-      return '<div style="' + chipStyle + '">' + r.rank + '</div>';
-    }).join('');
+    } else {
+      chipsEl.style.cssText = '';
+      const _rb2 = document.getElementById('roadmapBarcode'); if (_rb2) _rb2.style.display = '';
+      const CC = { E:'#e74c3c', D:'#e67e22', C:'#f1c40f', B:'#2ecc71', A:'#1abc9c', S:'#3498db', 'S+':'#a855f7', NL:'#ffffff' };
+      chipsEl.innerHTML = RANKS.map(r => {
+        const isCurrent = r.rank === rank.rank;
+        const isPast = r.minXP <= rank.minXP;
+        const chipColor = CC[r.rank] || '#555';
+        let chipStyle = 'font-family:Bebas Neue,sans-serif;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;border-radius:3px;transition:all 0.3s;';
+        if (isCurrent) {
+          chipStyle += 'font-size:14px;width:33px;height:33px;background:' + chipColor + ';color:#fff;'
+            + 'border:2px solid ' + chipColor + ';transform:scale(1.1);box-shadow:0 0 14px ' + chipColor + ',0 0 28px ' + chipColor + '44;'
+            + 'margin:0 6px;';
+        } else if (isPast) {
+          chipStyle += 'font-size:10px;width:25px;height:25px;background:' + chipColor + '22;color:#fff;'
+            + 'border:1px solid ' + chipColor + '88;opacity:0.8;';
+        } else {
+          chipStyle += 'font-size:10px;width:20px;height:20px;background:' + chipColor + '18;color:#fff;'
+            + 'border:1px solid ' + chipColor + '55;opacity:0.55;';
+        }
+        return '<div style="' + chipStyle + '">' + r.rank + '</div>';
+      }).join('');
+    }
   }
 
   // Rank letter — animated per rank
@@ -5270,7 +5334,7 @@ function updateHunterCard() {
     const pct = nextRank ? Math.min(100, ((data.totalXP - rangeStart) / (rangeEnd - rangeStart)) * 100) : 100;
     xpBar.style.width = pct + '%';
     xpBar.style.background = rank.barColor || rank.color;
-    if (xpDisplay) xpDisplay.textContent = data.totalXP.toLocaleString() + ' / ' + rangeEnd.toLocaleString() + ' XP';
+    if (xpDisplay) xpDisplay.textContent = nextRank ? data.totalXP.toLocaleString('en-US') + ' / ' + rangeEnd.toLocaleString('en-US') + ' XP' : 'MAX RANK';
   }
 
   // Level bar
@@ -5279,7 +5343,7 @@ function updateHunterCard() {
   if (levelBar) {
     const prog = xpProgressInLevel(data.totalXP);
     levelBar.style.width = ((prog.current / prog.needed) * 100) + '%';
-    if (levelDisplay) levelDisplay.textContent = 'LVL ' + level + '  ·  ' + prog.current + '/' + prog.needed;
+    if (levelDisplay) levelDisplay.textContent = 'LVL ' + level + ' · ' + prog.current + '/' + prog.needed;
   }
 
   // Card border + profile rank letter
@@ -5857,8 +5921,8 @@ function buildRewardShop() {
   ['topCoinBalance','coinBalance','rewardPageBalance','statCoins'].forEach(id => {
     const el = document.getElementById(id);
     if (el) {
-      if (id === 'statCoins') el.textContent = '🪙 ' + coins.toLocaleString();
-      else el.textContent = '🪙 ' + coins.toLocaleString();
+      if (id === 'statCoins') el.textContent = '🪙 ' + coins.toLocaleString('en-US');
+      else el.textContent = '🪙 ' + coins.toLocaleString('en-US');
       el.style.color = 'rgba(220,220,220,0.85)';
     }
   });
@@ -5875,7 +5939,7 @@ function buildRewardShop() {
       tile.innerHTML = '<div style="font-size:24px;margin-bottom:6px;">' + r.icon + '</div>'
         + '<div style="font-family:Bebas Neue,sans-serif;font-size:15px;color:var(--white);line-height:1.1;margin-bottom:2px;">' + r.name + '</div>'
         + '<div style="font-family:Space Mono,monospace;font-size:10px;color:var(--muted);margin-bottom:8px;line-height:1.4;flex:1;">' + r.desc + '</div>'
-        + '<div style="font-family:Bebas Neue,sans-serif;font-size:20px;color:#f0d878;margin-bottom:8px;">🪙 ' + r.cost.toLocaleString() + '</div>'
+        + '<div style="font-family:Bebas Neue,sans-serif;font-size:20px;color:#f0d878;margin-bottom:8px;">🪙 ' + r.cost.toLocaleString('en-US') + '</div>'
         + '<div class="reward-btn-wrap">'
         + (isRedeemed
           ? '<div style="font-family:Space Mono,monospace;font-size:10px;color:var(--muted);letter-spacing:1px;padding:6px 0;">REDEEMED ✓</div>'
@@ -6008,7 +6072,7 @@ function buildActivityCalendar() {
         const q2 = allQuests.find(x => x.id === id);
         return s + (q2 ? Math.round(q2.xp/10) : 0);
       }, 0);
-      return '<div style="font-family:Space Mono,monospace;font-size:9px;color:#2ecc71;margin-top:2px;line-height:1.4;">+' + rawXP.toLocaleString() + ' xp</div>'
+      return '<div style="font-family:Space Mono,monospace;font-size:9px;color:#2ecc71;margin-top:2px;line-height:1.4;">+' + rawXP.toLocaleString('en-US') + ' xp</div>'
            + '<div style="font-family:Space Mono,monospace;font-size:9px;color:#f0d878;">+' + rawCoins + ' 🪙</div>';
     })()
         : isFuture ? '<div style="font-family:Space Mono,monospace;font-size:10px;color:var(--gray4);">—</div>'
@@ -6028,6 +6092,7 @@ function setAccentColor(rank) {
   const hex = rank.color.replace('#','');
   const rv = parseInt(hex.slice(0,2),16)||255, gv = parseInt(hex.slice(2,4),16)||255, bv = parseInt(hex.slice(4,6),16)||255;
   root.style.setProperty('--gold', rank.color);
+  root.style.setProperty('--nav-tab-active-color', rank.rank === 'NL' ? '#000000' : rank.color);
   root.style.setProperty('--rank-rgb', rv+','+gv+','+bv);
   root.style.setProperty('--gold-dim', 'rgba('+rv+','+gv+','+bv+',0.15)');
   root.style.setProperty('--gold-bright', 'rgba('+rv+','+gv+','+bv+',0.9)');
@@ -6039,7 +6104,10 @@ function setAccentColor(rank) {
   if (heroStrip) heroStrip.style.borderBottomColor = rank.color;
   const navBar = document.getElementById('navAccentBar');
   if (navBar) navBar.style.background = rank.color;
-  document.querySelectorAll('.nav-tab.active').forEach(el => { el.style.borderBottomColor = rank.color; el.style.borderLeftColor = rank.color; el.style.color = rank.color; });
+  document.querySelectorAll('.nav-tab').forEach(el => {
+    el.classList.toggle('nl-active', el.classList.contains('active') && rank.rank === 'NL');
+  });
+  document.querySelectorAll('.nav-tab.active').forEach(el => { el.style.borderBottomColor = rank.color; el.style.borderLeftColor = rank.color; });
   document.querySelectorAll('.rm-section-header').forEach(el => { el.style.color = rank.color; });
   const xpBar = document.getElementById('xpBar');
   if (xpBar) xpBar.style.boxShadow = '0 0 8px rgba('+rv+','+gv+','+bv+',0.6)';
@@ -6094,8 +6162,8 @@ function setAccentColor(rank) {
   // Sidebar active nav-tab
   document.querySelectorAll('#sidebar .nav-tab.active').forEach(el => {
     el.style.borderLeftColor = rank.color;
-    el.style.color = rank.color;
-    el.style.background = 'rgba('+rv+','+gv+','+bv+',0.08)';
+    el.style.color = rank.rank === 'NL' ? '#000000' : rank.color;
+    el.style.background = rank.rank === 'NL' ? '#ffffff' : 'rgba('+rv+','+gv+','+bv+',0.08)';
   });
   // Hunter card + profile card border color
   const hc = document.getElementById('hunterCard');
@@ -6513,8 +6581,12 @@ function applyRankIconToElement(elId, rank) {
   el.style.borderRadius = '';
   el.style.padding = '';
   el.className = 'rank-letter-base' + (anim !== 'none' ? ' rank-anim-' + anim : '');
-  el.style.color = rank.color;
-  el.style.textShadow = anim === 'none' ? '0 0 20px ' + rank.glow : '';
+  // NL on license cards: use gold instead of white so it's visible on dark backgrounds
+  const isLicenseEl = elId === 'profileRankLetter' || elId === 'rankLetter';
+  const displayColor = rank.color;
+  const displayGlow  = rank.glow;
+  el.style.color = displayColor;
+  el.style.textShadow = anim === 'none' ? '0 0 20px ' + displayGlow : '';
 }
 
 function showRankUp(rank) {
@@ -7078,6 +7150,8 @@ function testCoinAnimations() {
   }
   next();
 }
+
+
 
 
 // ── Dev reset — tap 3 times to confirm ──
@@ -8253,7 +8327,7 @@ function buildStakesOverlay() {
   const rankXPStart = rank.minXP;
   const rankXPEnd = nextRank ? nextRank.minXP : rank.minXP + 10000;
   const rankPct = nextRank ? Math.min(100, ((data.totalXP - rankXPStart) / (rankXPEnd - rankXPStart)) * 100) : 100;
-  const xpToNext = nextRank ? (nextRank.minXP - data.totalXP).toLocaleString() : '—';
+  const xpToNext = nextRank ? (nextRank.minXP - data.totalXP).toLocaleString('en-US') : '—';
   document.getElementById('stakes-rank-block').innerHTML =
     '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;">'
     + '<div>'
@@ -8262,7 +8336,7 @@ function buildStakesOverlay() {
     + '<div style="font-family:Bebas Neue,sans-serif;font-size:36px;line-height:1;color:'+rank.color+';text-shadow:0 0 20px '+rank.color+'66;">'+rank.rank+'</div>'
     + '<div>'
     + '<div style="font-family:DM Sans,sans-serif;font-size:12px;font-weight:600;color:var(--text2);">'+rank.title+'</div>'
-    + '<div style="font-family:Space Mono,monospace;font-size:9px;color:var(--muted);margin-top:2px;">Level '+level+' · '+data.totalXP.toLocaleString()+' XP</div>'
+    + '<div style="font-family:Space Mono,monospace;font-size:9px;color:var(--muted);margin-top:2px;">Level '+level+' · '+data.totalXP.toLocaleString('en-US')+' XP</div>'
     + '</div></div></div>'
     + (nextRank ? '<div style="text-align:right;"><div style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;">Next</div><div style="font-family:Bebas Neue,sans-serif;font-size:22px;color:#333;margin-top:2px;">'+nextRank.rank+'</div></div>' : '')
     + '</div>'
@@ -8366,7 +8440,7 @@ function buildStakesOverlay() {
   // Next rank
   if (nextRank) {
     const xpNeeded = nextRank.minXP - data.totalXP;
-    closeItems.push({ icon: nextRank.rank, label: 'Rank '+nextRank.rank+' — '+nextRank.title, sub: xpNeeded.toLocaleString()+' XP needed', pct: Math.round(rankPct), color: nextRank.color });
+    closeItems.push({ icon: nextRank.rank, label: 'Rank '+nextRank.rank+' — '+nextRank.title, sub: xpNeeded.toLocaleString('en-US')+' XP needed', pct: Math.round(rankPct), color: nextRank.color });
   }
 
   // Next weight milestone
@@ -8380,7 +8454,7 @@ function buildStakesOverlay() {
   }).sort((a,b) => a.cost - b.cost)[0];
   if (nextReward) {
     const coinPct = Math.min(100, Math.round((coins / nextReward.cost) * 100));
-    closeItems.push({ icon: nextReward.icon, label: nextReward.name, sub: (nextReward.cost-coins)+' coins to go · have '+coins.toLocaleString(), pct: coinPct, color:'#f0d878' });
+    closeItems.push({ icon: nextReward.icon, label: nextReward.name, sub: (nextReward.cost-coins)+' coins to go · have '+coins.toLocaleString('en-US'), pct: coinPct, color:'#f0d878' });
   }
 
   // Next streak milestone
