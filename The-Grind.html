@@ -6,8 +6,19 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
-<title>Road 2 The Marathon Continues — The Grind</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<title>R2TMC — The Grind</title>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -7111,7 +7122,7 @@ function buildSkillTree() {
   const data = getXPData();
 
   const SKILLS = [
-    { id:'runner',  name:'The Runner',     icon:'🏃', color:'#e74c3c', desc:'Miles on the road',
+    { id:'runner',  name:'The Runner',     icon:'🏃', color:'#e74c3c', desc:'Miles on the Road',
       score: d => Math.min(100, Math.round((countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')+countQuestDone(d,'halfmarathon'))*2.5)),
       nodes:[
         {label:'First Run',    tip:'Log your first run of any distance.',                req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=1},
@@ -7121,7 +7132,7 @@ function buildSkillTree() {
         {label:'Marathoner',   tip:'80 sessions. Built for distance.',                  req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=80},
       ]
     },
-    { id:'lifter',  name:'The Lifter',     icon:'💪', color:'#e67e22', desc:'Push · pull · legs — building the frame',
+    { id:'lifter',  name:'The Lifter',     icon:'💪', color:'#e67e22', desc:'Push · Pull · Legs — Building the Frame',
       score: d => Math.min(100, Math.round((countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs'))*2)),
       nodes:[
         {label:'First Lift',   tip:'Complete your first Push, Pull, or Leg day.',       req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=1},
@@ -7131,7 +7142,7 @@ function buildSkillTree() {
         {label:'Architect',    tip:'120 sessions. You built this body from scratch.',   req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=120},
       ]
     },
-    { id:'hooper',  name:'The Hooper',     icon:'🏀', color:'#ff6b35', desc:'Court sessions — cardio disguised as fun',
+    { id:'hooper',  name:'The Hooper',     icon:'🏀', color:'#ff6b35', desc:'Court Sessions — Cardio Disguised as Fun',
       score: d => Math.min(100, Math.round((countQuestDone(d,'ball')+countQuestDone(d,'ballprac'))*5)),
       nodes:[
         {label:'First Bucket', tip:'Hit the court or practice for the first time.',     req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=1},
@@ -7141,7 +7152,7 @@ function buildSkillTree() {
         {label:'The Hooper',   tip:'50 sessions. The court shaped the body.',           req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=50},
       ]
     },
-    { id:'mover',   name:'The Mover',      icon:'🚶', color:'#2ecc71', desc:'Steps · walks — active every single day',
+    { id:'mover',   name:'The Mover',      icon:'🚶', color:'#2ecc71', desc:'Steps · Walks — Active Every Single Day',
       score: d => Math.min(100, Math.round((countQuestDone(d,'steps')+countQuestDone(d,'steps15')+countQuestDone(d,'outdoor'))*3)),
       nodes:[
         {label:'First Steps',  tip:'First 10K step day or outdoor walk.',               req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=1},
@@ -7151,7 +7162,7 @@ function buildSkillTree() {
         {label:'Never Sits',   tip:'60 days. Moving is just who you are now.',          req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=60},
       ]
     },
-    { id:'monk',    name:'The Monk',       icon:'🧘', color:'#1abc9c', desc:'Mobility · sleep · hydration · cold',
+    { id:'monk',    name:'The Monk',       icon:'🧘', color:'#1abc9c', desc:'Mobility · Sleep · Hydration · Cold',
       score: d => Math.min(100, Math.round(
         countQuestDone(d,'mobility')*4 +
         countQuestDone(d,'sleep')*4 +
@@ -7166,7 +7177,7 @@ function buildSkillTree() {
         {label:'The Monk',      tip:'60 combined wellness days. Untouchable.',          req:d=>countQuestDone(d,'mobility')+countQuestDone(d,'sleep')+countQuestDone(d,'hydrate')+countQuestDone(d,'cold')>=60},
       ]
     },
-    { id:'streak',  name:'Mr. Consistent', icon:'🔥', color:'#f0d878', desc:'Showing up every day — never breaking the chain',
+    { id:'streak',  name:'Mr. Consistent', icon:'🔥', color:'#f0d878', desc:'Showing Up Every Day — Never Breaking the Chain',
       score: d => Math.min(100, Math.round((d.streak||0)*3.3)),
       nodes:[
         {label:'3-Day Chain',  tip:'3 days straight. The chain is starting.',           req:d=>(d.streak||0)>=3},
@@ -7253,31 +7264,25 @@ function buildSkillTree() {
       +'<div style="font-family:Space Mono,monospace;font-size:7px;color:#3a3a3a;margin-top:1px;">'+skill.desc+'</div>'
       +'</div>'
       +'</div>'
-      // Score bar with tier markers
-      +'<div style="position:relative;height:6px;background:#0d0d0d;border-radius:4px;margin-bottom:6px;overflow:visible;border:1px solid #1a1a1a;">'
-      + tierMarkers
-      +'<div class="skill-bar-fill" data-target="'+score+'" style="height:100%;width:0%;border-radius:4px;background:linear-gradient(90deg,'+skill.color+'99,'+skill.color+');box-shadow:0 0 8px '+skill.color+'55;transition:width 1.4s cubic-bezier(0.4,0,0.2,1);"></div>'
-      +'</div>'
-      // Level bar — fully inlined
+      // Level bar — static HTML, width set after append (roadmap pattern)
       +(function(sid, c, d){
         var sl=getSkillLevel(sid,d), isS=sid==='streak';
-        var pct=sl.level>=30?100:isS?Math.round(sl.progress/sl.target*100):Math.round((sl.level-1)/29*100);
         var lc=sl.level>=20?c:sl.level>=10?c+'bb':c+'88';
-        var hint=sl.level>=30?'MAX':isS?sl.target+'-day streak → LVL '+(sl.level+1):(sl.target-sl.progress)+' more → LVL '+(sl.level+1);
-        var stat=isS?'best '+(d.longestStreak||d.streak||0)+'d':sl.count+' total';
-        var journeyPct=pct;
+        // Capitalize hint — accent color, bigger
+        var hintRaw=sl.level>=30?'Max':isS?(sl.target+'-Day Streak to LVL '+(sl.level+1)):((sl.target-sl.progress)+' More to LVL '+(sl.level+1));
+        // Capitalize stat tracker
+        var statMap={runner:'Run',lifter:'Lift',hooper:'Session',mover:'Active Day',monk:'Action'};
+        var statUnit=statMap[sid]||'Session';
+        var statRaw=isS?'Highest Streak: '+(d.longestStreak||d.streak||0)+' Days':sl.count+' '+statUnit+(sl.count!==1?'s':'');
         return '<div style="margin-bottom:8px;">'
           +'<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px;">'
-          +'<div style="display:flex;align-items:baseline;gap:5px;">'
           +'<span style="font-family:Bebas Neue,sans-serif;font-size:14px;color:'+lc+';letter-spacing:2px;line-height:1;">LVL '+sl.level+'</span>'
-          +'<span style="font-family:Space Mono,monospace;font-size:6px;color:'+lc+'99;">'+journeyPct+'%</span>'
-          +'</div>'
-          +'<div style="display:flex;gap:6px;">'
-          +'<span style="font-family:Space Mono,monospace;font-size:6px;color:#333;">'+stat+'</span>'
-          +'<span style="font-family:Space Mono,monospace;font-size:6px;color:#444;">'+hint+'</span>'
+          +'<div style="display:flex;gap:8px;align-items:baseline;">'
+          +'<span style="font-family:Space Mono,monospace;font-size:7px;color:#555;">'+statRaw+'</span>'
+          +'<span style="font-family:Space Mono,monospace;font-size:8px;color:'+c+';font-weight:bold;">'+hintRaw+'</span>'
           +'</div></div>'
-          +'<div style="height:4px;background:#0d0d0d;border-radius:2px;overflow:hidden;border:1px solid #1a1a1a;">'
-          +'<div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,'+lc+'88,'+lc+');border-radius:2px;"></div>'
+          +'<div style="height:4px;background:#1a1a1a;overflow:hidden;border-radius:2px;">'
+          +'<div id="skt-lvl-'+sid+'" style="height:100%;width:0%;background:'+c+';border-radius:2px;transition:width 0.8s ease;"></div>'
           +'</div></div>';
       })(skill.id, skill.color, data)
 
@@ -7291,10 +7296,23 @@ function buildSkillTree() {
     el.appendChild(card);
   });
 
-  // Animate skill score bars
+  // Animate skill score bars (roadmap pattern)
   requestAnimationFrame(() => requestAnimationFrame(() => {
     el.querySelectorAll('.skill-bar-fill').forEach(b => { b.style.width = b.dataset.target + '%'; });
   }));
+
+  // Set skill level bar widths — same pattern as levelBar in updateHunterCard
+  SKILLS.forEach(function(skill) {
+    var bar = document.getElementById('skt-lvl-' + skill.id);
+    if (!bar) return;
+    var sl = getSkillLevel(skill.id, data);
+    var isS = skill.id === 'streak';
+    var pct = sl.level >= 30 ? 100
+      : sl.level <= 1 ? 0
+      : isS ? Math.round(sl.progress / sl.target * 100)
+      : Math.round((sl.level - 1) / 29 * 100);
+    bar.style.width = pct + '%';
+  });
 
 
 
