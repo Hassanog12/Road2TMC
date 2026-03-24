@@ -7,7 +7,18 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
 <title>R2TMC — The Grind</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -7374,7 +7385,7 @@ function showWeeklyRecap() {
   let totalDays = 0, totalXP = 0;
   const wdata = getWeightData();
   const log = wdata.log || [];
-  const weightChange = log.length > 1 ? (log[Math.min(7,log.length-1)].weight - log[0].weight).toFixed(1) : null;
+  const weightChange = log.length > 1 ? (log[0].weight - log[Math.min(7,log.length-1)].weight).toFixed(1) : null;
 
   for (let i = 1; i <= 7; i++) {
     const d = new Date(now); d.setDate(now.getDate() - i);
@@ -7689,6 +7700,31 @@ function initXPSystem() {
     saveXPData(data);
     localStorage.setItem('grind_activity_patch_v6', '1');
   }
+  // Patch v7 — Monday March 23 activity
+  if (!localStorage.getItem('grind_activity_patch_v7')) {
+    if (!data.dailyQuests['2026-3-23']) data.dailyQuests['2026-3-23'] = {};
+    data.dailyQuests['2026-3-23'].hydrate  = true;
+    data.dailyQuests['2026-3-23'].mobility = true;
+    data.dailyQuests['2026-3-23'].cold     = true;
+    data.dailyQuests['2026-3-23'].outdoor  = true;
+    data.totalXP = (data.totalXP || 0) + 300;
+    data.coins   = (data.coins   || 0) + 38;
+    data.level   = getLevelFromXP(data.totalXP);
+    data.streak  = 7;
+    data.lastActiveDate = '2026-3-23';
+    if (!data.longestStreak || data.streak > data.longestStreak) data.longestStreak = data.streak;
+    data.streakSkillProgress = (data.streakSkillProgress || 0) + 1;
+    data.lastStreakSkillDate = '2026-3-23';
+    if (!data.coinHistory) data.coinHistory = [];
+    data.coinHistory.unshift({ icon:'🌿', label:'Outdoor Walk',  amount:11, date:'3/23/2026' });
+    data.coinHistory.unshift({ icon:'🧊', label:'Cold Shower',   amount:9,  date:'3/23/2026' });
+    data.coinHistory.unshift({ icon:'🧘', label:'Mobility',      amount:10, date:'3/23/2026' });
+    data.coinHistory.unshift({ icon:'💧', label:'2L Water',      amount:8,  date:'3/23/2026' });
+    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
+    saveXPData(data);
+    localStorage.setItem('grind_activity_patch_v7', '1');
+  }
+
 
   checkPunishment();
   updateHunterCard();
