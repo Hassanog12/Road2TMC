@@ -6,8 +6,19 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
-<title>Road to the Marathon Continues</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<title>R2TMC — The Grind</title>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -5416,7 +5427,7 @@ const BASE_QUESTS = [
   { id:'halfmarathon', label:'Half Marathon',   icon:'🥇', xp:1000, type:'cardio',   row:'cardio' },
   // ── Movement ──
   { id:'steps',        label:'10K Steps',       icon:'🚶', xp:175,  type:'movement', row:'movement' },
-  { id:'ballprac',      label:'Hoop Practice',   icon:'🏀', xp:120,  type:'movement', row:'movement'    },
+  { id:'ballprac',      label:'Sports Practice',  icon:'🏀', xp:125,  type:'movement', row:'movement'    },
   { id:'outdoor',      label:'Outdoor Walk',    icon:'🌳', xp:90,   type:'movement', row:'movement' },
   // ── Wellness ──
   { id:'hydrate',      label:'2L Water',        icon:'💧', xp:60,   type:'wellness', row:'wellness' },
@@ -5428,7 +5439,7 @@ const BASE_QUESTS = [
   { id:'book',         label:'Book Logged',     icon:'📖', xp:0,    type:'wellness', row:'hidden' },
   { id:'fasted',       label:'Fasted Workout',  icon:'⚡', xp:180,  type:'lifting',  row:'hidden' },
   { id:'steps15',      label:'15K Steps',       icon:'👟', xp:150,  type:'movement', row:'hidden' },
-  { id:'ball',         label:'Hoop Session',    icon:'🏀', xp:200,  type:'cardio',   row:'hidden' },
+  { id:'ball',         label:'Sports Game',     icon:'🏀', xp:250,  type:'cardio',   row:'hidden' },
   { id:'race',         label:'Race Day',        icon:'🥇', xp:1500, type:'cardio',   row:'hidden' },
 ];
 
@@ -5514,7 +5525,7 @@ function buildQuestGrid() {
     if (id === 'longrun') return { ...q, label: tier.longRunMiles + ' Mile Long Run' };
     return q;
   }).filter(Boolean);
-  const movementQuests = ['steps','ballprac','outdoor'].map(id => BASE_QUESTS.find(q => q.id === id)).filter(Boolean);
+  movementQuests = ['steps','outdoor'].map(id => BASE_QUESTS.find(q => q.id === id)).filter(Boolean);
   // Wellness: hydrate + mobility always show, rotate sleep/cold as 3rd slot daily
   const daySeed = parseInt(today.replace(/-/g,'')) || 1;
   const wellnessThird = (daySeed % 2 === 0) ? 'sleep' : 'cold';
@@ -5539,6 +5550,39 @@ function buildQuestGrid() {
       if (isDone) totalEarned += q.xp;
       el.appendChild(makeQuestTile(q, isDone, 'daily', isLocked));
     });
+    // Inject Sports tile into movement row
+    if (row.id === 'questRow-consistency') {
+      const todayQ = data.dailyQuests[today] || {};
+      const pracDone = !!todayQ['ballprac'] && todayQ['ballprac'] !== 'locked';
+      const gameDone = !!todayQ['ball'] && todayQ['ball'] !== 'locked';
+      const sportsDone = pracDone || gameDone;
+      const sportsXP = gameDone ? 250 : pracDone ? 125 : 0;
+      const sportsLabel = gameDone ? 'Sports Game' : pracDone ? 'Sports Practice' : 'Sports';
+      if (sportsDone) totalEarned += sportsXP;
+      const sportsTile = document.createElement('div');
+      sportsTile.className = 'quest-tile' + (sportsDone ? ' quest-done' : '');
+      sportsTile.innerHTML = '<div style="font-size:20px;margin-bottom:3px;">🏀</div>'
+        + '<div class="quest-name">' + sportsLabel + '</div>'
+        + '<div style="font-family:Space Mono,monospace;font-size:10px;color:var(--gold);letter-spacing:1px;margin-top:2px;">' + (sportsDone ? '+' + sportsXP + ' XP ✓' : '+125 / +250') + '</div>';
+      if (!sportsDone) {
+        sportsTile.onclick = () => {
+          const modal = document.createElement('div');
+          modal.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;';
+          const btnStyle = 'font-family:Space Mono,monospace;font-size:9px;padding:14px 0;width:110px;background:#111;border:1px solid var(--gold);color:var(--gold);cursor:pointer;letter-spacing:1px;text-transform:uppercase;';
+          modal.innerHTML = '<div style="background:#0a0a0a;border:1px solid #333;padding:28px 32px;text-align:center;min-width:280px;">'
+            + '<div style="font-family:Space Mono,monospace;font-size:9px;letter-spacing:3px;color:#555;text-transform:uppercase;margin-bottom:20px;">🏀 Sports</div>'
+            + '<div style="display:flex;gap:12px;justify-content:center;">'
+            + '<button id="sp-prac" style="' + btnStyle + '">Practice<br><span style="font-size:8px;color:#555;letter-spacing:0;">+125 XP</span></button>'
+            + '<button id="sp-game" style="' + btnStyle + '">Game<br><span style="font-size:8px;color:#555;letter-spacing:0;">+250 XP</span></button>'
+            + '</div></div>';
+          document.body.appendChild(modal);
+          modal.querySelector('#sp-prac').onclick = () => { modal.remove(); earnQuestXP('ballprac','daily',null); };
+          modal.querySelector('#sp-game').onclick = () => { modal.remove(); earnQuestXP('ball','daily',null); };
+          modal.onclick = (e) => { if(e.target===modal) modal.remove(); };
+        };
+      }
+      el.appendChild(sportsTile);
+    }
   });
 
   const xpEl = document.getElementById('dailyXPEarned');
