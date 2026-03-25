@@ -7,7 +7,18 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
 <title>R2TMC — The Grind</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -3576,7 +3587,7 @@ function buildRunnerTierCard() {
   const btns = document.getElementById('runnerTierOverrideBtns');
   if (lbl) { lbl.textContent = tier.label; lbl.style.color = 'var(--gold)'; }
   if (wm)  wm.textContent  = tier.weeklyMiles + ' mi/wk';
-  if (lr)  lr.textContent  = tier.longRunMiles + ' miles';
+  if (lr)  lr.textContent  = tier.longRunLabel || tier.longRunMiles + ' miles';
   if (pc)  pc.textContent  = 'Sub ' + formatPace(tier.paceSec);
   if (ss && tier.sessionLabel) ss.textContent = tier.sessionLabel;
   if (btns) {
@@ -5352,12 +5363,13 @@ function updateHunterCard() {
 // RUNNER TIER SYSTEM
 // ═══════════════════════════════════════
 const RUNNER_TIERS = {
-  rookie:     { icon:'◆', label:'Fresh Legs',    ranks:['E','D'],    weeklyMiles:8,  longRunMiles:3,  paceSec:720, cardioQuests:['run1','run5k','longrun'] },
-  builder:    { icon:'◆', label:'In Motion',     ranks:['C'],         weeklyMiles:12, longRunMiles:5,  paceSec:690, cardioQuests:['run1','run5k','longrun'] },
-  runner:     { icon:'◆', label:'Runner',        ranks:['B'],         weeklyMiles:18, longRunMiles:8,  paceSec:660, cardioQuests:['run5k','run10k','longrun'] },
-  roadwarrior:{ icon:'◆', label:'Road Warrior',  ranks:['A'],         weeklyMiles:25, longRunMiles:12, paceSec:600, cardioQuests:['run5k','run10k','longrun'] },
-  elite:      { icon:'◆', label:'Pacer',         ranks:['S','S+'],    weeklyMiles:35, longRunMiles:16, paceSec:540, cardioQuests:['run10k','longrun','halfmarathon'] },
-  nl:         { icon:'◆', label:'Marathoner',    ranks:['NL'],        weeklyMiles:50, longRunMiles:20, paceSec:480, cardioQuests:['run10k','halfmarathon','longrun'] },
+  rookie:     { icon:'◆', label:'Fresh Legs',    ranks:['E'],        weeklyMiles:8,  longRunMiles:3,  paceSec:720, cardioQuests:['run1','run2','run5k'],   longRunLabel:'3 Mile Long Run (5K)' },
+  building:   { icon:'◆', label:'Building',      ranks:['D'],        weeklyMiles:12, longRunMiles:3,  paceSec:720, cardioQuests:['run1','run2','run5k'],   longRunLabel:'3 Mile Long Run (5K)' },
+  builder:    { icon:'◆', label:'In Motion',     ranks:['C'],         weeklyMiles:12, longRunMiles:5,  paceSec:690, cardioQuests:['run1','run5k','longrun'],  longRunLabel:'5 Mile Long Run' },
+  runner:     { icon:'◆', label:'Runner',        ranks:['B'],         weeklyMiles:18, longRunMiles:8,  paceSec:660, cardioQuests:['run5k','run10k','longrun'],  longRunLabel:'8 Mile Long Run' },
+  roadwarrior:{ icon:'◆', label:'Road Warrior',  ranks:['A'],         weeklyMiles:25, longRunMiles:12, paceSec:600, cardioQuests:['run5k','run10k','longrun'], longRunLabel:'12 Mile Long Run' },
+  elite:      { icon:'◆', label:'Pacer',         ranks:['S','S+'],    weeklyMiles:35, longRunMiles:16, paceSec:540, cardioQuests:['run10k','longrun','halfmarathon'], longRunLabel:'16 Mile Long Run' },
+  nl:         { icon:'◆', label:'Marathoner',    ranks:['NL'],        weeklyMiles:50, longRunMiles:20, paceSec:480, cardioQuests:['run10k','halfmarathon','longrun'], longRunLabel:'20 Mile Long Run' },
 };
 function getRunnerTier(rankStr) {
   const override = localStorage.getItem('runnerTierOverride');
@@ -5408,6 +5420,7 @@ const BASE_QUESTS = [
   { id:'legs',         label:'Leg Day',         icon:'🦵', xp:300,  type:'lifting',  row:'lifting' },
   // ── Cardio (dynamic by tier) ──
   { id:'run1',         label:'Run 1 Mile',      icon:'🏃', xp:150,  type:'cardio',   row:'cardio' },
+  { id:'run2',         label:'Run 2 Miles',     icon:'🏃', xp:220,  type:'cardio',   row:'cardio' },
   { id:'run5k',        label:'Run a 5K',        icon:'🏁', xp:350,  type:'cardio',   row:'cardio' },
   { id:'run10k',       label:'Run a 10K',       icon:'🛣️', xp:550,  type:'cardio',   row:'cardio' },
   { id:'longrun',      label:'Long Run',        icon:'🏔️', xp:600,  type:'cardio',   row:'cardio' },
@@ -5586,7 +5599,7 @@ function earnQuestXP(questId, type, e) {
 
   // Check already done
   // Run quest guard — if a higher run quest is already completed today, bail immediately
-  const RUN_CHAIN_CHECK = ['run1','run5k','run10k','longrun','halfmarathon'];
+  const RUN_CHAIN_CHECK = ['run1','run2','run5k','run10k','longrun','halfmarathon'];
   const thisRunIdx = RUN_CHAIN_CHECK.indexOf(questId);
   if (thisRunIdx >= 0 && type !== 'weekly') {
     const todayQ = data.dailyQuests[today] || {};
@@ -5605,7 +5618,7 @@ function earnQuestXP(questId, type, e) {
     data.dailyQuests[today][questId] = true;
     // Run quest hierarchy — logging a higher run locks lower ones
     // If a lower run was already completed, refund its XP + coins first
-    const RUN_CHAIN = ['run1','run5k','run10k','longrun','halfmarathon'];
+    const RUN_CHAIN = ['run1','run2','run5k','run10k','longrun','halfmarathon'];
     const allQuestsForRun = [...BASE_QUESTS, ...WEEKLY_QUESTS];
     const runIdx = RUN_CHAIN.indexOf(questId);
     if (runIdx > 0) {
@@ -6023,7 +6036,7 @@ function buildActivityCalendar() {
     const allQuests = [...BASE_QUESTS, ...WEEKLY_QUESTS];
     // Support both boolean (true) and object ({done,xp,coins,icon}) formats
     // For run quests, only show the highest completed one
-    const RUN_CHAIN_CAL = ['halfmarathon','longrun','run10k','run5k','run1'];
+    const RUN_CHAIN_CAL = ['halfmarathon','longrun','run10k','run5k','run2','run1'];
     let topRunIcon = null;
     for (const rid of RUN_CHAIN_CAL) {
       const rv = dayDone[rid];
@@ -6032,7 +6045,7 @@ function buildActivityCalendar() {
         if (rq) { topRunIcon = { id: rid, icon: rq.icon }; break; }
       }
     }
-    const RUN_IDS = new Set(['run1','run5k','run10k','longrun','halfmarathon']);
+    const RUN_IDS = new Set(['run1','run2','run5k','run10k','longrun','halfmarathon']);
     const icons = questIds
       .filter(id => dayDone[id] !== 'locked')
       .filter(id => !RUN_IDS.has(id) || (topRunIcon && id === topRunIcon.id))
@@ -6834,7 +6847,7 @@ function getSkillLevel(skillId, data) {
   const dq = data.dailyQuests || {};
   const wq = data.weeklyQuests || {};
 
-  const RUN_IDS  = ['run1','run5k','run10k','longrun','halfmarathon'];
+  const RUN_IDS  = ['run1','run2','run5k','run10k','longrun','halfmarathon'];
   const LIFT_IDS = ['push','pull','legs'];
   const HOOP_IDS = ['ballprac','ball'];
   const MOVE_IDS = ['steps','steps15','outdoor'];
@@ -6845,7 +6858,8 @@ function getSkillLevel(skillId, data) {
     const target = reqs[banked];
     const progress = Math.min(data.streakSkillProgress || 0, target);
     const longest = data.longestStreak || data.streak || 0;
-    return { level: Math.max(1, banked + 1), progress, target, count: longest };
+    // Use target+1 so bar never fully fills until level actually banks
+    return { level: Math.max(1, banked + 1), progress, target: target + 1, count: longest };
   }
 
   // Count completions across all daily quests
