@@ -6,8 +6,19 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
-<title>Road to The Marathon Continues</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<title>R2TMC — The Grind</title>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -3487,35 +3498,62 @@ function resetLastRace() {
   if (!log.length) return;
   const last = log[0];
   const rt = RACE_TYPES[last.type] || {};
+
+  // Pre-calculate rank/level coin reversal before confirm
+  const data = getXPData();
+  const xpBefore    = data.totalXP || 0;
+  const xpAfter     = Math.max(0, xpBefore - last.xp);
+  const levelBefore = getLevelFromXP(xpBefore);
+  const levelAfter  = getLevelFromXP(xpAfter);
+  let bonusCoins = 0;
+  for (const r of RANKS) {
+    if (r.minXP > xpAfter && r.minXP <= xpBefore) bonusCoins += RANK_COIN_REWARDS[r.rank] || 0;
+  }
+  for (let l = levelAfter + 1; l <= levelBefore; l++) bonusCoins += LEVEL_COIN_REWARDS[l] || 0;
+  const totalCoinsLost = last.coins + bonusCoins;
+
   showResetConfirm(
     '↩ Undo Last Race',
-    'Remove <span style="color:' + (rt.color||'var(--gold)') + ';">' + last.icon + ' ' + last.label + ' on ' + last.date + '</span>? This will deduct <span style="color:#e74c3c;">-' + last.xp + ' XP</span> and <span style="color:#e74c3c;">-' + last.coins + ' 🪙</span>.',
+    'Remove <span style="color:' + (rt.color||'var(--gold)') + ';">' + last.icon + ' ' + last.label + ' on ' + last.date + '</span>?<br>XP lost: <span style="color:#e74c3c;">-' + last.xp + '</span> · Coins lost: <span style="color:#e74c3c;">-' + totalCoinsLost + ' 🪙</span>.',
     () => {
-      // Remove from race log
       log.shift();
       saveRaceLog(log);
 
-      // Deduct XP + coins
-      const data = getXPData();
-      data.totalXP = Math.max(0, (data.totalXP||0) - last.xp);
-      data.coins   = Math.max(0, (data.coins||0)   - last.coins);
+      const data2 = getXPData();
+      data2.totalXP = xpAfter;
+      data2.level   = levelAfter;
+      data2.coins   = Math.max(0, (data2.coins || 0) - totalCoinsLost);
 
-      // Remove race + run quest from that day
+      // Remove race + ALL associated run quests from that day
       const dStr = last.dateStr;
-      if (dStr && data.dailyQuests[dStr]) {
-        delete data.dailyQuests[dStr]['race'];
-        delete data.dailyQuests[dStr]['run5k'];
-        delete data.dailyQuests[dStr]['run10k'];
-        delete data.dailyQuests[dStr]['run1'];
+      if (dStr && data2.dailyQuests[dStr]) {
+        delete data2.dailyQuests[dStr]['race'];
+        delete data2.dailyQuests[dStr]['run5k'];
+        delete data2.dailyQuests[dStr]['run10k'];
+        delete data2.dailyQuests[dStr]['run1'];
+        delete data2.dailyQuests[dStr]['longrun'];
+        delete data2.dailyQuests[dStr]['halfmarathon'];
       }
 
-      // Remove from coin history
-      if (data.coinHistory) {
-        const idx = data.coinHistory.findIndex(e => e.label && e.label.includes('Race') && e.date === last.date);
-        if (idx !== -1) data.coinHistory.splice(idx, 1);
+      // Remove race coin history entry
+      if (data2.coinHistory) {
+        const idx = data2.coinHistory.findIndex(e => e.label && e.label.includes('Race') && e.date === last.date);
+        if (idx !== -1) data2.coinHistory.splice(idx, 1);
+        // Remove any rank/level reward entries that are now above the post-reset XP
+        data2.coinHistory = data2.coinHistory.filter(e => {
+          if (e.icon === '🏆') {
+            const rankMatch = RANKS.find(r => e.label === r.rank + ' Rank Achieved');
+            if (rankMatch && rankMatch.minXP > xpAfter) return false;
+          }
+          if (e.icon === '⬆️') {
+            const lvlMatch = e.label && e.label.match(/Level (\d+) Reward/);
+            if (lvlMatch && parseInt(lvlMatch[1]) > levelAfter) return false;
+          }
+          return true;
+        });
       }
 
-      saveXPData(data);
+      saveXPData(data2);
       buildRaceHistory();
       updateHunterCard();
       buildBadges();
@@ -5168,6 +5206,7 @@ function getXPData() {
       lastStreakSkillDate: d.lastStreakSkillDate|| null,
       longestStreak:      d.longestStreak      || 0,
       claimedMilestones:  d.claimedMilestones  || {},
+      punishedDates:      d.punishedDates       || {},
     };
   } catch { return { totalXP:0, level:1, coins:0, dailyQuests:{}, weeklyQuests:{}, streak:0, lastActiveDate:null, redeemedRewards:{}, coinHistory:[] }; }
 }
@@ -5502,7 +5541,7 @@ const BASE_QUESTS = [
   // ── Hidden ──
   { id:'weigh',        label:'Weigh In',        icon:'⚖️', xp:50,   type:'wellness', row:'hidden' },
   { id:'book',         label:'Book Logged',     icon:'📖', xp:0,    type:'wellness', row:'hidden' },
-  { id:'fasted',       label:'Fasted Workout',  icon:'⚡', xp:180,  type:'lifting',  row:'hidden' },
+  { id:'fasted',       label:'Fasted Workout',  icon:'⚡', xp:180,  type:'wellness', row:'hidden' },
   { id:'steps15',      label:'15K Steps',       icon:'👟', xp:150,  type:'movement', row:'hidden' },
   { id:'ball',         label:'Sports Game',     icon:'🏀', xp:250,  type:'cardio',   row:'hidden' },
   { id:'race',         label:'Race Day',        icon:'🥇', xp:1500, type:'cardio',   row:'hidden' },
@@ -5600,8 +5639,11 @@ function buildQuestGrid() {
   const hydrateQuest = getHydrateQuest(rank.rank);
   const fastedQuest = BASE_QUESTS.find(q => q.id === 'fasted');
   const isFastedDay = (new Date().getDay() === 1 || new Date().getDay() === 4);
-  const wellnessFirst = (isFastedDay && fastedQuest) ? fastedQuest : hydrateQuest;
-  const wellnessQuests = [wellnessFirst, BASE_QUESTS.find(q => q.id === 'mobility'), BASE_QUESTS.find(q => q.id === wellnessThird)].filter(Boolean);
+  // Mon/Thu: Mobility → Sleep/Cold → Fasted (hydrate replaced, fasted goes last)
+  // Other days: Hydrate → Mobility → Sleep/Cold
+  const wellnessQuests = isFastedDay && fastedQuest
+    ? [BASE_QUESTS.find(q => q.id === 'mobility'), BASE_QUESTS.find(q => q.id === wellnessThird), fastedQuest].filter(Boolean)
+    : [hydrateQuest, BASE_QUESTS.find(q => q.id === 'mobility'), BASE_QUESTS.find(q => q.id === wellnessThird)].filter(Boolean);
 
   const rows = [
     { id:'questRow-workout',     quests: liftingQuests.slice(0,3)   },
@@ -6046,17 +6088,20 @@ function resetWeeklyQuests(e) {
       data.coins   = Math.max(0, (data.coins || 0) - wTotalCoinsLost);
       data.level   = wLevelAfter;
       if (data.coinHistory) {
-        // Remove quest coin history entries by label, plus any rank/level reward entries this week
-        const resetLabels = new Set(doneIds.map(id => { const q = allQ.find(x => x.id === id); return q ? q.label : null; }).filter(Boolean));
-        // Also remove rank and level coin entries whose XP thresholds are now unreached
+        // Build a set of icon+label pairs for completed weekly quests
+        const resetPairs = new Set(doneIds.map(id => {
+          const q = allQ.find(x => x.id === id);
+          return q ? q.icon + '|' + q.label : null;
+        }).filter(Boolean));
         data.coinHistory = data.coinHistory.filter(e => {
-          if (resetLabels.has(e.label)) return false;
-          // Remove rank reward entries for ranks that are now above current XP
+          // Remove matching quest coin entries
+          if (resetPairs.has((e.icon || '') + '|' + (e.label || ''))) return false;
+          // Remove rank reward entries for ranks now above post-reset XP
           if (e.icon === '🏆') {
             const rankMatch = RANKS.find(r => e.label === r.rank + ' Rank Achieved');
             if (rankMatch && rankMatch.minXP > wXPAfter) return false;
           }
-          // Remove level milestone entries for levels above new level
+          // Remove level milestone entries for levels now above post-reset level
           if (e.icon === '⬆️') {
             const lvlMatch = e.label && e.label.match(/Level (\d+) Reward/);
             if (lvlMatch && parseInt(lvlMatch[1]) > wLevelAfter) return false;
@@ -7017,8 +7062,7 @@ function spawnRankParticles(color, type) {
 
 
 // ── PUNISHMENT SYSTEM ──
-// If yesterday had 0 quests completed and user had XP > 0, show a warning
-// and deduct a small amount of coins (not XP — never take away progress)
+// Streak-scaled penalty: 10 coins per day of streak broken, min 15, max 150
 function checkPunishment() {
   const data = getXPData();
   if (data.totalXP === 0) return; // new hunter, no punishment
@@ -7031,29 +7075,30 @@ function checkPunishment() {
   if (questsDoneYesterday === 0 && (data.streak || 0) === 0 && data.lastActiveDate && data.lastActiveDate !== yd) {
     const alreadyPunished = data.punishedDates && data.punishedDates[yd];
     if (!alreadyPunished) {
-      const penalty = Math.min(20, Math.floor((data.coins || 0) * 0.05)); // 5% of coins, max 20
-      if (penalty > 0) {
-        data.coins = Math.max(0, (data.coins || 0) - penalty);
+      // Scale by the streak that was broken — longer streak = harsher penalty
+      const brokenStreak = data.longestStreak || 1;
+      const penalty = Math.min(150, Math.max(15, brokenStreak * 10));
+      const actualPenalty = Math.min(penalty, data.coins || 0); // can't go below 0
+      if (actualPenalty > 0) {
+        data.coins = Math.max(0, (data.coins || 0) - actualPenalty);
         if (!data.punishedDates) data.punishedDates = {};
         data.punishedDates[yd] = true;
         if (!data.coinHistory) data.coinHistory = [];
-        data.coinHistory.unshift({ icon:'⚠️', label:'Missed Day Penalty (' + yd + ')', amount: -penalty, date: new Date().toLocaleDateString() });
+        data.coinHistory.unshift({ icon:'⚠️', label:'Missed Day Penalty (' + yd + ')', amount: -actualPenalty, date: new Date().toLocaleDateString() });
         saveXPData(data);
-        // Show a non-intrusive toast warning
-        showPunishmentToast(penalty);
+        showPunishmentToast(actualPenalty, brokenStreak);
       }
     }
   }
 }
 
-function showPunishmentToast(penalty) {
+function showPunishmentToast(penalty, streak) {
   const toast = document.createElement('div');
-  toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a0a0a;border:1px solid rgba(231,76,60,0.5);color:#e74c3c;font-family:Space Mono,monospace;font-size:10px;letter-spacing:2px;padding:10px 20px;z-index:9999;text-transform:uppercase;text-align:center;pointer-events:none;animation:fadeIn 0.3s ease;';
-  toast.innerHTML = '⚠️ MISSED DAY · -' + penalty + ' 🪙 · Association Warning Logged';
+  toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a0a0a;border:1px solid rgba(231,76,60,0.5);color:#e74c3c;font-family:Space Mono,monospace;font-size:10px;letter-spacing:2px;padding:10px 20px;z-index:9999;text-transform:uppercase;text-align:center;pointer-events:none;animation:fadeIn 0.3s ease;max-width:90vw;';
+  toast.innerHTML = '⚠️ ' + streak + '-DAY STREAK BROKEN · -' + penalty + ' 🪙 · The grind does not forgive';
   document.body.appendChild(toast);
-  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.5s'; setTimeout(() => toast.remove(), 500); }, 4000);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.5s'; setTimeout(() => toast.remove(), 500); }, 5000);
 }
-// ── END PUNISHMENT SYSTEM ──
 // ═══════════════════════════════════════
 // ═══════════════════════════════════════
 // ═══════════════════════════════════════
@@ -8125,19 +8170,6 @@ function initXPSystem() {
     localStorage.removeItem('grind_badges_prev_v2');
     localStorage.removeItem('grind_badges_prev_lvl_v2');
     localStorage.setItem('grind_activity_patch_v15', '1');
-  }
-
-  //patch 16 set level a level in E rank and set rank to E Rank
-  if (!localStorage.getItem('grind_data_patch_v16')) {
-    data = getXPData();
-    if ((data.totalXP || 0) < 3500) {
-      data.totalXP = 3500;
-      data.level   = getLevelFromXP(3500); // = something less than D rank
-    } else {
-      data.level = getLevelFromXP(data.totalXP);
-    }
-    saveXPData(data);
-    localStorage.setItem('grind_data_patch_v16', '1');
   }
 
   setTimeout(checkWeeklyRecap, 1200);
