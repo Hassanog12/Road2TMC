@@ -6,8 +6,19 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
-<title>Road to The Marathon Continues</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<title>R2TMC — The Grind</title>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -8103,6 +8114,30 @@ function initXPSystem() {
     saveXPData(data);
     localStorage.setItem('grind_activity_patch_v14', '1');
   }
+  // Patch v15 — scrub run5k/longrun/halfmarathon from daily quests unless from a real logged race,
+  // and clear badge prev-state caches so they recompute from actual data
+  if (!localStorage.getItem('grind_activity_patch_v15')) {
+    data = getXPData();
+    const raceLog = getRaceLog();
+    // Build a set of date strings that have a legitimate logged race
+    const raceDates = new Set(raceLog.map(r => r.dateStr).filter(Boolean));
+    const runQuestsToScrub = ['run5k','longrun','halfmarathon'];
+    Object.keys(data.dailyQuests).forEach(dStr => {
+      if (!raceDates.has(dStr)) {
+        runQuestsToScrub.forEach(id => {
+          if (data.dailyQuests[dStr] && data.dailyQuests[dStr][id]) {
+            delete data.dailyQuests[dStr][id];
+          }
+        });
+      }
+    });
+    saveXPData(data);
+    // Clear badge caches so they recompute from clean data
+    localStorage.removeItem('grind_badges_prev_v2');
+    localStorage.removeItem('grind_badges_prev_lvl_v2');
+    localStorage.setItem('grind_activity_patch_v15', '1');
+  }
+
   setTimeout(checkWeeklyRecap, 1200);
   buildQuestGrid();
   updateResetButtonStates();
