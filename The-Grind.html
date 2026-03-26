@@ -7,7 +7,18 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
 <title>R2TMC — The Grind</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -2131,24 +2142,25 @@ html, body {
 </div>
 
 <!-- RANK UP OVERLAY — epic cinematic -->
-<div id="rankUpOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0);align-items:center;justify-content:center;flex-direction:column;overflow:hidden;" onclick="closeRankUp()">
+<div id="rankUpOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0);align-items:center;justify-content:center;flex-direction:column;overflow-y:auto;" onclick="closeRankUp()">
   <!-- Particle canvas -->
   <canvas id="rankUpCanvas" style="position:absolute;inset:0;pointer-events:none;"></canvas>
   <!-- BG glow sweep -->
   <div id="rankUpBg" style="position:absolute;inset:0;opacity:0;transition:opacity 0.6s;"></div>
 
-  <div id="rankUpContent" onclick="event.stopPropagation()" style="position:relative;z-index:2;text-align:center;opacity:0;transform:scale(0.5);transition:all 0.6s cubic-bezier(0.34,1.56,0.64,1);">
+  <div id="rankUpContent" onclick="event.stopPropagation()" style="position:relative;z-index:2;text-align:center;opacity:0;transform:scale(0.5);transition:all 0.6s cubic-bezier(0.34,1.56,0.64,1);padding:32px 28px;max-width:520px;width:92%;margin:auto;background:rgba(0,0,0,0.55);border-radius:4px;">
     <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:8px;color:#fff;text-transform:uppercase;margin-bottom:16px;opacity:0.7;">RANK UP</div>
     <!-- Chips row -->
-    <div id="rankUpChips" style="display:flex;justify-content:center;gap:4px;margin-bottom:20px;"></div>
+    <div id="rankUpChips" style="display:flex;justify-content:center;gap:4px;margin-bottom:20px;flex-wrap:wrap;"></div>
     <!-- Giant rank letter -->
-    <div id="rankUpLetter" style="font-family:'Bebas Neue',sans-serif;font-size:180px;line-height:0.85;letter-spacing:-4px;transition:all 0.3s;"></div>
-    <!-- Title -->
-    <div id="rankUpTitle" style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#fff;letter-spacing:3px;margin-top:12px;line-height:1.2;"></div>
-    <div id="rankUpCoinReward" style="display:none;text-align:center;margin-top:12px;padding:10px 14px;background:rgba(240,216,120,0.08);border:1px solid rgba(240,216,120,0.25);border-radius:2px;"></div>
-    <div id="rankUpRunnerTier" style="display:none;text-align:center;margin-top:10px;padding:10px 14px;border:1px solid rgba(200,168,75,0.3);background:rgba(200,168,75,0.05);border-radius:2px;"></div>
+    <div id="rankUpLetter" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(100px,30vw,180px);line-height:0.85;letter-spacing:-4px;transition:all 0.3s;"></div>
+    <!-- Title — smaller -->
+    <div id="rankUpTitle" style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;letter-spacing:3px;margin-top:10px;line-height:1.2;opacity:0.75;"></div>
+    <!-- Runner tier — styled box -->
+    <div id="rankUpRunnerTier" style="display:none;"></div>
+    <div id="rankUpCoinReward" style="display:none;"></div>
     <div id="rankUpStatus" style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,0.5);letter-spacing:3px;margin-top:8px;text-transform:uppercase;"></div>
-    <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;color:rgba(255,255,255,0.3);margin-top:20px;text-transform:uppercase;">Tap outside to close · TMC 🏁</div>
+    <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.12);margin-top:24px;text-transform:uppercase;">Tap outside to close · TMC 🏁</div>
   </div>
 </div>
 
@@ -2758,6 +2770,44 @@ id="page-running" class="page">
   </div>
   <div class="container" style="padding-top:12px;padding-bottom:48px;">
 
+    <!-- FASTED RUNNING BANNER — Mon & Thu only — always at top -->
+    <div id="fastedBanner-running" style="display:none;margin-bottom:10px;position:relative;overflow:hidden;border:1px solid rgba(200,168,75,0.25);background:#000;">
+      <!-- Animated shimmer line -->
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#c8a84b,#f0d878,#c8a84b,transparent);background-size:200% 100%;animation:badgeShine 2.5s ease-in-out infinite;"></div>
+      <div style="display:flex;align-items:stretch;gap:0;">
+        <!-- Left accent column -->
+        <div style="width:4px;flex-shrink:0;background:linear-gradient(180deg,#c8a84b 0%,#f0d878 50%,#c8a84b 100%);"></div>
+        <!-- Main content -->
+        <div style="padding:14px 18px;flex:1;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <span style="font-size:22px;line-height:1;">🌙</span>
+            <div>
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--gold);letter-spacing:2px;line-height:1;">FASTED RUN — SUNNAH MONDAY &amp; THURSDAY</div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:rgba(200,168,75,0.5);letter-spacing:2px;text-transform:uppercase;margin-top:2px;">Following the practice of the Prophet ﷺ</div>
+            </div>
+          </div>
+          <!-- 3-column info row -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:6px;">
+            <div style="background:rgba(200,168,75,0.06);border:1px solid rgba(200,168,75,0.12);padding:8px 10px;">
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;">FAT BURN</div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#666;line-height:1.5;margin-top:2px;">Fasted Zone 2 maximises fat oxidation. Glycogen is low — the body burns fat first.</div>
+            </div>
+            <div style="background:rgba(200,168,75,0.06);border:1px solid rgba(200,168,75,0.12);padding:8px 10px;">
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;">MENTAL EDGE</div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#666;line-height:1.5;margin-top:2px;">Running while fasted builds discipline other people will never understand. That's the point.</div>
+            </div>
+            <div style="background:rgba(200,168,75,0.06);border:1px solid rgba(200,168,75,0.12);padding:8px 10px;">
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;">SUNNAH</div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#666;line-height:1.5;margin-top:2px;">The Prophet ﷺ fasted Mon & Thu voluntarily. You're running those same days. Barakah in the miles.</div>
+            </div>
+          </div>
+          <div style="font-family:'Space Mono',monospace;font-size:8px;color:#444;margin-top:8px;letter-spacing:1px;">Tip: sip water before you go, keep it Zone 2, and make du'a at the door. Bismillah — then run.</div>
+        </div>
+      </div>
+      <!-- Bottom shimmer line -->
+      <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(200,168,75,0.2),transparent);"></div>
+    </div>
+
     <!-- RUNNER TIER CARD -->
     <div id="runnerTierCard" style="background:#0a0a0a;border:1px solid var(--border);padding:16px 18px;margin-bottom:14px;position:relative;overflow:hidden;">
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);opacity:0.5;"></div>
@@ -2841,45 +2891,6 @@ id="page-running" class="page">
     </div>
 
     <div class="wo-tip" style="border-left-color:#e74c3c;">Zone 2 = conversational pace. Heart rate under 137. 80% of your runs should feel almost too easy. Slow down now → run faster in 3 months.</div>
-
-    <!-- FASTED RUNNING BANNER — Mon & Thu only -->
-    <div id="fastedBanner-running" style="display:none;margin-bottom:10px;position:relative;overflow:hidden;border:1px solid rgba(200,168,75,0.25);background:#000;">
-      <!-- Animated shimmer line -->
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#c8a84b,#f0d878,#c8a84b,transparent);background-size:200% 100%;animation:badgeShine 2.5s ease-in-out infinite;"></div>
-      <div style="display:flex;align-items:stretch;gap:0;">
-        <!-- Left accent column -->
-        <div style="width:4px;flex-shrink:0;background:linear-gradient(180deg,#c8a84b 0%,#f0d878 50%,#c8a84b 100%);"></div>
-        <!-- Main content -->
-        <div style="padding:14px 18px;flex:1;">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-            <span style="font-size:22px;line-height:1;">🌙</span>
-            <div>
-              <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--gold);letter-spacing:2px;line-height:1;">FASTED RUN — SUNNAH MONDAY &amp; THURSDAY</div>
-              <div style="font-family:'Space Mono',monospace;font-size:8px;color:rgba(200,168,75,0.5);letter-spacing:2px;text-transform:uppercase;margin-top:2px;">Following the practice of the Prophet ﷺ</div>
-            </div>
-          </div>
-          <!-- 3-column info row -->
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:6px;">
-            <div style="background:rgba(200,168,75,0.06);border:1px solid rgba(200,168,75,0.12);padding:8px 10px;">
-              <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;">FAT BURN</div>
-              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#666;line-height:1.5;margin-top:2px;">Fasted Zone 2 maximises fat oxidation. Glycogen is low — the body burns fat first.</div>
-            </div>
-            <div style="background:rgba(200,168,75,0.06);border:1px solid rgba(200,168,75,0.12);padding:8px 10px;">
-              <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;">MENTAL EDGE</div>
-              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#666;line-height:1.5;margin-top:2px;">Running while fasted builds discipline other people will never understand. That's the point.</div>
-            </div>
-            <div style="background:rgba(200,168,75,0.06);border:1px solid rgba(200,168,75,0.12);padding:8px 10px;">
-              <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;">SUNNAH</div>
-              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#666;line-height:1.5;margin-top:2px;">The Prophet ﷺ fasted Mon & Thu voluntarily. You're running those same days. Barakah in the miles.</div>
-            </div>
-          </div>
-          <div style="font-family:'Space Mono',monospace;font-size:8px;color:#444;margin-top:8px;letter-spacing:1px;">Tip: sip water before you go, keep it Zone 2, and make du'a at the door. Bismillah — then run.</div>
-        </div>
-      </div>
-      <!-- Bottom shimmer line -->
-      <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(200,168,75,0.2),transparent);"></div>
-    </div>
-
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">01</div>
@@ -5320,16 +5331,22 @@ function updateHunterCard() {
   const hwl = document.getElementById('hunterWeightLost');
   if (hwl) { hwl.textContent = (wLost >= 0 ? '-' : '+') + Math.abs(wLost); hwl.style.color = parseFloat(wLost) >= 0 ? '#2ecc71' : '#e74c3c'; }
 
-  // XP bar
+  // XP bar — use rAF so transition fires after paint (avoids 0→value snap on page load)
   const xpBar = document.getElementById('xpBar');
   const xpDisplay = document.getElementById('xpDisplay');
   if (xpBar) {
     const rangeStart = rank.minXP;
     const rangeEnd = nextRank ? nextRank.minXP : rank.minXP + 10000;
     const pct = nextRank ? Math.min(100, ((data.totalXP - rangeStart) / (rangeEnd - rangeStart)) * 100) : 100;
-    xpBar.style.width = pct + '%';
     xpBar.style.background = rank.barColor || rank.color;
     if (xpDisplay) xpDisplay.textContent = nextRank ? data.totalXP.toLocaleString('en-US') + ' / ' + rangeEnd.toLocaleString('en-US') + ' XP' : 'MAX RANK';
+    // Force width to 0 first so transition always plays
+    xpBar.style.transition = 'none';
+    xpBar.style.width = '0%';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      xpBar.style.transition = 'width 0.8s ease';
+      xpBar.style.width = pct + '%';
+    }));
   }
 
   // Level bar
@@ -5337,8 +5354,14 @@ function updateHunterCard() {
   const levelDisplay = document.getElementById('levelDisplay');
   if (levelBar) {
     const prog = xpProgressInLevel(data.totalXP);
-    levelBar.style.width = ((prog.current / prog.needed) * 100) + '%';
+    const lvPct = (prog.current / prog.needed) * 100;
     if (levelDisplay) levelDisplay.textContent = 'LVL ' + level + '  ·  ' + prog.current + '/' + prog.needed;
+    levelBar.style.transition = 'none';
+    levelBar.style.width = '0%';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      levelBar.style.transition = 'width 0.8s ease';
+      levelBar.style.width = lvPct + '%';
+    }));
   }
 
   // Card border + profile rank letter
@@ -5350,9 +5373,23 @@ function updateHunterCard() {
   setAccentColor(rank);
 }
 
-// ── Quest pool ──
-// ═══════════════════════════════════════
-// RUNNER TIER SYSTEM
+// ── Water scaling by rank ──
+// ── Water scaling by rank — 4 clean steps, easy to track in oz ──
+// 2L=67oz · 2.5L=84oz · 3L=101oz · 1 Gallon=128oz
+const WATER_BY_RANK = {
+  E:   { label:'2L Water',   oz:67,  xp:60,  icon:'💧' },
+  D:   { label:'2L Water',   oz:67,  xp:60,  icon:'💧' },
+  C:   { label:'2.5L Water', oz:84,  xp:75,  icon:'💧' },
+  B:   { label:'2.5L Water', oz:84,  xp:75,  icon:'💧' },
+  A:   { label:'3L Water',   oz:101, xp:90,  icon:'💧' },
+  S:   { label:'3L Water',   oz:101, xp:90,  icon:'💧' },
+  'S+':{ label:'1 Gallon',   oz:128, xp:110, icon:'🪣' },
+  NL:  { label:'1 Gallon',   oz:128, xp:110, icon:'🪣' },
+};
+function getHydrateQuest(rankStr) {
+  const w = WATER_BY_RANK[rankStr] || WATER_BY_RANK['E'];
+  return { id:'hydrate', label:w.label + ' (' + w.oz + 'oz)', icon:w.icon, xp:w.xp, type:'wellness', row:'wellness' };
+}
 // ═══════════════════════════════════════
 const RUNNER_TIERS = {
   rookie:     { icon:'◆', label:'Tortoise',    ranks:['E'],        weeklyMiles:8,  longRunMiles:3,  paceSec:720, cardioQuests:['run1','run2','run5k'],   longRunLabel:'3 Mile Long Run (5K)' },
@@ -5506,11 +5543,13 @@ function getWeeklyQuestPool() {
   const data = getXPData();
   const rank = getRankForXP(data.totalXP);
   const tier = getRunnerTier(rank.rank); // pass rank string
+  const hydrateQ = getHydrateQuest(rank.rank);
   const allPool = WEEKLY_QUEST_POOL.map(q => {
     const clone = {...q};
     if (q.id === 'wk_longrun') clone.label = 'Complete a ' + tier.longRunMiles + ' Mile Run';
     if (q.id === 'wk_miles')   clone.label = 'Log ' + tier.weeklyMiles + ' Miles This Week';
     if (q.id === 'wk_pace')    clone.label = 'Run a Mile Under ' + formatPace(tier.paceSec);
+    if (q.id === 'wk_hydrate7') clone.label = 'Hit ' + hydrateQ.label + ' Every Day This Week';
     return clone;
   });
   const weekSeed = parseInt(getWeekStr().replace(/\D/g,'')) || 20260101;
@@ -5565,10 +5604,15 @@ function buildQuestGrid() {
     return q;
   }).filter(Boolean);
   movementQuests = ['steps'].map(id => BASE_QUESTS.find(q => q.id === id)).filter(Boolean);
-  // Wellness: hydrate + mobility always show, rotate sleep/cold as 3rd slot daily
+  // Wellness: hydrate (scaled by rank) + mobility always show, rotate sleep/cold as 3rd slot daily
+  // Mon (1) or Thu (4): fasted workout replaces hydrate — harder to hit hydrate goal while fasting
   const daySeed = parseInt(today.replace(/-/g,'')) || 1;
   const wellnessThird = (daySeed % 2 === 0) ? 'sleep' : 'cold';
-  const wellnessQuests = ['hydrate','mobility', wellnessThird].map(id => BASE_QUESTS.find(q => q.id === id)).filter(Boolean);
+  const hydrateQuest = getHydrateQuest(rank.rank);
+  const fastedQuest = BASE_QUESTS.find(q => q.id === 'fasted');
+  const isFastedDay = (new Date().getDay() === 1 || new Date().getDay() === 4);
+  const wellnessFirst = (isFastedDay && fastedQuest) ? fastedQuest : hydrateQuest;
+  const wellnessQuests = [wellnessFirst, BASE_QUESTS.find(q => q.id === 'mobility'), BASE_QUESTS.find(q => q.id === wellnessThird)].filter(Boolean);
 
   const rows = [
     { id:'questRow-workout',     quests: liftingQuests.slice(0,3)   },
@@ -5585,15 +5629,49 @@ function buildQuestGrid() {
     const el = document.getElementById(row.id);
     if (!el) return;
     el.innerHTML = '';
-    row.quests.forEach(q => {
-      const questVal = data.dailyQuests[today] && data.dailyQuests[today][q.id];
-      const isLocked = questVal === 'locked';
-      const isDone = !!questVal && !isLocked;
-      if (isDone) totalEarned += q.xp;
-      el.appendChild(makeQuestTile(q, isDone, 'daily', isLocked));
-    });
-    // Inject Sports tile into movement row
+    if (row.id !== 'questRow-consistency') {
+      row.quests.forEach(q => {
+        const questVal = data.dailyQuests[today] && data.dailyQuests[today][q.id];
+        const isLocked = questVal === 'locked';
+        const isDone = !!questVal && !isLocked;
+        if (isDone) totalEarned += q.xp;
+        el.appendChild(makeQuestTile(q, isDone, 'daily', isLocked));
+      });
+    }
+    // Inject walk + sports tiles into movement row (reordered: walk, 10K steps, sports)
     if (row.id === 'questRow-consistency') {
+      // Clear what was appended (steps tile) and rebuild in correct order
+      el.innerHTML = '';
+
+      // 1. Walk tile first
+      var daySeedWalk = parseInt(today.replace(/-/g,'')) || 1;
+      var walkId = (daySeedWalk % 2 !== 0) ? 'outdoor' : 'indoor';
+      var altWalkId = (walkId === 'outdoor') ? 'indoor' : 'outdoor';
+      var walkQ = BASE_QUESTS.find(function(q){ return q.id === walkId; });
+      var altWalkDone = data.dailyQuests[today] && data.dailyQuests[today][altWalkId] && data.dailyQuests[today][altWalkId] !== 'locked';
+      if (altWalkDone) {
+        var altWalkQ = BASE_QUESTS.find(function(q){ return q.id === altWalkId; });
+        if (altWalkQ) {
+          totalEarned += altWalkQ.xp;
+          el.appendChild(makeQuestTile(altWalkQ, true, 'daily', false));
+        }
+      } else if (walkQ) {
+        var wv = data.dailyQuests[today] && data.dailyQuests[today][walkId];
+        var wl = wv === 'locked'; var wd = !!wv && !wl;
+        if (wd) totalEarned += walkQ.xp;
+        el.appendChild(makeQuestTile(walkQ, wd, 'daily', wl));
+      }
+
+      // 2. 10K Steps tile
+      row.quests.forEach(q => {
+        const questVal = data.dailyQuests[today] && data.dailyQuests[today][q.id];
+        const isLocked = questVal === 'locked';
+        const isDone = !!questVal && !isLocked;
+        if (isDone) totalEarned += q.xp;
+        el.appendChild(makeQuestTile(q, isDone, 'daily', isLocked));
+      });
+
+      // 3. Sports tile last
       const todayQ = data.dailyQuests[today] || {};
       const pracDone = !!todayQ['ballprac'] && todayQ['ballprac'] !== 'locked';
       const gameDone = !!todayQ['ball'] && todayQ['ball'] !== 'locked';
@@ -5624,27 +5702,6 @@ function buildQuestGrid() {
         };
       }
       el.appendChild(sportsTile);
-      // Walk quest — alternate outdoor/indoor by day for variety
-      // Odd days = outdoor, even days = indoor
-      var daySeedWalk = parseInt(today.replace(/-/g,'')) || 1;
-      var walkId = (daySeedWalk % 2 !== 0) ? 'outdoor' : 'indoor';
-      // If the other type was already done today, show that one as done
-      var altWalkId = (walkId === 'outdoor') ? 'indoor' : 'outdoor';
-      var walkQ = BASE_QUESTS.find(function(q){ return q.id === walkId; });
-      var altWalkDone = data.dailyQuests[today] && data.dailyQuests[today][altWalkId] && data.dailyQuests[today][altWalkId] !== 'locked';
-      if (altWalkDone) {
-        // Show completed tile for the one they already did
-        var altWalkQ = BASE_QUESTS.find(function(q){ return q.id === altWalkId; });
-        if (altWalkQ) {
-          totalEarned += altWalkQ.xp;
-          el.appendChild(makeQuestTile(altWalkQ, true, 'daily', false));
-        }
-      } else if (walkQ) {
-        var wv = data.dailyQuests[today] && data.dailyQuests[today][walkId];
-        var wl = wv === 'locked'; var wd = !!wv && !wl;
-        if (wd) totalEarned += walkQ.xp;
-        el.appendChild(makeQuestTile(walkQ, wd, 'daily', wl));
-      }
     }
   });
 
@@ -5721,8 +5778,13 @@ function earnQuestXP(questId, type, e) {
   const today = getTodayStr();
   const weekStr = getWeekStr();
   const allQuests = [...BASE_QUESTS, ...WEEKLY_QUESTS];
-  const quest = allQuests.find(q => q.id === questId);
+  let quest = allQuests.find(q => q.id === questId);
   if (!quest) return;
+  // Swap in rank-scaled hydrate quest so XP and label are correct
+  if (questId === 'hydrate') {
+    const rank = getRankForXP(data.totalXP);
+    quest = getHydrateQuest(rank.rank);
+  }
 
   // Check already done
   // Run quest guard — if a higher run quest is already completed today, bail immediately
@@ -5848,6 +5910,8 @@ function earnQuestXP(questId, type, e) {
   }
   if (newRank.rank !== prevRank.rank) {
     awardRankCoins(newRank.rank, data);
+    // Auto-advance runner tier — clear any manual override so rank→tier auto-maps
+    localStorage.removeItem('runnerTierOverride');
   }
 
   saveXPData(data);
@@ -5926,21 +5990,33 @@ function resetDailyQuests(e) {
   let xpToRemove = 0, coinsToRemove = 0;
   doneIds.forEach(id => { const q = allQ.find(x => x.id === id); if (q) { xpToRemove += Math.round(q.xp * mult); coinsToRemove += Math.round(q.xp / 8); } });
 
+  // Snapshot XP/level/rank BEFORE mutation so comparisons are accurate
+  const xpBefore    = data.totalXP || 0;
+  const levelBefore = getLevelFromXP(xpBefore);
+  const xpAfter     = Math.max(0, xpBefore - xpToRemove);
+  const levelAfter  = getLevelFromXP(xpAfter);
+  // Calculate bonus coins to revert: rank-up rewards + level milestone rewards
+  let bonusCoinsToRemove = 0;
+  for (const r of RANKS) {
+    if (r.minXP > xpAfter && r.minXP <= xpBefore) bonusCoinsToRemove += RANK_COIN_REWARDS[r.rank] || 0;
+  }
+  for (let l = levelAfter + 1; l <= levelBefore; l++) bonusCoinsToRemove += LEVEL_COIN_REWARDS[l] || 0;
+  const totalCoinsLost = coinsToRemove + bonusCoinsToRemove;
+
   showResetConfirm('Reset Today\'s Quests',
-    'This will undo today\'s completions and reset your streak.<br>XP lost: <span style="color:#e74c3c;">-' + xpToRemove + '</span> · Coins lost: <span style="color:#e74c3c;">-' + coinsToRemove + '</span>',
+    'This will undo today\'s completions and reset your streak.<br>XP lost: <span style="color:#e74c3c;">-' + xpToRemove + '</span> · Coins lost: <span style="color:#e74c3c;">-' + totalCoinsLost + '</span>',
     () => {
       delete data.dailyQuests[today];
-      data.totalXP = Math.max(0, (data.totalXP || 0) - xpToRemove);
-      data.coins   = Math.max(0, (data.coins   || 0) - coinsToRemove);
-      data.level   = getLevelFromXP(data.totalXP);
-      // Restore streak — if today was active, subtract 1 (back to yesterday's streak)
-      // but don't go below 0, and set lastActiveDate to yesterday so chain isn't broken
+      data.totalXP = xpAfter;
+      data.coins   = Math.max(0, (data.coins || 0) - totalCoinsLost);
+      data.level   = levelAfter;
       const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
       const yd = yesterday.getFullYear() + '-' + (yesterday.getMonth()+1) + '-' + yesterday.getDate();
       const prevDayDone = data.dailyQuests[yd] || {};
       const prevDayActive = Object.values(prevDayDone).some(Boolean);
       data.streak = Math.max(0, (data.streak || 1) - 1);
       data.lastActiveDate = prevDayActive ? yd : null;
+      // Wipe all coin history entries from today (quest + rank + level coins)
       const todayDateStr = new Date().toLocaleDateString();
       if (data.coinHistory) data.coinHistory = data.coinHistory.filter(e => e.date !== todayDateStr);
       saveXPData(data);
@@ -5961,16 +6037,43 @@ function resetWeeklyQuests(e) {
   let xpToRemove = 0, coinsToRemove = 0;
   doneIds.forEach(id => { const q = allQ.find(x => x.id === id); if (q) { xpToRemove += Math.round(q.xp * mult); coinsToRemove += Math.round(q.xp / 8); } });
 
+  // Snapshot XP/level/rank BEFORE mutation
+  const wXPBefore    = data.totalXP || 0;
+  const wLevelBefore = getLevelFromXP(wXPBefore);
+  const wXPAfter     = Math.max(0, wXPBefore - xpToRemove);
+  const wLevelAfter  = getLevelFromXP(wXPAfter);
+  let wBonusCoins = 0;
+  for (const r of RANKS) {
+    if (r.minXP > wXPAfter && r.minXP <= wXPBefore) wBonusCoins += RANK_COIN_REWARDS[r.rank] || 0;
+  }
+  for (let l = wLevelAfter + 1; l <= wLevelBefore; l++) wBonusCoins += LEVEL_COIN_REWARDS[l] || 0;
+  const wTotalCoinsLost = coinsToRemove + wBonusCoins;
+
   showResetConfirm('Reset Weekly Challenges',
-    'This will undo this week\'s completions.<br>XP lost: <span style="color:#e74c3c;">-' + xpToRemove + '</span> · Coins lost: <span style="color:#e74c3c;">-' + coinsToRemove + '</span>',
+    'This will undo this week\'s completions.<br>XP lost: <span style="color:#e74c3c;">-' + xpToRemove + '</span> · Coins lost: <span style="color:#e74c3c;">-' + wTotalCoinsLost + '</span>',
     () => {
       if (data.weeklyQuests) delete data.weeklyQuests[weekStr];
-      data.totalXP = Math.max(0, (data.totalXP || 0) - xpToRemove);
-      data.coins   = Math.max(0, (data.coins   || 0) - coinsToRemove);
-      data.level   = getLevelFromXP(data.totalXP);
+      data.totalXP = wXPAfter;
+      data.coins   = Math.max(0, (data.coins || 0) - wTotalCoinsLost);
+      data.level   = wLevelAfter;
       if (data.coinHistory) {
+        // Remove quest coin history entries by label, plus any rank/level reward entries this week
         const resetLabels = new Set(doneIds.map(id => { const q = allQ.find(x => x.id === id); return q ? q.label : null; }).filter(Boolean));
-        data.coinHistory = data.coinHistory.filter(e => !resetLabels.has(e.label));
+        // Also remove rank and level coin entries whose XP thresholds are now unreached
+        data.coinHistory = data.coinHistory.filter(e => {
+          if (resetLabels.has(e.label)) return false;
+          // Remove rank reward entries for ranks that are now above current XP
+          if (e.icon === '🏆') {
+            const rankMatch = RANKS.find(r => e.label === r.rank + ' Rank Achieved');
+            if (rankMatch && rankMatch.minXP > wXPAfter) return false;
+          }
+          // Remove level milestone entries for levels above new level
+          if (e.icon === '⬆️') {
+            const lvlMatch = e.label && e.label.match(/Level (\d+) Reward/);
+            if (lvlMatch && parseInt(lvlMatch[1]) > wLevelAfter) return false;
+          }
+          return true;
+        });
       }
       saveXPData(data);
       buildQuestGrid(); updateHunterCard(); buildProfileStats(getXPData()); buildBadges(); buildCoinHistory(); buildSkillTree();
@@ -6775,31 +6878,31 @@ function showRankUp(rank) {
   }
 
   const bgMap = {
-    E:'rgba(0,0,0,0.92)',
-    D:'radial-gradient(ellipse at center,rgba(230,126,34,0.2) 0%,rgba(0,0,0,0.95) 65%)',
-    C:'radial-gradient(ellipse at center,rgba(241,196,15,0.22) 0%,rgba(0,0,0,0.95) 65%)',
-    B:'radial-gradient(ellipse at 50% 60%,rgba(46,204,113,0.24) 0%,rgba(0,0,0,0.95) 65%)',
-    A:'radial-gradient(ellipse at center,rgba(26,188,156,0.28) 0%,rgba(0,0,0,0.96) 60%)',
-    S:'radial-gradient(ellipse at 35% 40%,rgba(52,152,219,0.4) 0%,rgba(0,0,20,0.97) 50%),radial-gradient(ellipse at 65% 60%,rgba(0,80,255,0.2) 0%,transparent 55%)',
-    'S+':'radial-gradient(ellipse at 40% 35%,rgba(168,85,247,0.45) 0%,rgba(10,0,25,0.98) 55%),radial-gradient(ellipse at 60% 65%,rgba(80,0,200,0.3) 0%,transparent 50%)',
-    NL:'radial-gradient(ellipse at center,rgba(255,255,200,0.18) 0%,rgba(200,168,75,0.12) 30%,rgba(0,0,0,0.98) 70%)',
+    E:'rgba(0,0,0,0.97)',
+    D:'radial-gradient(ellipse at center,rgba(230,126,34,0.35) 0%,rgba(0,0,0,0.97) 55%)',
+    C:'radial-gradient(ellipse at center,rgba(241,196,15,0.38) 0%,rgba(0,0,0,0.97) 55%)',
+    B:'radial-gradient(ellipse at 50% 60%,rgba(46,204,113,0.40) 0%,rgba(0,0,0,0.97) 55%)',
+    A:'radial-gradient(ellipse at center,rgba(26,188,156,0.44) 0%,rgba(0,0,0,0.97) 50%)',
+    S:'radial-gradient(ellipse at 35% 40%,rgba(52,152,219,0.55) 0%,rgba(0,0,10,0.98) 45%),radial-gradient(ellipse at 65% 60%,rgba(0,80,255,0.35) 0%,transparent 50%)',
+    'S+':'radial-gradient(ellipse at 40% 35%,rgba(168,85,247,0.60) 0%,rgba(10,0,25,0.98) 45%),radial-gradient(ellipse at 60% 65%,rgba(80,0,200,0.45) 0%,transparent 45%)',
+    NL:'radial-gradient(ellipse at center,rgba(255,255,200,0.30) 0%,rgba(200,168,75,0.20) 25%,rgba(0,0,0,0.98) 60%)',
   };
   if (bg) { bg.style.background = bgMap[rank.rank] || bgMap.E; bg.style.opacity='1'; }
-  setTimeout(() => { overlay.style.background = bgMap[rank.rank] || 'rgba(0,0,0,0.92)'; }, 50);
+  setTimeout(() => { overlay.style.background = bgMap[rank.rank] || 'rgba(0,0,0,0.97)'; }, 50);
   setTimeout(() => { if(content){content.style.opacity='1';content.style.transform='scale(1)';} }, 100);
 
   const ptypeMap = { E:'none',D:'sparks',C:'stars',B:'emerald',A:'teal',S:'supernova','S+':'cosmos',NL:'godmode' };
   spawnRankParticles(rank.color, ptypeMap[rank.rank]||'sparks');
 
-  // Rank coin reward
+  // Rank coin reward — bigger text
   const rankReward = RANK_COIN_REWARDS[rank.rank] || 0;
   const rankCoinEl = document.getElementById('rankUpCoinReward');
   if (rankReward > 0) {
     if (rankCoinEl) {
-      rankCoinEl.style.cssText = 'display:block;text-align:center;margin-top:14px;padding:10px 14px;background:rgba(240,216,120,0.08);border:1px solid rgba(240,216,120,0.25);border-radius:2px;';
+      rankCoinEl.style.cssText = 'display:block;text-align:center;margin-top:16px;padding:14px 16px;background:rgba(240,216,120,0.07);border:1px solid rgba(240,216,120,0.2);border-radius:3px;';
       rankCoinEl.innerHTML =
-        '<div style="font-family:Space Mono,monospace;font-size:7px;letter-spacing:3px;color:#666;text-transform:uppercase;margin-bottom:6px;">Coin Reward</div>'
-        + '<div style="font-family:Bebas Neue,sans-serif;font-size:42px;color:#f0d878;text-shadow:0 0 24px #f0d87888,0 0 48px #c8a84b44;letter-spacing:3px;line-height:1;">+' + rankReward + ' <span style="font-size:30px;">🪙</span></div>';
+        '<div style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:3px;color:#555;text-transform:uppercase;margin-bottom:8px;">Coin Reward</div>'
+        + '<div style="font-family:Bebas Neue,sans-serif;font-size:54px;color:#f0d878;text-shadow:0 0 28px #f0d87899,0 0 56px #c8a84b44;letter-spacing:3px;line-height:1;">+' + rankReward + ' <span style="font-size:40px;">🪙</span></div>';
     }
     if (!window._coinRainFired) {
       window._coinRainFired = true;
@@ -6809,20 +6912,25 @@ function showRankUp(rank) {
     if (rankCoinEl) rankCoinEl.style.display = 'none';
   }
 
-  // Runner tier unlock — show inline if tier changed
+  // Runner tier unlock — distinct styled box with complementary accent color
   const rankRunnerEl = document.getElementById('rankUpRunnerTier');
   if (rankRunnerEl) {
     const newTier = getRunnerTier(rank.rank);
-    // Find what the previous rank's tier was
     const prevRankIdx = RANKS.findIndex(r => r.rank === rank.rank);
     const prevRankObj = prevRankIdx > 0 ? RANKS[prevRankIdx - 1] : null;
     const prevTier = prevRankObj ? getRunnerTier(prevRankObj.rank) : null;
     if (prevTier && prevTier.label !== newTier.label) {
-      rankRunnerEl.style.cssText = 'display:block;text-align:center;margin-top:10px;padding:12px 14px;border:1px solid rgba(200,168,75,0.35);background:rgba(200,168,75,0.06);border-radius:2px;animation:badgePop 0.4s ease 0.6s both;';
+      // Use the rank's own color for the left border accent
+      const ac = rank.color;
+      rankRunnerEl.style.cssText = 'display:block;margin-top:16px;';
       rankRunnerEl.innerHTML =
-        '<div style="font-family:Space Mono,monospace;font-size:7px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:4px;">🏃 Running Tier Unlocked</div>'
-        + '<div style="font-family:Bebas Neue,sans-serif;font-size:26px;color:#fff;letter-spacing:2px;line-height:1;">' + newTier.label.toUpperCase() + '</div>'
-        + '<div style="font-family:Space Mono,monospace;font-size:8px;color:#555;margin-top:4px;">' + newTier.weeklyMiles + ' mi/wk · Long run: ' + (newTier.longRunLabel || newTier.longRunMiles + ' mi') + '</div>';
+        '<div style="background:rgba(0,0,0,0.6);border:1px solid ' + ac + '44;border-left:3px solid ' + ac + ';padding:14px 16px;text-align:left;border-radius:2px;">'
+        + '<div style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:3px;color:' + ac + ';text-transform:uppercase;margin-bottom:6px;">🏃 Running Tier Unlocked</div>'
+        + '<div style="font-family:Bebas Neue,sans-serif;font-size:clamp(28px,8vw,38px);color:#fff;letter-spacing:2px;line-height:1;">' + newTier.label.toUpperCase() + '</div>'
+        + '<div style="display:flex;gap:16px;margin-top:6px;flex-wrap:wrap;">'
+        + '<div style="font-family:Space Mono,monospace;font-size:9px;color:#666;">' + newTier.weeklyMiles + ' mi / week</div>'
+        + '<div style="font-family:Space Mono,monospace;font-size:9px;color:#666;">' + (newTier.longRunLabel || newTier.longRunMiles + ' mi long run') + '</div>'
+        + '</div></div>';
     } else {
       rankRunnerEl.style.display = 'none';
     }
@@ -7975,8 +8083,37 @@ function initXPSystem() {
     saveXPData(data);
     localStorage.setItem('grind_data_patch_v13', '1');
   }
-  checkPunishment();
-  updateHunterCard();
+  // Patch v14 — Wednesday March 25: steps + outdoor + hoops game + hydrate + cold shower
+  if (!localStorage.getItem('grind_activity_patch_v14')) {
+    data = getXPData();
+    if (!data.dailyQuests['2026-3-25']) data.dailyQuests['2026-3-25'] = {};
+    data.dailyQuests['2026-3-25'].steps   = true;
+    data.dailyQuests['2026-3-25'].outdoor = true;
+    data.dailyQuests['2026-3-25'].ball    = true;
+    data.dailyQuests['2026-3-25'].hydrate = true;
+    data.dailyQuests['2026-3-25'].cold    = true;
+    // XP with streak 8 mult (1.05)
+    var wedMult = Math.min(1.5, 1 + Math.floor(8 / 7) * 0.05); // 1.05
+    var wedXP   = Math.round((175 + 90 + 250 + 60 + 70) * wedMult); // ~677
+    var wedCoins = Math.round((175 + 90 + 250 + 60 + 70) / 8);      // ~81
+    data.totalXP = (data.totalXP || 0) + wedXP;
+    data.coins   = (data.coins   || 0) + wedCoins;
+    data.level   = getLevelFromXP(data.totalXP);
+    data.streak  = 9;
+    data.lastActiveDate = '2026-3-25';
+    if (!data.longestStreak || data.streak > data.longestStreak) data.longestStreak = data.streak;
+    data.streakSkillProgress = (data.streakSkillProgress || 0) + 1;
+    data.lastStreakSkillDate = '2026-3-25';
+    if (!data.coinHistory) data.coinHistory = [];
+    data.coinHistory.unshift({ icon:'🧊', label:'Cold Shower',    amount: Math.round(70/8),  date:'3/25/2026' });
+    data.coinHistory.unshift({ icon:'💧', label:'2L Water',       amount: Math.round(60/8),  date:'3/25/2026' });
+    data.coinHistory.unshift({ icon:'🏀', label:'Sports Game',    amount: Math.round(250/8), date:'3/25/2026' });
+    data.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',   amount: Math.round(90/8),  date:'3/25/2026' });
+    data.coinHistory.unshift({ icon:'🚶', label:'10K Steps',      amount: Math.round(175/8), date:'3/25/2026' });
+    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
+    saveXPData(data);
+    localStorage.setItem('grind_activity_patch_v14', '1');
+  }
   setTimeout(checkWeeklyRecap, 1200);
   buildQuestGrid();
   updateResetButtonStates();
@@ -8296,6 +8433,7 @@ setTimeout(positionAccentBar, 500);
 // ── INIT ──
 showPage('roadmap');
 initXPSystem();
+updateHunterCard();
 renderWeightProfile();
 
 
