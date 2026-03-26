@@ -6,8 +6,19 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
-<title>Road to the Marathon Continues</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<title>R2TMC — The Grind</title>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -1904,9 +1915,10 @@ html, body {
       <!-- Main content -->
       <div style="display:flex;align-items:stretch;position:relative;z-index:1;padding:0 0 0;">
         <!-- Left: Big rank letter -->
-        <div style="padding:0 16px 0 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:90px;">
-          <div id="rankLetter" style="font-size:64px;line-height:0.85;letter-spacing:-2px;transition:all 0.4s;text-shadow:0 0 30px currentColor;"></div>
-          <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:#888;margin-top:4px;text-transform:uppercase;">RANK</div>
+        <div style="padding:0 16px 0 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:100px;position:relative;">
+          <div id="rankLetterGlow" style="position:absolute;inset:0;opacity:0.08;filter:blur(18px);border-radius:4px;background:currentColor;pointer-events:none;"></div>
+          <div id="rankLetter" style="font-size:80px;line-height:0.85;letter-spacing:-2px;transition:all 0.4s;position:relative;z-index:1;"></div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:#888;margin-top:6px;text-transform:uppercase;">RANK</div>
         </div>
 
         <!-- Center: Hunter info -->
@@ -2029,19 +2041,19 @@ html, body {
       <div class="rm-section-body" style="padding:8px 8px 12px;">
 
         <!-- ROW: Lifting -->
-        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;padding:4px 0 6px;border-bottom:1px solid var(--gray3);margin-bottom:6px;">💪 Lifting</div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;padding:4px 0 6px;border-bottom:1px solid var(--gray3);margin-bottom:6px;" id="hdr-workout">💪 Lifting</div>
         <div id="questRow-workout" style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:12px;"></div>
 
         <!-- ROW: Cardio (rank-dynamic) -->
-        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;padding:4px 0 6px;border-bottom:1px solid var(--gray3);margin-bottom:6px;">🏃 Cardio <span id="runnerTierBadge" style="font-size:8px;opacity:0.6;letter-spacing:1px;"></span></div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;padding:4px 0 6px;border-bottom:1px solid var(--gray3);margin-bottom:6px;" id="hdr-running">🏃 Cardio <span id="runnerTierBadge" style="font-size:8px;opacity:0.6;letter-spacing:1px;"></span></div>
         <div id="questRow-running" style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:12px;"></div>
 
         <!-- ROW: Movement -->
-        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;padding:4px 0 6px;border-bottom:1px solid var(--gray3);margin-bottom:6px;">🚶 Movement</div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;padding:4px 0 6px;border-bottom:1px solid var(--gray3);margin-bottom:6px;" id="hdr-consistency">🚶 Movement</div>
         <div id="questRow-consistency" style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:12px;"></div>
 
         <!-- ROW: Wellness -->
-        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;padding:4px 0 6px;border-bottom:1px solid var(--gray3);margin-bottom:6px;">💧 Wellness</div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;padding:4px 0 6px;border-bottom:1px solid var(--gray3);margin-bottom:6px;" id="hdr-misc">💧 Wellness</div>
         <div id="questRow-misc" style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:12px;"></div>
 
       </div>
@@ -2117,7 +2129,6 @@ html, body {
 <!-- LEVEL UP OVERLAY — clean quick pop -->
 <div id="levelUpOverlay" onclick="closeLevelUp()" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.82);align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
   <div id="levelUpCard" onclick="event.stopPropagation()" style="background:#0a0a0a;border:2px solid var(--gold);padding:24px 28px;text-align:center;position:relative;overflow:hidden;width:100%;max-width:340px;max-height:85vh;overflow-y:auto;-webkit-overflow-scrolling:touch;animation:levelUpPop 0.45s cubic-bezier(0.34,1.56,0.64,1) forwards;box-sizing:border-box;">
-    <button onclick="closeLevelUp()" style="position:fixed;top:max(env(safe-area-inset-top,16px),16px);right:16px;background:rgba(0,0,0,0.7);border:1px solid #333;color:#888;font-size:20px;cursor:pointer;line-height:1;padding:4px 10px;z-index:10001;border-radius:2px;" title="Close">×</button>
     <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:6px;color:var(--gold);text-transform:uppercase;margin-bottom:10px;margin-top:4px;">LEVEL UP</div>
     <div id="levelUpNum" style="font-family:'Bebas Neue',sans-serif;font-size:88px;line-height:0.9;color:var(--gold);filter:drop-shadow(0 0 20px var(--gold));"></div>
     <div id="levelUpStatus" style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#ccc;letter-spacing:2px;margin-top:8px;line-height:1.2;"></div>
@@ -2138,7 +2149,6 @@ html, body {
   <div id="rankUpBg" style="position:absolute;inset:0;opacity:0;transition:opacity 0.6s;"></div>
 
   <div id="rankUpContent" onclick="event.stopPropagation()" style="position:relative;z-index:2;text-align:center;opacity:0;transform:scale(0.5);transition:all 0.6s cubic-bezier(0.34,1.56,0.64,1);">
-    <button onclick="closeRankUp()" style="position:fixed;top:max(env(safe-area-inset-top,16px),16px);right:16px;background:rgba(0,0,0,0.7);border:1px solid #333;color:#888;font-size:20px;cursor:pointer;line-height:1;padding:4px 10px;z-index:10001;border-radius:2px;" title="Close">×</button>
     <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:8px;color:#fff;text-transform:uppercase;margin-bottom:16px;opacity:0.7;">RANK UP</div>
     <!-- Chips row -->
     <div id="rankUpChips" style="display:flex;justify-content:center;gap:4px;margin-bottom:20px;"></div>
@@ -2147,6 +2157,7 @@ html, body {
     <!-- Title -->
     <div id="rankUpTitle" style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#fff;letter-spacing:3px;margin-top:12px;line-height:1.2;"></div>
     <div id="rankUpCoinReward" style="display:none;text-align:center;margin-top:12px;padding:10px 14px;background:rgba(240,216,120,0.08);border:1px solid rgba(240,216,120,0.25);border-radius:2px;"></div>
+    <div id="rankUpRunnerTier" style="display:none;text-align:center;margin-top:10px;padding:10px 14px;border:1px solid rgba(200,168,75,0.3);background:rgba(200,168,75,0.05);border-radius:2px;"></div>
     <div id="rankUpStatus" style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,0.5);letter-spacing:3px;margin-top:8px;text-transform:uppercase;"></div>
     <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;color:rgba(255,255,255,0.3);margin-top:20px;text-transform:uppercase;">Tap outside to close · TMC 🏁</div>
   </div>
@@ -2769,19 +2780,19 @@ id="page-running" class="page">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;text-align:right;">
           <div>
             <div style="font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);text-transform:uppercase;">Weekly Goal</div>
-            <div id="rtcWeeklyMiles" style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;">8 mi/wk</div>
+            <div id="rtcWeeklyMiles" style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fff;white-space:nowrap;">8 mi/wk</div>
           </div>
           <div>
             <div style="font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);text-transform:uppercase;">Long Run</div>
-            <div id="rtcLongRun" style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;">3 miles</div>
+            <div id="rtcLongRun" style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fff;white-space:nowrap;">3 miles</div>
           </div>
           <div>
             <div style="font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);text-transform:uppercase;">Pace Target</div>
-            <div id="rtcPace" style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;">Sub 12:00</div>
+            <div id="rtcPace" style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fff;white-space:nowrap;">Sub 12:00</div>
           </div>
           <div>
             <div style="font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);text-transform:uppercase;">Session</div>
-            <div id="rtcSession" style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;">2–3 mi</div>
+            <div id="rtcSession" style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fff;white-space:nowrap;">2–3 mi</div>
           </div>
         </div>
       </div>
@@ -5284,6 +5295,9 @@ function updateHunterCard() {
   // Rank letter — animated per rank
   const rl = document.getElementById('rankLetter');
   if (rl) { applyRankIconToElement('rankLetter', rank); }
+  // Rank glow slab
+  const rlg = document.getElementById('rankLetterGlow');
+  if (rlg) rlg.style.background = rank.color;
 
   // Hunter title
   const ht = document.getElementById('hunterTitle');
@@ -5352,13 +5366,13 @@ function updateHunterCard() {
 // RUNNER TIER SYSTEM
 // ═══════════════════════════════════════
 const RUNNER_TIERS = {
-  rookie:     { icon:'◆', label:'Fresh Legs',    ranks:['E'],        weeklyMiles:8,  longRunMiles:3,  paceSec:720, cardioQuests:['run1','run2','run5k'],   longRunLabel:'3 Mile Long Run (5K)' },
-  building:   { icon:'◆', label:'Building',      ranks:['D'],        weeklyMiles:12, longRunMiles:3,  paceSec:720, cardioQuests:['run1','run2','run5k'],   longRunLabel:'3 Mile Long Run (5K)' },
-  builder:    { icon:'◆', label:'In Motion',     ranks:['C'],         weeklyMiles:12, longRunMiles:5,  paceSec:690, cardioQuests:['run1','run5k','longrun'],  longRunLabel:'5 Mile Long Run' },
+  rookie:     { icon:'◆', label:'Tortoise',    ranks:['E'],        weeklyMiles:8,  longRunMiles:3,  paceSec:720, cardioQuests:['run1','run2','run5k'],   longRunLabel:'3 Mile Long Run (5K)' },
+  building:   { icon:'◆', label:'In Motion',     ranks:['D'],        weeklyMiles:12, longRunMiles:3,  paceSec:720, cardioQuests:['run1','run2','run5k'],   longRunLabel:'3 Mile Long Run (5K)' },
+  builder:    { icon:'◆', label:'Finding the Stride', ranks:['C'],         weeklyMiles:12, longRunMiles:5,  paceSec:690, cardioQuests:['run1','run5k','longrun'],  longRunLabel:'5 Mile Long Run' },
   runner:     { icon:'◆', label:'Runner',        ranks:['B'],         weeklyMiles:18, longRunMiles:8,  paceSec:660, cardioQuests:['run5k','run10k','longrun'],  longRunLabel:'8 Mile Long Run' },
   roadwarrior:{ icon:'◆', label:'Road Warrior',  ranks:['A'],         weeklyMiles:25, longRunMiles:12, paceSec:600, cardioQuests:['run5k','run10k','longrun'], longRunLabel:'12 Mile Long Run' },
-  elite:      { icon:'◆', label:'Pacer',         ranks:['S','S+'],    weeklyMiles:35, longRunMiles:16, paceSec:540, cardioQuests:['run10k','longrun','halfmarathon'], longRunLabel:'16 Mile Long Run' },
-  nl:         { icon:'◆', label:'Marathoner',    ranks:['NL'],        weeklyMiles:50, longRunMiles:20, paceSec:480, cardioQuests:['run10k','halfmarathon','longrun'], longRunLabel:'20 Mile Long Run' },
+  elite:      { icon:'◆', label:'Ingenium',         ranks:['S','S+'],    weeklyMiles:35, longRunMiles:16, paceSec:540, cardioQuests:['run10k','longrun','halfmarathon'], longRunLabel:'16 Mile Long Run' },
+  nl:         { icon:'◆', label:'Bankai',    ranks:['NL'],        weeklyMiles:50, longRunMiles:20, paceSec:480, cardioQuests:['run10k','halfmarathon','longrun'], longRunLabel:'20 Mile Long Run' },
 };
 function getRunnerTier(rankStr) {
   const override = localStorage.getItem('runnerTierOverride');
@@ -5390,13 +5404,59 @@ function checkRunnerTierUp(prevRankStr, newRankStr) {
 }
 
 function showRunnerTierUp(tier) {
-  const toast = document.createElement('div');
-  toast.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#0a0a0a;border:1px solid var(--gold);padding:14px 24px;z-index:9997;text-align:center;animation:levelUpPop 0.4s ease both;min-width:260px;';
-  toast.innerHTML = '<div style="font-family:Space Mono,monospace;font-size:9px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;">Runner Tier Unlocked</div>'
-    + '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;color:#fff;letter-spacing:2px;">' + tier.icon + ' ' + tier.label.toUpperCase() + '</div>'
-    + '<div style="font-family:Space Mono,monospace;font-size:9px;color:#888;margin-top:6px;">Week target: ' + tier.weeklyMiles + ' mi · Long run: ' + tier.longRunMiles + ' mi</div>';
-  document.body.appendChild(toast);
-  setTimeout(() => { toast.style.opacity='0'; toast.style.transition='opacity 0.5s'; setTimeout(()=>toast.remove(),500); }, 4500);
+  if (tier.label === 'Bankai') { showBankaiSequence(); return; }
+  // Full-screen overlay — cannot click out, must tap to continue
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,0.95);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;cursor:pointer;animation:levelUpPop 0.4s ease both;';
+  overlay.innerHTML =
+    '<div style="font-family:Space Mono,monospace;font-size:9px;letter-spacing:5px;color:var(--gold);text-transform:uppercase;margin-bottom:12px;opacity:0.7;">Running Tier Unlocked 🏃</div>'
+    + '<div style="font-family:Bebas Neue,sans-serif;font-size:clamp(52px,14vw,96px);line-height:0.9;letter-spacing:2px;color:#fff;text-shadow:0 0 40px var(--gold),0 0 80px rgba(200,168,75,0.4);text-align:center;">' + tier.label.toUpperCase() + '</div>'
+    + '<div style="width:60px;height:2px;background:var(--gold);margin:16px auto;opacity:0.5;"></div>'
+    + '<div style="font-family:Space Mono,monospace;font-size:10px;color:var(--muted);text-align:center;line-height:1.8;">'
+    + 'Weekly Target: ' + tier.weeklyMiles + ' mi &nbsp;·&nbsp; Long Run: ' + (tier.longRunLabel || tier.longRunMiles + ' mi') + '</div>'
+    + '<div style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:2px;color:#333;margin-top:36px;text-transform:uppercase;">Tap to continue</div>';
+  document.body.appendChild(overlay);
+  overlay.onclick = function(){ overlay.remove(); };
+  // Auto-dismiss after 6s
+  setTimeout(function(){ if(overlay.parentNode){ overlay.style.opacity='0'; overlay.style.transition='opacity 0.5s'; setTimeout(function(){if(overlay.parentNode)overlay.remove();},500); } }, 6000);
+}
+function showBankaiSequence() {
+  var overlay = document.createElement('div');
+  overlay.id = 'bankaiOverlay';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:10000;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;';
+  var canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:absolute;inset:0;pointer-events:none;';
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  overlay.appendChild(canvas);
+  var content = document.createElement('div');
+  content.style.cssText = 'position:relative;z-index:2;text-align:center;opacity:0;transition:opacity 0.8s ease;padding:24px;';
+  content.innerHTML =
+    '<div style="font-family:Space Mono,monospace;font-size:9px;letter-spacing:8px;color:#555;text-transform:uppercase;margin-bottom:20px;">NL Rank Achieved</div>'
+    + '<div style="font-family:Bebas Neue,sans-serif;font-size:clamp(60px,18vw,120px);line-height:0.85;letter-spacing:-4px;color:#fff;text-shadow:0 0 60px #fff,0 0 120px rgba(255,255,255,0.5);">BANKAI</div>'
+    + '<div style="font-family:Space Mono,monospace;font-size:clamp(8px,2.5vw,11px);letter-spacing:4px;color:#888;margin-top:20px;text-transform:uppercase;">Marathoner · National Level</div>'
+    + '<div style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:2px;color:#333;margin-top:40px;text-transform:uppercase;">Tap to continue</div>';
+  overlay.appendChild(content);
+  document.body.appendChild(overlay);
+  overlay.onclick = function(){ overlay.remove(); };
+  var ctx = canvas.getContext('2d');
+  var frame = 0;
+  function drawLightning(x1,y1,x2,y2,b) {
+    if(b<=0) return;
+    ctx.beginPath(); ctx.moveTo(x1,y1);
+    var mx=(x1+x2)/2+(Math.random()-0.5)*120, my=(y1+y2)/2+(Math.random()-0.5)*60;
+    ctx.quadraticCurveTo(mx,my,x2,y2);
+    ctx.strokeStyle='rgba(255,255,255,'+(0.3+Math.random()*0.7)+')';
+    ctx.lineWidth=b*0.8; ctx.stroke();
+    if(Math.random()>0.5) drawLightning(mx,my,mx+(Math.random()-0.5)*200,my+Math.random()*150,b-1);
+  }
+  function animateLightning() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    if(frame%3===0){ var n=3+Math.floor(Math.random()*4); for(var i=0;i<n;i++) drawLightning(Math.random()*canvas.width,0,Math.random()*canvas.width,canvas.height*0.8,4); }
+    frame++;
+    var bo=document.getElementById('bankaiOverlay'); if(bo) requestAnimationFrame(animateLightning);
+  }
+  animateLightning();
+  setTimeout(function(){ content.style.opacity='1'; },400);
 }
 
 // ═══════════════════════════════════════
@@ -5418,6 +5478,7 @@ const BASE_QUESTS = [
   { id:'steps',        label:'10K Steps',       icon:'🚶', xp:175,  type:'movement', row:'movement' },
   { id:'ballprac',      label:'Sports Practice',  icon:'🏀', xp:125,  type:'movement', row:'movement'    },
   { id:'outdoor',      label:'Outdoor Walk',    icon:'🌳', xp:90,   type:'movement', row:'movement' },
+  { id:'indoor',       label:'Indoor Walk',     icon:'🏢', xp:90,   type:'movement', row:'movement' },
   // ── Wellness ──
   { id:'hydrate',      label:'2L Water',        icon:'💧', xp:60,   type:'wellness', row:'wellness' },
   { id:'sleep',        label:'8hrs Sleep',      icon:'😴', xp:100,  type:'wellness', row:'wellness' },
@@ -5514,7 +5575,7 @@ function buildQuestGrid() {
     if (id === 'longrun') return { ...q, label: tier.longRunMiles + ' Mile Long Run' };
     return q;
   }).filter(Boolean);
-  movementQuests = ['steps','outdoor'].map(id => BASE_QUESTS.find(q => q.id === id)).filter(Boolean);
+  movementQuests = ['steps'].map(id => BASE_QUESTS.find(q => q.id === id)).filter(Boolean);
   // Wellness: hydrate + mobility always show, rotate sleep/cold as 3rd slot daily
   const daySeed = parseInt(today.replace(/-/g,'')) || 1;
   const wellnessThird = (daySeed % 2 === 0) ? 'sleep' : 'cold';
@@ -5528,6 +5589,9 @@ function buildQuestGrid() {
   ];
 
   let totalEarned = 0;
+  // Header IDs for neglect detection
+  const HDR_IDS = { 'questRow-workout':'hdr-workout','questRow-running':'hdr-running','questRow-consistency':'hdr-consistency','questRow-misc':'hdr-misc' };
+
   rows.forEach(row => {
     const el = document.getElementById(row.id);
     if (!el) return;
@@ -5571,8 +5635,60 @@ function buildQuestGrid() {
         };
       }
       el.appendChild(sportsTile);
+      // Walk quest — alternate outdoor/indoor by day for variety
+      // Odd days = outdoor, even days = indoor
+      var daySeedWalk = parseInt(today.replace(/-/g,'')) || 1;
+      var walkId = (daySeedWalk % 2 !== 0) ? 'outdoor' : 'indoor';
+      // If the other type was already done today, show that one as done
+      var altWalkId = (walkId === 'outdoor') ? 'indoor' : 'outdoor';
+      var walkQ = BASE_QUESTS.find(function(q){ return q.id === walkId; });
+      var altWalkDone = data.dailyQuests[today] && data.dailyQuests[today][altWalkId] && data.dailyQuests[today][altWalkId] !== 'locked';
+      if (altWalkDone) {
+        // Show completed tile for the one they already did
+        var altWalkQ = BASE_QUESTS.find(function(q){ return q.id === altWalkId; });
+        if (altWalkQ) {
+          totalEarned += altWalkQ.xp;
+          el.appendChild(makeQuestTile(altWalkQ, true, 'daily', false));
+        }
+      } else if (walkQ) {
+        var wv = data.dailyQuests[today] && data.dailyQuests[today][walkId];
+        var wl = wv === 'locked'; var wd = !!wv && !wl;
+        if (wd) totalEarned += walkQ.xp;
+        el.appendChild(makeQuestTile(walkQ, wd, 'daily', wl));
+      }
     }
   });
+
+  // ── Neglect detection — 4-day window ──
+  (function(){
+    var dq = data.dailyQuests || {};
+    var todayQ = dq[today] || {};
+    var neglectMap = [
+      { hdr:'hdr-workout',     ids:['push','pull','legs'] },
+      { hdr:'hdr-running',     ids:['run1','run2','run5k','run10k','longrun','halfmarathon'] },
+      { hdr:'hdr-consistency', ids:['steps','steps15','outdoor','indoor','ballprac','ball'] },
+      { hdr:'hdr-misc',        ids:['hydrate','mobility','sleep','cold','fasted','weigh'] },
+    ];
+    var last4 = [];
+    for (var ni=1; ni<=4; ni++) { var nd=new Date(); nd.setDate(nd.getDate()-ni); last4.push(nd.getFullYear()+'-'+(nd.getMonth()+1)+'-'+nd.getDate()); }
+    neglectMap.forEach(function(cat){
+      var hdr = document.getElementById(cat.hdr);
+      if (!hdr) return;
+      var neglected = !last4.some(function(dStr){ var dq2=dq[dStr]||{}; return cat.ids.some(function(id){ return dq2[id]&&dq2[id]!=='locked'; }); });
+      var doneToday = cat.ids.some(function(id){ return todayQ[id]&&todayQ[id]!=='locked'; });
+      if (neglected && !doneToday) {
+        hdr.style.color='#e67e22'; hdr.style.borderBottomColor='#e67e2255';
+        if (!hdr.querySelector('.neglect-warn')) {
+          var w=document.createElement('span'); w.className='neglect-warn';
+          w.style.cssText='font-size:7px;letter-spacing:1px;color:#e67e22;margin-left:8px;opacity:0.8;';
+          w.textContent='⚠ neglected — complete one today'; hdr.appendChild(w);
+        }
+      } else {
+        hdr.style.color=''; hdr.style.borderBottomColor='';
+        var w=hdr.querySelector('.neglect-warn'); if(w) w.remove();
+      }
+    });
+  })();
 
   const xpEl = document.getElementById('dailyXPEarned');
   if (xpEl) xpEl.textContent = totalEarned > 0 ? '+' + totalEarned + ' XP' : '';
@@ -5764,13 +5880,17 @@ function earnQuestXP(questId, type, e) {
   buildCoinHistory();
   buildBadges();
 
-  // Queue: milestones first, then level/rank popup after
+  // Queue: milestones → level ups → rank up (level ups ALWAYS fire before rank ups)
   function showLevelOrRank() {
-    if (newRank.rank !== prevRank.rank) {
-      checkRunnerTierUp(prevRank.rank, newRank.rank);
+    if (levelsGained.length > 0 && newRank.rank !== prevRank.rank) {
+      // Level ups first, then rank up after they finish
+      setTimeout(() => showLevelUpSequence(levelsGained, prevLevel, data, () => {
+        setTimeout(() => showRankUp(newRank), 400);
+      }), 400);
+    } else if (newRank.rank !== prevRank.rank) {
       setTimeout(() => showRankUp(newRank), 400);
     } else if (levelsGained.length > 0) {
-      setTimeout(() => showLevelUpSequence(levelsGained, prevLevel, data), 400);
+      setTimeout(() => showLevelUpSequence(levelsGained, prevLevel, data, null), 400);
     }
   }
 
@@ -6271,13 +6391,17 @@ const LEVEL_UP_QUOTES = [
 
 function showLevelUp(newLevel, newStatus) {
   // Legacy single-level call — wrap in sequence
-  showLevelUpSequence([newLevel], newLevel - 1, getXPData());
+  showLevelUpSequence([newLevel], newLevel - 1, getXPData(), null);
 }
 
-function showLevelUpSequence(levels, prevLevel, data) {
-  if (!levels || levels.length === 0) return;
+function showLevelUpSequence(levels, prevLevel, data, onComplete) {
+  if (!levels || levels.length === 0) { if (onComplete) onComplete(); return; }
   const overlay = document.getElementById('levelUpOverlay');
-  if (!overlay) return;
+  if (!overlay) { if (onComplete) onComplete(); return; }
+
+  // Block backdrop click when multiple level-ups remain
+  overlay._onComplete = onComplete;
+  overlay._levelsTotal = levels.length;
 
   // Detect status change
   const prevStatus = getStatusTitle(0, data.streak, 0, { ...data, totalXP: 0, dailyQuests: data.dailyQuests });
@@ -6315,12 +6439,16 @@ function showLevelUpSequence(levels, prevLevel, data) {
     if (stepIdx >= levels.length) {
       // Final step — show badges + status + quote
       showFinalLevelUp(levels[levels.length-1], newStatusTitle, statusChanged, prevStatusTitle, newBadges, data, MILESTONES);
+      // Allow close now (final screen)
+      overlay._blockClose = false;
       return;
     }
     const lvl = levels[stepIdx];
     stepIdx++;
     _renderLevelFrame(lvl, MILESTONES, levels.length > 1);
     overlay.style.display = 'flex';
+    // Block close while more levels to show
+    overlay._blockClose = (stepIdx < levels.length);
     // If multiple levels, auto-advance after 900ms each, except last
     if (levels.length > 1 && stepIdx < levels.length) {
       clearTimeout(window._lvlTimeout);
@@ -6501,7 +6629,13 @@ function spawnMilestoneBurst(color, level) {
 }
 function closeLevelUp() {
   const o = document.getElementById('levelUpOverlay');
-  if (o) o.style.display = 'none';
+  if (!o) return;
+  // Block dismissal if multiple levels still queued
+  if (o._blockClose) return;
+  o.style.display = 'none';
+  const cb = o._onComplete;
+  o._onComplete = null;
+  if (cb) setTimeout(cb, 200);
 }
 
 // ── Rank Up overlay ──
@@ -6598,13 +6732,16 @@ function applyRankIconToElement(elId, rank) {
   const el = document.getElementById(elId);
   if (!el) return;
   const anim = RANK_ANIM[rank.rank] || 'none';
+  // Preserve existing font-size — only clear layout-breaking styles
+  const existingSize = el.style.fontSize;
   el.textContent = rank.rank;
-  el.style.fontSize = '';
   el.style.background = '';
   el.style.border = '';
   el.style.borderRadius = '';
   el.style.padding = '';
   el.className = 'rank-letter-base' + (anim !== 'none' ? ' rank-anim-' + anim : '');
+  // Restore font-size if it was set; otherwise use a sensible fallback
+  if (existingSize) el.style.fontSize = existingSize;
   el.style.color = rank.color;
   el.style.textShadow = anim === 'none' ? '0 0 20px ' + rank.glow : '';
 }
@@ -6681,6 +6818,25 @@ function showRankUp(rank) {
     }
   } else {
     if (rankCoinEl) rankCoinEl.style.display = 'none';
+  }
+
+  // Runner tier unlock — show inline if tier changed
+  const rankRunnerEl = document.getElementById('rankUpRunnerTier');
+  if (rankRunnerEl) {
+    const newTier = getRunnerTier(rank.rank);
+    // Find what the previous rank's tier was
+    const prevRankIdx = RANKS.findIndex(r => r.rank === rank.rank);
+    const prevRankObj = prevRankIdx > 0 ? RANKS[prevRankIdx - 1] : null;
+    const prevTier = prevRankObj ? getRunnerTier(prevRankObj.rank) : null;
+    if (prevTier && prevTier.label !== newTier.label) {
+      rankRunnerEl.style.cssText = 'display:block;text-align:center;margin-top:10px;padding:12px 14px;border:1px solid rgba(200,168,75,0.35);background:rgba(200,168,75,0.06);border-radius:2px;animation:badgePop 0.4s ease 0.6s both;';
+      rankRunnerEl.innerHTML =
+        '<div style="font-family:Space Mono,monospace;font-size:7px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:4px;">🏃 Running Tier Unlocked</div>'
+        + '<div style="font-family:Bebas Neue,sans-serif;font-size:26px;color:#fff;letter-spacing:2px;line-height:1;">' + newTier.label.toUpperCase() + '</div>'
+        + '<div style="font-family:Space Mono,monospace;font-size:8px;color:#555;margin-top:4px;">' + newTier.weeklyMiles + ' mi/wk · Long run: ' + (newTier.longRunLabel || newTier.longRunMiles + ' mi') + '</div>';
+    } else {
+      rankRunnerEl.style.display = 'none';
+    }
   }
 }
 
@@ -6847,7 +7003,7 @@ const SKILL_LEVELS = {
   lifter: [2,2,2,2,2,2,3,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,6,6,6,6,7,7],
   hooper: [1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,4,4,4,4,4,5,5],
   mover:  [2,2,2,2,3,3,3,3,3,4,4,4,4,5,5,5,6,6,7,7,8,8,9,9,10,11,11,12,13,14],
-  monk:   [2,2,2,2,3,3,3,3,3,3,4,4,4,4,5,5,5,6,6,6,7,7,8,8,9,9,10,11,11,12],
+  monk:   [3,3,4,4,5,5,6,6,7,7,8,8,9,10,11,12,13,14,15,16,18,20,22,24,26,28,30,33,36,40],
   streak: [2,2,3,3,4,4,5,5,6,6,7,7,8,9,10,10,11,12,14,15,16,18,19,21,23,20,20,20,20,20],
 };
 const SKILL_TOTALS = {
@@ -6855,7 +7011,7 @@ const SKILL_TOTALS = {
   lifter: 120,
   hooper: 74,
   mover: 185,
-  monk: 167,
+  monk: 443,
   streak: 340,
 };
 
@@ -6872,7 +7028,7 @@ function getSkillLevel(skillId, data) {
   const RUN_IDS  = ['run1','run2','run5k','run10k','longrun','halfmarathon'];
   const LIFT_IDS = ['push','pull','legs'];
   const HOOP_IDS = ['ballprac','ball'];
-  const MOVE_IDS = ['steps','steps15','outdoor'];
+  const MOVE_IDS = ['steps','steps15','outdoor','indoor'];
   const MONK_IDS = ['hydrate','mobility','sleep','cold','fasted','weigh'];
 
   if (skillId === 'streak') {
@@ -6986,8 +7142,7 @@ const HIDDEN_MILESTONES = [
   // Mover
   { id:'hm_move20',  check: d => countMover(d) >= 20,   coins:60,  title:'CITY MOVER',       icon:'🚶', color:'#2ecc71' },
   { id:'hm_move50',  check: d => countMover(d) >= 50,   coins:100, title:'NEVER SITS',       icon:'🚶', color:'#2ecc71' },
-  { id:'hm_move100', check: d => countMover(d) >= 100,  coins:175, title:'THE WALKER',       icon:'🚶', color:'#2ecc71' },
-  // Monk
+  { id:'hm_move100', check: d => countMover(d) >= 100,  coins:175, title:'THE WALKER',       icon:'🚶', color:'#2ecc71' },  // Monk
   { id:'hm_cold10',  check: d => countQuestDone(d,'cold') >= 10,    coins:80,  title:'ICE PROTOCOL',    icon:'🧊', color:'#1abc9c' },
   { id:'hm_weigh20', check: d => countQuestDone(d,'weigh') >= 20,   coins:60,  title:'SCALE MASTER',    icon:'⚖️', color:'#1abc9c' },
   { id:'hm_hydrate30',check:d => countQuestDone(d,'hydrate') >= 30, coins:70,  title:'HYDRATION LOCKED',icon:'💧', color:'#3498db' },
@@ -7003,7 +7158,7 @@ const HIDDEN_MILESTONES = [
 function countAllRuns(d)  { return ['run1','run5k','run10k','longrun','halfmarathon'].reduce((s,id)=>s+countQuestDone(d,id),0); }
 function countAllLifts(d) { return ['push','pull','legs'].reduce((s,id)=>s+countQuestDone(d,id),0); }
 function countHoops(d)    { return ['ballprac','ball'].reduce((s,id)=>s+countQuestDone(d,id),0); }
-function countMover(d)    { return ['steps','steps15','outdoor'].reduce((s,id)=>s+countQuestDone(d,id),0); }
+function countMover(d)    { return ['steps','steps15','outdoor','indoor'].reduce((s,id)=>s+countQuestDone(d,id),0); }
 
 function checkHiddenMilestones(data) {
   if (!data.claimedMilestones) data.claimedMilestones = {};
@@ -7215,7 +7370,7 @@ function buildSkillTree() {
         {label:'5 Sessions',   tip:'5 total runs. The legs are adapting.',               req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=5},
         {label:'Road Warrior', tip:'15 sessions. You call yourself a runner now.',      req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=15},
         {label:'35 Sessions',  tip:'35 sessions. The city knows your footsteps.',       req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=35},
-        {label:'Marathoner',   tip:'80 sessions. Built for distance.',                  req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=80},
+        {label:'Bankai',   tip:'80 sessions. Built for distance.',                  req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=80},
       ]
     },
     { id:'lifter',  name:'The Lifter',     icon:'💪', color:'#e67e22', desc:'Push · pull · legs — building the frame',
@@ -7239,13 +7394,13 @@ function buildSkillTree() {
       ]
     },
     { id:'mover',   name:'The Mover',      icon:'🚶', color:'#2ecc71', desc:'Steps · walks — active every single day',
-      score: d => Math.min(100, Math.round((countQuestDone(d,'steps')+countQuestDone(d,'steps15')+countQuestDone(d,'outdoor'))*3)),
+      score: d => Math.min(100, Math.round((countQuestDone(d,'steps')+countQuestDone(d,'steps15')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor'))*3)),
       nodes:[
-        {label:'First Steps',  tip:'First 10K step day or outdoor walk.',               req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=1},
-        {label:'One Week',     tip:'7 movement days. The baseline is locked in.',       req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=7},
-        {label:'The Walker',   tip:'14 days. You never just sit anymore.',              req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=14},
-        {label:'City Explorer',tip:'30 days. This city is your track.',                 req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=30},
-        {label:'Never Sits',   tip:'60 days. Moving is just who you are now.',          req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=60},
+        {label:'First Steps',  tip:'First 10K step day or outdoor/indoor walk.',          req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=1},
+        {label:'One Week',     tip:'7 movement days. The baseline is locked in.',         req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=7},
+        {label:'The Walker',   tip:'14 days. You never just sit anymore.',                req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=14},
+        {label:'City Explorer',tip:'30 days. This city is your track.',                   req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=30},
+        {label:'Never Sits',   tip:'60 days. Moving is just who you are now.',            req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=60},
       ]
     },
     { id:'monk',    name:'The Monk',       icon:'🧘', color:'#1abc9c', desc:'Mobility · sleep · hydration · cold',
@@ -7749,19 +7904,91 @@ function initXPSystem() {
     saveXPData(data);
     localStorage.setItem('grind_activity_patch_v7', '1');
   }
-  // Patch v8 — set XP to LVL 8, halfway E rank (1929 XP)
-  if (!localStorage.getItem('grind_xp_patch_v8')) {
-    data.totalXP = 1929;
-    data.level   = getLevelFromXP(1929);
+  // Patch v8 — force Level 10 (2350 XP — solidly into L10, still E rank)
+  if (!localStorage.getItem('grind_xp_patch_v8b')) {
+    data = getXPData();
+    data.totalXP = Math.max(data.totalXP || 0, 2350);
+    data.level   = getLevelFromXP(data.totalXP);
     saveXPData(data);
     localStorage.setItem('grind_xp_patch_v8', '1');
+    localStorage.setItem('grind_xp_patch_v8b', '1');
   }
 
 
 
+  // Patch v12 — Tuesday March 24 activities + treat yourself x2
+  if (!localStorage.getItem('grind_activity_patch_v12')) {
+    data = getXPData();
+    if (!data.dailyQuests['2026-3-24']) data.dailyQuests['2026-3-24'] = {};
+    data.dailyQuests['2026-3-24'].sleep   = true;
+    data.dailyQuests['2026-3-24'].steps   = true;
+    data.dailyQuests['2026-3-24'].run2    = true;
+    // run2 locks run1
+    data.dailyQuests['2026-3-24'].run1    = 'locked';
+    data.dailyQuests['2026-3-24'].outdoor = true;
+    data.dailyQuests['2026-3-24'].hydrate = true;
+    data.dailyQuests['2026-3-24'].weigh   = true;
+    // XP for Tuesday (no streak mult yet — streak was 7, mult = 1 + floor(7/7)*0.05 = 1.05)
+    var tueMult = Math.min(1.5, 1 + Math.floor(7 / 7) * 0.05); // 1.05
+    var tueXP = Math.round((100 + 175 + 220 + 90 + 60 + 50) * tueMult); // 695 * 1.05 = ~730
+    var tueCoins = Math.round((100 + 175 + 220 + 90 + 60 + 50) / 8); // ~84
+    data.totalXP = (data.totalXP || 0) + tueXP;
+    data.coins   = (data.coins   || 0) + tueCoins;
+    // Subtract Treat Yourself x2 (150 each = 300 total)
+    data.coins   = Math.max(0, data.coins - 300);
+    data.level   = getLevelFromXP(data.totalXP);
+    data.streak  = 8;
+    data.lastActiveDate = '2026-3-24';
+    if (!data.longestStreak || data.streak > data.longestStreak) data.longestStreak = data.streak;
+    data.streakSkillProgress = (data.streakSkillProgress || 0) + 1;
+    data.lastStreakSkillDate = '2026-3-24';
+    if (!data.coinHistory) data.coinHistory = [];
+    // Treat yourself deductions first (most recent)
+    data.coinHistory.unshift({ icon:'🎁', label:'Treat Yourself',    amount:-150, date:'3/24/2026' });
+    data.coinHistory.unshift({ icon:'🎁', label:'Treat Yourself',    amount:-150, date:'3/24/2026' });
+    // Earned coins
+    data.coinHistory.unshift({ icon:'⚖️', label:'Weigh In — 259.5 lbs', amount:6,  date:'3/24/2026' });
+    data.coinHistory.unshift({ icon:'💧', label:'2L Water',          amount:7,  date:'3/24/2026' });
+    data.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',      amount:11, date:'3/24/2026' });
+    data.coinHistory.unshift({ icon:'🏃', label:'2 Mile Run',        amount:27, date:'3/24/2026' });
+    data.coinHistory.unshift({ icon:'🚶', label:'10K Steps',         amount:22, date:'3/24/2026' });
+    data.coinHistory.unshift({ icon:'😴', label:'8hrs Sleep',        amount:12, date:'3/24/2026' });
+    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
+    // Weight log
+    var wdata12 = getWeightData();
+    if (!wdata12.log) wdata12.log = [];
+    wdata12.current = 259.5;
+    // Only add if not already logged
+    if (!wdata12.log.some(function(e){ return e.date === '3/24/2026'; })) {
+      wdata12.log.unshift({ weight: 259.5, date: '3/24/2026', _ts: new Date('2026-03-24').getTime() });
+    }
+    saveWeightData(wdata12);
+    // Mark redeemed Treat Yourself x2
+    if (!data.redeemedRewards) data.redeemedRewards = {};
+    data.redeemedRewards['snack'] = (data.redeemedRewards['snack'] || 0) + 2;
+    saveXPData(data);
+    localStorage.setItem('grind_activity_patch_v12', '1');
+  }
+  // Patch v13 — force Level 10 hard floor (2350 XP), streak 8 floor
+  if (!localStorage.getItem('grind_data_patch_v13')) {
+    data = getXPData();
+    if ((data.totalXP || 0) < 2350) {
+      data.totalXP = 2350;
+      data.level   = getLevelFromXP(2350); // = 10
+    } else {
+      data.level = getLevelFromXP(data.totalXP);
+    }
+    if ((data.streak || 0) < 8) {
+      data.streak = 8;
+      data.lastActiveDate = '2026-3-24';
+      data.longestStreak = Math.max(data.longestStreak || 0, 8);
+    }
+    saveXPData(data);
+    localStorage.setItem('grind_data_patch_v13', '1');
+  }
   checkPunishment();
   updateHunterCard();
-  setTimeout(checkWeeklyRecap, 1200); // slight delay so app loads first
+  setTimeout(checkWeeklyRecap, 1200);
   buildQuestGrid();
   updateResetButtonStates();
   buildRewardShop();
