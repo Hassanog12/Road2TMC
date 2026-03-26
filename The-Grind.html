@@ -6,8 +6,19 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
-<title>Road to The Marathon Continues</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<title>R2TMC — The Grind</title>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -8159,6 +8170,15 @@ function initXPSystem() {
     localStorage.removeItem('grind_badges_prev_v2');
     localStorage.removeItem('grind_badges_prev_lvl_v2');
     localStorage.setItem('grind_activity_patch_v15', '1');
+  }
+
+  // Patch v16 — force level 13, rank E (3128 XP)
+  if (!localStorage.getItem('grind_data_patch_v16')) {
+    data = getXPData();
+    data.totalXP = 3128;
+    data.level   = getLevelFromXP(3128); // = 13
+    saveXPData(data);
+    localStorage.setItem('grind_data_patch_v16', '1');
   }
 
   setTimeout(checkWeeklyRecap, 1200);
