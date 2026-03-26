@@ -8127,6 +8127,19 @@ function initXPSystem() {
     localStorage.setItem('grind_activity_patch_v15', '1');
   }
 
+  //patch 16 set level a level in E rank and set rank to E Rank
+  if (!localStorage.getItem('grind_data_patch_v16')) {
+    data = getXPData();
+    if ((data.totalXP || 0) < 3500) {
+      data.totalXP = 3500;
+      data.level   = getLevelFromXP(3500); // = something less than D rank
+    } else {
+      data.level = getLevelFromXP(data.totalXP);
+    }
+    saveXPData(data);
+    localStorage.setItem('grind_data_patch_v16', '1');
+  }
+
   setTimeout(checkWeeklyRecap, 1200);
   buildQuestGrid();
   updateResetButtonStates();
