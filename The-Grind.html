@@ -6,8 +6,19 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
-<title>Road to The Marathon Continues</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<title>R2TMC — The Grind</title>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -2385,16 +2396,16 @@ html, body {
 .ex-meta{text-align:right;flex-shrink:0;white-space:nowrap;}
 .ex-meta-val{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--white);line-height:1;}
 .ex-meta-lbl{font-family:'Space Mono',monospace;font-size:9px;color:#555;}
-.vid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px;padding:12px 14px;}
-.vid-card{background:#060606;border:1px solid var(--gray3);overflow:hidden;text-decoration:none;display:block;transition:border-color 0.2s;}
-.vid-card:hover{border-color:var(--gold);}
-.vid-card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#111;}
-.vid-info{padding:6px 8px;}
-.vid-title{font-family:'Space Mono',monospace;font-size:9px;color:var(--white);line-height:1.4;margin-bottom:2px;}
+.vid-grid{display:flex;flex-direction:column;gap:4px;padding:12px 14px;}
+.vid-card{background:#0a0a0a;border:1px solid var(--gray3);overflow:hidden;text-decoration:none;display:flex;align-items:center;gap:12px;padding:10px 14px;transition:border-color 0.2s;}
+.vid-card:hover{border-color:var(--gold);background:#111;}
+.vid-info{flex:1;min-width:0;}
+.vid-title{font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--white);letter-spacing:1px;line-height:1.2;margin-bottom:2px;}
 .vid-ch{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);}
+.vid-icon{font-size:16px;flex-shrink:0;opacity:0.7;}
+.vid-arrow{font-family:'Space Mono',monospace;font-size:9px;color:var(--gold);flex-shrink:0;letter-spacing:1px;}
 @media(max-width:600px){
   .wo-title{font-size:28px;}
-  .vid-grid{grid-template-columns:1fr 1fr;}
   .ex{grid-template-columns:18px 1fr auto;gap:0 6px;padding:9px 10px;}
 }
 </style>
@@ -2416,76 +2427,96 @@ html, body {
       <div style="font-family:'Space Mono',monospace;font-size:8px;color:rgba(200,168,75,0.5);margin-top:6px;letter-spacing:2px;text-transform:uppercase;">MON &amp; THU · SUNNAH FAST · TMC 🏁</div>
     </div>
 
+    <!-- UPPER CHEST -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">01</div>
-        <div class="wo-section-name">Incline Dumbbell Press</div>
-        <div class="wo-section-tag">Upper Chest</div>
+        <div class="wo-section-name">Upper Chest</div>
+        <div class="wo-section-tag">Clavicular Head</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Incline Dumbbell Press</div><div class="ex-cue">45° incline. Press up and slightly together. 3 sec descent. Builds the upper chest shelf. Feel the stretch at bottom.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">30–35 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Lateral Raises</div><div class="ex-cue">Raise to shoulder height. Pinky slightly higher. No swinging. Builds shoulder width = V-taper.</div></div><div class="ex-meta"><div class="ex-meta-val">4×12</div><div class="ex-meta-lbl">10–15 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Incline Dumbbell Press</div><div class="ex-cue">45° incline. Press up and slightly inward. 3 sec descent. Builds the upper chest shelf — the part that shows in a shirt.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">30–35 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">High-to-Low Cable Fly</div><div class="ex-cue">Cables set high. Bring hands together at chest level sweeping downward. Squeeze at the crossover. Direct upper chest isolation.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">Light</div></div></div>
+        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Incline Dumbbell Fly</div><div class="ex-cue">Same 45° bench. Wide arc — elbows slightly bent. Lower until chest stretch. Squeeze back up. Pure upper chest stretch.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">15–20 lbs</div></div></div>
       </div>
     </div>
 
+    <!-- MID / LOWER CHEST -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">02</div>
-        <div class="wo-section-name">Flat Dumbbell Press</div>
-        <div class="wo-section-tag">Chest Mass</div>
+        <div class="wo-section-name">Mid &amp; Lower Chest</div>
+        <div class="wo-section-tag">Sternal Head</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Flat Dumbbell Press</div><div class="ex-cue">Feel the stretch at bottom. Primary chest mass builder. Drive feet into floor for stability.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">35–40 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Tricep Cable Pushdown</div><div class="ex-cue">Elbows pinned to sides. Squeeze hard at full extension. Slow return. Triceps = 2/3 of arm size.</div></div><div class="ex-meta"><div class="ex-meta-val">4×12</div><div class="ex-meta-lbl">30–40 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Flat Dumbbell Press</div><div class="ex-cue">Feel the stretch at the bottom — that's where the growth is. Primary mass builder for the chest. Drive feet into floor, arch slightly.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">35–40 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Low-to-High Cable Fly</div><div class="ex-cue">Cables set low. Sweep hands upward and together at face height. Targets the lower and outer chest sweep.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">Light</div></div></div>
+        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Chest Dips (Assisted if needed)</div><div class="ex-cue">Lean forward 30°. Lower until 90° at elbow. Drive up squeezing chest. Don't go too deep. The lean is what hits chest over tricep.</div></div><div class="ex-meta"><div class="ex-meta-val">3×8</div><div class="ex-meta-lbl">BW / Assisted</div></div></div>
       </div>
     </div>
 
+    <!-- FRONT DELTS (ANTERIOR) -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">03</div>
-        <div class="wo-section-name">Overhead Press + Tricep Extension</div>
-        <div class="wo-section-tag">Shoulders</div>
+        <div class="wo-section-name">Front Shoulders</div>
+        <div class="wo-section-tag">Anterior Delts</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Seated Dumbbell Overhead Press</div><div class="ex-cue">Sit upright. Press straight up. Don't fully lock elbows. Control the descent. Wider silhouette.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">25–30 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Overhead Cable Tricep Extension</div><div class="ex-cue">Face away from cable. Extend arms forward. Squeeze at full extension. Hits the long head.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">25–35 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Seated Dumbbell Overhead Press</div><div class="ex-cue">Press straight up from shoulder height. Don't lean back excessively. 3 sec descent. Primary mass builder for front and mid delts.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">25–30 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Dumbbell Front Raise</div><div class="ex-cue">Arms straight, raise to shoulder height, pause 1 sec. No swinging. Pure anterior delt — these are already hit by pressing but this isolates them fully.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">10–15 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Arnold Press</div><div class="ex-cue">Start with palms facing you, rotate outward as you press. Hits front, side, and rear delt in one movement. Great shoulder finisher.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">20–25 lbs</div></div></div>
       </div>
     </div>
 
+    <!-- SIDE DELTS (LATERAL) -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">04</div>
-        <div class="wo-section-name">Cable Fly + Chest Dips</div>
-        <div class="wo-section-tag">Finisher</div>
+        <div class="wo-section-name">Side Shoulders</div>
+        <div class="wo-section-tag">Lateral Delts · V-Taper</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Low Cable Fly</div><div class="ex-cue">Cables low, arms wide, bring hands together at chest height. Squeeze for 1 sec. Isolates chest fully.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">Light</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Chest Dips (Assisted if needed)</div><div class="ex-cue">Lean forward for chest emphasis. Lower to 90°. Press up squeezing chest. Don't go too deep.</div></div><div class="ex-meta"><div class="ex-meta-val">3×8</div><div class="ex-meta-lbl">Bodyweight</div></div></div>
-        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Front Raises</div><div class="ex-cue">Arms straight, raise to shoulder height. Controlled. Hits anterior delts. Keep core tight.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">10–15 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Dumbbell Lateral Raise</div><div class="ex-cue">Raise to shoulder height, pinky slightly higher than thumb. No swinging. This is the single most important exercise for shoulder width and V-taper. Do it slowly.</div></div><div class="ex-meta"><div class="ex-meta-val">4×15</div><div class="ex-meta-lbl">10–15 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Cable Lateral Raise</div><div class="ex-cue">Single arm, cable at ankle height. Pull outward and up. Cable keeps tension throughout — dumbbells drop off at the bottom. Do both sides.</div></div><div class="ex-meta"><div class="ex-meta-val">3×15</div><div class="ex-meta-lbl">Each side</div></div></div>
+        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Leaning Lateral Raise</div><div class="ex-cue">Hold a rack, lean away slightly. Single arm raise. The lean increases the range of motion at the bottom — better stretch and growth stimulus.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">Each side</div></div></div>
+      </div>
+    </div>
+
+    <!-- TRICEPS -->
+    <div class="wo-section open">
+      <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
+        <div class="wo-section-num">05</div>
+        <div class="wo-section-name">Triceps</div>
+        <div class="wo-section-tag">Long · Lateral · Medial Heads</div>
+        <div class="wo-section-chev">▼</div>
+      </div>
+      <div class="wo-section-body">
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Overhead Cable Tricep Extension</div><div class="ex-cue">Face away from cable. Arms overhead, extend forward. Hits the long head — the biggest head, the one that makes arms look big from behind. Squeeze hard at full extension.</div></div><div class="ex-meta"><div class="ex-meta-val">4×12</div><div class="ex-meta-lbl">25–35 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Rope Cable Pushdown</div><div class="ex-cue">Elbows pinned to sides. At the bottom, pull the rope ends apart for extra contraction. Hits lateral and medial heads. Triceps = 2/3 of arm size.</div></div><div class="ex-meta"><div class="ex-meta-val">4×12</div><div class="ex-meta-lbl">30–40 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Dumbbell Skull Crusher</div><div class="ex-cue">Lie flat. Arms vertical, lower dumbbells toward forehead bending only at elbows. Isolates all three heads. Control the negative — this is where you build.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">15–20 lbs</div></div></div>
       </div>
     </div>
 
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
-        <div class="wo-section-num">05</div>
-        <div class="wo-section-name">Watch & Learn</div>
+        <div class="wo-section-num">06</div>
+        <div class="wo-section-name">Watch &amp; Learn</div>
         <div class="wo-section-tag">YouTube</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
         <div class="vid-grid">
-          <a href="https://youtube.com/watch?v=IOH7Y84HlQ0" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/IOH7Y84HlQ0/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Beginner Push Day Full Workout</div><div class="vid-ch">Jeff Nippard</div></div></a>
-          <a href="https://youtube.com/watch?v=gRVjAtPip0Y" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/gRVjAtPip0Y/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Lateral Raises — Perfect Form</div><div class="vid-ch">Athlean-X</div></div></a>
-          <a href="https://youtube.com/watch?v=VmB1G1K7v94" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/VmB1G1K7v94/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Perfect Chest Workout for Beginners</div><div class="vid-ch">Jeremy Ethier</div></div></a>
-          <a href="https://youtube.com/watch?v=L3pTnzqKaB8" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/L3pTnzqKaB8/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Dumbbell Only Push Day</div><div class="vid-ch">Austin Dunham</div></div></a>
-          <a href="https://youtube.com/watch?v=dSmHzbMJLeo" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/dSmHzbMJLeo/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Incline Press Mastery</div><div class="vid-ch">Jeff Nippard</div></div></a>
-          <a href="https://youtube.com/watch?v=WxnxmAhFGM8" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/WxnxmAhFGM8/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Tricep Pushdown Form Guide</div><div class="vid-ch">Athlean-X</div></div></a>
-          <a href="https://youtube.com/watch?v=eozdVDA78K0" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/eozdVDA78K0/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Cable Fly — Full Tutorial</div><div class="vid-ch">Scott Herman Fitness</div></div></a>
-          <a href="https://youtube.com/watch?v=Dkl_t3oNQ5M" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/Dkl_t3oNQ5M/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Chest Dips — How To</div><div class="vid-ch">Buff Dudes</div></div></a>
+          <a href="https://www.youtube.com/watch?v=IOH7Y84HlQ0" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Beginner Push Day Full Workout</div><div class="vid-ch">Jeff Nippard</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=gRVjAtPip0Y" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Lateral Raises — Perfect Form</div><div class="vid-ch">Athlean-X</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=VmB1G1K7v94" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Perfect Chest Workout</div><div class="vid-ch">Jeremy Ethier</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=dSmHzbMJLeo" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Incline Press Mastery</div><div class="vid-ch">Jeff Nippard</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=WxnxmAhFGM8" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Tricep Pushdown Form</div><div class="vid-ch">Athlean-X</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=eozdVDA78K0" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Cable Fly Full Tutorial</div><div class="vid-ch">Scott Herman</div></div><span class="vid-arrow">↗</span></a>
         </div>
       </div>
     </div>
@@ -2514,76 +2545,96 @@ html, body {
     </div>
     <div class="wo-tip" style="border-left-color:#3498db;">Pull with your elbows, not your hands. Initiate every rep by depressing your shoulder blade first. Feel the lat — don't just move the bar.</div>
 
+    <!-- LATS — WIDTH -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">01</div>
-        <div class="wo-section-name">Lat Pulldown + Face Pulls</div>
-        <div class="wo-section-tag">Back Width</div>
+        <div class="wo-section-name">Lats — Width</div>
+        <div class="wo-section-tag">Latissimus Dorsi</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Lat Pulldown</div><div class="ex-cue">Wide grip. Pull bar to upper chest. Lean back slightly. Feel lats stretch at top. Builds the V.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">Mod weight</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Face Pulls</div><div class="ex-cue">Rope at face height. Pull to forehead. Elbows high and wide. Rear delt and rotator cuff health.</div></div><div class="ex-meta"><div class="ex-meta-val">4×15</div><div class="ex-meta-lbl">Light</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Lat Pulldown (Wide Grip)</div><div class="ex-cue">Pull bar to upper chest, lean back slightly. Feel lats stretch at the top — that stretch is your friend. Builds the V from front and back.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">Mod weight</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Straight-Arm Pulldown</div><div class="ex-cue">Arms straight, cable at top. Pull bar to hips sweeping down. Pure lat isolation — no bicep involvement. Great for mind-muscle connection.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">Light</div></div></div>
+        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Assisted Pull-Up</div><div class="ex-cue">Dead hang to chin over bar. Full range every rep. Use the machine or a band. This is the king of lat exercises — work toward doing it unassisted.</div></div><div class="ex-meta"><div class="ex-meta-val">3×6</div><div class="ex-meta-lbl">Assisted</div></div></div>
       </div>
     </div>
 
+    <!-- MID BACK — THICKNESS -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">02</div>
-        <div class="wo-section-name">Dumbbell Row + Cable Row</div>
-        <div class="wo-section-tag">Back Thickness</div>
+        <div class="wo-section-name">Mid Back — Thickness</div>
+        <div class="wo-section-tag">Rhomboids · Mid Traps</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Dumbbell Row</div><div class="ex-cue">Brace on bench. Pull elbow back and up past your hip. Squeeze lat at top. 3 sec lower.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">40–50 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Seated Cable Row</div><div class="ex-cue">Pull to belly button. Squeeze shoulder blades together at end. Chest stays up the whole time.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">Mod weight</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Dumbbell Row</div><div class="ex-cue">Brace on bench. Pull elbow back and up past hip. Squeeze the lat hard at the top, hold 1 sec. 3 sec lower. Heavy is good here.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">40–55 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Seated Cable Row (Close Grip)</div><div class="ex-cue">Pull to belly button. Squeeze shoulder blades together at end — this is the key movement, not just pulling the weight. Chest stays up the whole time.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">Mod weight</div></div></div>
+        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Chest-Supported Dumbbell Row</div><div class="ex-cue">Lie chest-down on incline bench. Row both dumbbells up. Takes the lower back out completely — pure upper back and rhomboid work.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">25–35 lbs</div></div></div>
       </div>
     </div>
 
+    <!-- REAR DELTS -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">03</div>
-        <div class="wo-section-name">Bicep Curls + Hammer Curls</div>
-        <div class="wo-section-tag">Arms</div>
+        <div class="wo-section-name">Rear Shoulders</div>
+        <div class="wo-section-tag">Posterior Delts</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Dumbbell Bicep Curl</div><div class="ex-cue">Full range. Supinate at top (rotate wrist). No swinging. Squeeze at peak. Slow negatives.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">20–25 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Hammer Curl</div><div class="ex-cue">Neutral grip throughout. Builds the brachialis — makes arm look thick from every angle.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">20–25 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Face Pulls</div><div class="ex-cue">Rope at face height. Pull to forehead with elbows high and wide. Most people skip this — it's what keeps your shoulders healthy long-term. Do it every pull day.</div></div><div class="ex-meta"><div class="ex-meta-val">4×15</div><div class="ex-meta-lbl">Light</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Dumbbell Rear Delt Fly</div><div class="ex-cue">Hinge forward 45°. Raise arms outward to shoulder height, elbows slightly bent. Squeeze rear delts at the top. These are weak in most people — fix that now.</div></div><div class="ex-meta"><div class="ex-meta-val">3×15</div><div class="ex-meta-lbl">10–15 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Reverse Pec Deck</div><div class="ex-cue">Sit facing the pad. Arms out to sides on the handles. Sweep back as far as possible. Machine keeps tension consistent throughout — great finisher for rear delts.</div></div><div class="ex-meta"><div class="ex-meta-val">3×15</div><div class="ex-meta-lbl">Light</div></div></div>
       </div>
     </div>
 
+    <!-- TRAPS -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">04</div>
-        <div class="wo-section-name">Assisted Pull-Ups + Shrugs</div>
-        <div class="wo-section-tag">Finisher</div>
+        <div class="wo-section-name">Traps</div>
+        <div class="wo-section-tag">Upper Trapezius</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Assisted Pull-Ups</div><div class="ex-cue">Use the machine or a band. Full range — dead hang to chin over bar. Best lat exercise there is.</div></div><div class="ex-meta"><div class="ex-meta-val">3×6</div><div class="ex-meta-lbl">Assisted</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Dumbbell Shrugs</div><div class="ex-cue">Hold heavy dumbbells. Shrug straight up — no rolling. Hold 1 sec at top. Builds trap thickness.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">50–60 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Incline Dumbbell Curl</div><div class="ex-cue">Sit on incline bench, arms hang straight. Curl up. Increased stretch = more peak activation.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">15–20 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Dumbbell Shrugs</div><div class="ex-cue">Hold heavy dumbbells. Shrug straight up — no rolling. Hold 1 sec at top. Builds trap thickness visible from front and behind. Go heavy here.</div></div><div class="ex-meta"><div class="ex-meta-val">4×12</div><div class="ex-meta-lbl">55–70 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Cable Shrug</div><div class="ex-cue">Cable at waist height behind you, lean forward slightly. Shrug upward. Different angle than dumbbell shrugs — hits lower fibers of upper trap.</div></div><div class="ex-meta"><div class="ex-meta-val">3×15</div><div class="ex-meta-lbl">Mod weight</div></div></div>
+      </div>
+    </div>
+
+    <!-- BICEPS -->
+    <div class="wo-section open">
+      <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
+        <div class="wo-section-num">05</div>
+        <div class="wo-section-name">Biceps</div>
+        <div class="wo-section-tag">Short Head · Long Head · Brachialis</div>
+        <div class="wo-section-chev">▼</div>
+      </div>
+      <div class="wo-section-body">
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Dumbbell Bicep Curl</div><div class="ex-cue">Full range. Supinate at top — rotate wrist outward. No swinging. Squeeze at peak. Slow negatives build the most. Hits the short head (inner thickness).</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">20–25 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Incline Dumbbell Curl</div><div class="ex-cue">Sit on incline bench, arms hang straight. Curl up. The arm-behind-body position stretches the long head — more peak development. Don't rush.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">15–20 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Hammer Curl</div><div class="ex-cue">Neutral grip (palms facing each other) throughout. Hits the brachialis — the muscle under the bicep that pushes it up and makes arms look thick from every angle.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">20–25 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">D</div><div class="ex-body"><div class="ex-name">Cable Curl (Single Arm)</div><div class="ex-cue">Cable at ankle height. Curl up. Cable keeps tension at the bottom (unlike dumbbells). Both arms. Great finisher — go light and squeeze hard.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">Each side</div></div></div>
       </div>
     </div>
 
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
-        <div class="wo-section-num">05</div>
-        <div class="wo-section-name">Watch & Learn</div>
+        <div class="wo-section-num">06</div>
+        <div class="wo-section-name">Watch &amp; Learn</div>
         <div class="wo-section-tag">YouTube</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
         <div class="vid-grid">
-          <a href="https://youtube.com/watch?v=oBL8PFiKCPY" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/oBL8PFiKCPY/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Perfect Pull Day for All Levels</div><div class="vid-ch">Jeff Nippard</div></div></a>
-          <a href="https://youtube.com/watch?v=6rgE9D2OQBE" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/6rgE9D2OQBE/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Dumbbell Row — Correct Form</div><div class="vid-ch">Athlean-X</div></div></a>
-          <a href="https://youtube.com/watch?v=wZzSRh55SCg" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/wZzSRh55SCg/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Best Back Exercises for Beginners</div><div class="vid-ch">Jeremy Ethier</div></div></a>
-          <a href="https://youtube.com/watch?v=3YvfRx31xDE" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/3YvfRx31xDE/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Bicep Curls — Perfect Form</div><div class="vid-ch">Scott Herman Fitness</div></div></a>
-          <a href="https://youtube.com/watch?v=cwqPYf2SQNE" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/cwqPYf2SQNE/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Lat Pulldown — Full Tutorial</div><div class="vid-ch">Athlean-X</div></div></a>
-          <a href="https://youtube.com/watch?v=DMo3HJoawrU" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/DMo3HJoawrU/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Face Pulls — Why You Need These</div><div class="vid-ch">Jeff Nippard</div></div></a>
-          <a href="https://youtube.com/watch?v=q7TqMVQPkY8" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/q7TqMVQPkY8/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Pull-Up Progression for Beginners</div><div class="vid-ch">Calisthenicmovement</div></div></a>
-          <a href="https://youtube.com/watch?v=8IPNh8GPCOs" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/8IPNh8GPCOs/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Hammer Curl vs Regular Curl</div><div class="vid-ch">Renaissance Periodization</div></div></a>
+          <a href="https://www.youtube.com/watch?v=oBL8PFiKCPY" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Perfect Pull Day</div><div class="vid-ch">Jeff Nippard</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=6rgE9D2OQBE" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Dumbbell Row — Correct Form</div><div class="vid-ch">Athlean-X</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=wZzSRh55SCg" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Best Back Exercises for Beginners</div><div class="vid-ch">Jeremy Ethier</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=DMo3HJoawrU" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Face Pulls — Why You Need These</div><div class="vid-ch">Jeff Nippard</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=q7TqMVQPkY8" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Pull-Up Progression for Beginners</div><div class="vid-ch">Calisthenicmovement</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=3YvfRx31xDE" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Bicep Curls — Perfect Form</div><div class="vid-ch">Scott Herman Fitness</div></div><span class="vid-arrow">↗</span></a>
         </div>
       </div>
     </div>
@@ -2601,7 +2652,7 @@ html, body {
         <div class="wo-title">LEG <span>DAY</span></div>
         <div class="wo-sub">Biggest muscle group = biggest metabolic impact. Builds the base everything else sits on.</div>
       </div>
-      <div class="wo-badge">🦵 Wed & Sat</div>
+      <div class="wo-badge">🦵 Wed &amp; Sat</div>
     </div>
   </div>
   <div class="container" style="padding-top:12px;padding-bottom:48px;">
@@ -2612,76 +2663,96 @@ html, body {
       <div style="font-family:'Space Mono',monospace;font-size:8px;color:rgba(200,168,75,0.5);margin-top:6px;letter-spacing:2px;text-transform:uppercase;">MON &amp; THU · SUNNAH FAST · TMC 🏁</div>
     </div>
 
+    <!-- QUADS -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">01</div>
-        <div class="wo-section-name">Goblet Squat + Romanian Deadlift</div>
-        <div class="wo-section-tag">Compound</div>
+        <div class="wo-section-name">Quads</div>
+        <div class="wo-section-tag">Rectus Femoris · Vastus Lateralis</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Goblet Squat</div><div class="ex-cue">Hold dumbbell at chest. Sit deep between knees. Drive through heels. Back stays tall. Perfect beginner squat.</div></div><div class="ex-meta"><div class="ex-meta-val">4×12</div><div class="ex-meta-lbl">25–35 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Romanian Deadlift</div><div class="ex-cue">Hinge at hips. Back flat — no rounding. Lower until hamstring stretch. Drive hips forward on the way up.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">40–50 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Goblet Squat</div><div class="ex-cue">Hold dumbbell at chest. Sit deep between knees. Drive through heels. Back stays tall. Perfect beginner squat — builds quad sweep and depth.</div></div><div class="ex-meta"><div class="ex-meta-val">4×12</div><div class="ex-meta-lbl">25–35 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Leg Press</div><div class="ex-cue">Feet shoulder-width, mid-plate. Lower until 90° — go deeper for more quad. Drive through heels. Don't lock out at top. Great mass builder for all quad heads.</div></div><div class="ex-meta"><div class="ex-meta-val">4×12</div><div class="ex-meta-lbl">Moderate</div></div></div>
+        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Leg Extension Machine</div><div class="ex-cue">Squeeze hard at full extension, hold 1 sec. Lower controlled. Pure quad isolation — hits all four quad heads directly. No substitute for this.</div></div><div class="ex-meta"><div class="ex-meta-val">3×15</div><div class="ex-meta-lbl">Light-Mod</div></div></div>
       </div>
     </div>
 
+    <!-- HAMSTRINGS -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">02</div>
-        <div class="wo-section-name">Lunges + Hip Thrusts</div>
-        <div class="wo-section-tag">Glutes & Quads</div>
+        <div class="wo-section-name">Hamstrings</div>
+        <div class="wo-section-tag">Bicep Femoris · Semimembranosus</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Dumbbell Walking Lunges</div><div class="ex-cue">Step forward, knee tracks over toe. Back knee nearly touches floor. Stay upright. Great for quads and glutes.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">20–25 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Hip Thrust</div><div class="ex-cue">Back on bench edge. Squeeze glutes HARD at top. Hold 1 sec. Lower controlled. Best glute builder.</div></div><div class="ex-meta"><div class="ex-meta-val">4×15</div><div class="ex-meta-lbl">BW or 25 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Romanian Deadlift</div><div class="ex-cue">Hinge at hips, back flat. Lower until you feel the hamstring stretch — that's your depth. Drive hips forward on the way up. Most important ham exercise.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">40–55 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Lying Leg Curl Machine</div><div class="ex-cue">Full range. Squeeze hamstring at peak, hold 1 sec. Lower very slowly — 3 sec negative. Hamstrings respond best to slow eccentrics. Do not rush this.</div></div><div class="ex-meta"><div class="ex-meta-val">4×12</div><div class="ex-meta-lbl">Light-Mod</div></div></div>
+        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Nordic Curl (Assisted)</div><div class="ex-cue">Kneel, anchor feet. Lower your body slowly toward floor, catch yourself, push back up. The hardest hamstring exercise there is. Use hands to help on the way up.</div></div><div class="ex-meta"><div class="ex-meta-val">3×5</div><div class="ex-meta-lbl">Assisted</div></div></div>
       </div>
     </div>
 
+    <!-- GLUTES -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">03</div>
-        <div class="wo-section-name">Leg Curl + Calf Raises</div>
-        <div class="wo-section-tag">Isolation</div>
+        <div class="wo-section-name">Glutes</div>
+        <div class="wo-section-tag">Gluteus Maximus · Medius</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Leg Curl Machine</div><div class="ex-cue">Full range. Squeeze hamstring at peak. Lower very slowly. Do not rush. Hamstrings need volume.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">Light-Mod</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Standing Calf Raises</div><div class="ex-cue">Full stretch at bottom. Pause at top. Your calves need volume to grow. Do all 4 sets slowly.</div></div><div class="ex-meta"><div class="ex-meta-val">4×20</div><div class="ex-meta-lbl">Bodyweight</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Hip Thrust</div><div class="ex-cue">Back on bench edge. Squeeze glutes HARD at top — not just extend. Hold 1 sec. Lower controlled. The single best glute builder. Go heavy.</div></div><div class="ex-meta"><div class="ex-meta-val">4×15</div><div class="ex-meta-lbl">BW or 25 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Dumbbell Walking Lunges</div><div class="ex-cue">Step forward, knee tracks over toe. Back knee nearly touches floor. The glute stretch at the bottom is the point. Stay upright. Each step = one rep.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">20–25 lbs each</div></div></div>
+        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Cable Kickback</div><div class="ex-cue">Ankle attachment. Kick leg straight back and up, squeeze glute at top. Hold 1 sec. Isolates glute max directly. Do not swing the leg — control the whole way.</div></div><div class="ex-meta"><div class="ex-meta-val">3×15</div><div class="ex-meta-lbl">Each side</div></div></div>
       </div>
     </div>
 
+    <!-- ADDUCTORS / ABDUCTORS -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">04</div>
-        <div class="wo-section-name">Leg Press + Wall Sit</div>
-        <div class="wo-section-tag">Finisher</div>
+        <div class="wo-section-name">Inner &amp; Outer Thigh</div>
+        <div class="wo-section-tag">Adductors · Abductors · Glute Med</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Leg Press</div><div class="ex-cue">Feet shoulder-width. Lower until 90°. Drive through heels. Don't lock out at top. Great quad builder.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">Moderate</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Wall Sit</div><div class="ex-cue">Back flat against wall, thighs parallel. Hold. Builds quad endurance — helps running too.</div></div><div class="ex-meta"><div class="ex-meta-val">3×45s</div><div class="ex-meta-lbl">Bodyweight</div></div></div>
-        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Step-Ups</div><div class="ex-cue">Use a bench or step. Drive knee up. Step up fully. Great single-leg stability and glute builder.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">Each leg</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Abductor Machine (Outer Thigh)</div><div class="ex-cue">Slow and controlled outward. Squeeze at full range. Builds glute medius — what gives the glute a rounded look from the side. Often skipped. Don't skip it.</div></div><div class="ex-meta"><div class="ex-meta-val">3×15</div><div class="ex-meta-lbl">Light-Mod</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Adductor Machine (Inner Thigh)</div><div class="ex-cue">Slow squeeze inward. Controls knee tracking during squats. Weak adductors = knee cave = injury. Train them.</div></div><div class="ex-meta"><div class="ex-meta-val">3×15</div><div class="ex-meta-lbl">Light-Mod</div></div></div>
+        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Step-Ups</div><div class="ex-cue">Use a bench or box. Drive through the heel of the top leg. Step up fully. Single-leg stability, glute medius, and glute max. Great for running performance too.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">Each leg</div></div></div>
+      </div>
+    </div>
+
+    <!-- CALVES -->
+    <div class="wo-section open">
+      <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
+        <div class="wo-section-num">05</div>
+        <div class="wo-section-name">Calves</div>
+        <div class="wo-section-tag">Gastrocnemius · Soleus</div>
+        <div class="wo-section-chev">▼</div>
+      </div>
+      <div class="wo-section-body">
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Standing Calf Raise</div><div class="ex-cue">Full stretch at bottom — pause 1 sec in the stretch. Slow raise to the top. Pause 1 sec at peak. Hits gastrocnemius (visible calf). Calves need high volume to grow — do all sets.</div></div><div class="ex-meta"><div class="ex-meta-val">4×20</div><div class="ex-meta-lbl">Bodyweight</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Seated Calf Raise</div><div class="ex-cue">Knee bent = gastrocnemius off = soleus dominant. The soleus is the flat calf muscle below the gastrocnemius — building it pushes the gastroc up and makes the calf look bigger.</div></div><div class="ex-meta"><div class="ex-meta-val">4×20</div><div class="ex-meta-lbl">25 lbs on lap</div></div></div>
+        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Wall Sit</div><div class="ex-cue">Back flat against wall, thighs parallel. Hold. Builds quad endurance and helps running. If it's easy, add dumbbells on your lap.</div></div><div class="ex-meta"><div class="ex-meta-val">3×45s</div><div class="ex-meta-lbl">Bodyweight</div></div></div>
       </div>
     </div>
 
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
-        <div class="wo-section-num">05</div>
-        <div class="wo-section-name">Watch & Learn</div>
+        <div class="wo-section-num">06</div>
+        <div class="wo-section-name">Watch &amp; Learn</div>
         <div class="wo-section-tag">YouTube</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
         <div class="vid-grid">
-          <a href="https://youtube.com/watch?v=Dy28gy8X-xo" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/Dy28gy8X-xo/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Best Leg Day for Beginners</div><div class="vid-ch">Jeff Nippard</div></div></a>
-          <a href="https://youtube.com/watch?v=1uDiW5--rAE" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/1uDiW5--rAE/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Goblet Squat — Perfect Form</div><div class="vid-ch">Alan Thrall</div></div></a>
-          <a href="https://youtube.com/watch?v=XxWcirHIwVo" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/XxWcirHIwVo/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Romanian Deadlift Form Guide</div><div class="vid-ch">Athlean-X</div></div></a>
-          <a href="https://youtube.com/watch?v=ky1Gv4S1hO4" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/ky1Gv4S1hO4/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Hip Thrusts for Beginners</div><div class="vid-ch">Jeremy Ethier</div></div></a>
-          <a href="https://youtube.com/watch?v=YyvSfVjQeL0" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/YyvSfVjQeL0/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Leg Press — How to Do It Right</div><div class="vid-ch">Athlean-X</div></div></a>
-          <a href="https://youtube.com/watch?v=xXvdMRsqXMI" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/xXvdMRsqXMI/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Calf Raises — Do This Instead</div><div class="vid-ch">Renaissance Periodization</div></div></a>
-          <a href="https://youtube.com/watch?v=TIq4_oMmpio" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/TIq4_oMmpio/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Walking Lunges for Beginners</div><div class="vid-ch">Scott Herman Fitness</div></div></a>
-          <a href="https://youtube.com/watch?v=3KQ4X7TA5UE" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/3KQ4X7TA5UE/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Hamstring Curl Technique</div><div class="vid-ch">NASM</div></div></a>
+          <a href="https://www.youtube.com/watch?v=Dy28gy8X-xo" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Best Leg Day for Beginners</div><div class="vid-ch">Jeff Nippard</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=1uDiW5--rAE" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Goblet Squat — Perfect Form</div><div class="vid-ch">Alan Thrall</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=XxWcirHIwVo" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Romanian Deadlift Form Guide</div><div class="vid-ch">Athlean-X</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=ky1Gv4S1hO4" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Hip Thrusts for Beginners</div><div class="vid-ch">Jeremy Ethier</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=YyvSfVjQeL0" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Leg Press — How to Do It Right</div><div class="vid-ch">Athlean-X</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=xXvdMRsqXMI" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Calf Raises — Do This Instead</div><div class="vid-ch">Renaissance Periodization</div></div><span class="vid-arrow">↗</span></a>
         </div>
       </div>
     </div>
@@ -2953,14 +3024,14 @@ id="page-running" class="page">
       </div>
       <div class="wo-section-body">
         <div class="vid-grid">
-          <a href="https://youtube.com/watch?v=9L2b2khySLE" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/9L2b2khySLE/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">How to Start Running for Beginners</div><div class="vid-ch">Global Triathlon Network</div></div></a>
-          <a href="https://youtube.com/watch?v=kVnyY17VS9Y" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/kVnyY17VS9Y/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Couch to 5K — The Right Way</div><div class="vid-ch">James Dunne</div></div></a>
-          <a href="https://youtube.com/watch?v=brFHyOtTwH4" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/brFHyOtTwH4/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Run Faster and Longer</div><div class="vid-ch">Jeff Nippard</div></div></a>
-          <a href="https://youtube.com/watch?v=tBcGPOGnVMI" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/tBcGPOGnVMI/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">How to Breathe When Running</div><div class="vid-ch">James Dunne</div></div></a>
-          <a href="https://youtube.com/watch?v=_kGESn8ArrU" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/_kGESn8ArrU/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">5K Training Plan for Beginners</div><div class="vid-ch">The Run Experience</div></div></a>
-          <a href="https://youtube.com/watch?v=s8oCByMJAM8" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/s8oCByMJAM8/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Zone 2 Training Explained</div><div class="vid-ch">Peter Attia</div></div></a>
-          <a href="https://youtube.com/watch?v=MkROmL-v5GY" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/MkROmL-v5GY/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Running Form for Beginners</div><div class="vid-ch">Global Running Day</div></div></a>
-          <a href="https://youtube.com/watch?v=wrCMJxA0EBY" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/wrCMJxA0EBY/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Why You Run Too Hard</div><div class="vid-ch">Vo2maxProductions</div></div></a>
+          <a href="https://www.youtube.com/watch?v=9L2b2khySLE" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">How to Start Running for Beginners</div><div class="vid-ch">Global Triathlon Network</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=kVnyY17VS9Y" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Couch to 5K — The Right Way</div><div class="vid-ch">James Dunne</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=brFHyOtTwH4" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Run Faster and Longer</div><div class="vid-ch">Jeff Nippard</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=tBcGPOGnVMI" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">How to Breathe When Running</div><div class="vid-ch">James Dunne</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=_kGESn8ArrU" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">5K Training Plan for Beginners</div><div class="vid-ch">The Run Experience</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=s8oCByMJAM8" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Zone 2 Training Explained</div><div class="vid-ch">Peter Attia</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=MkROmL-v5GY" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Running Form for Beginners</div><div class="vid-ch">Global Running Day</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=wrCMJxA0EBY" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Why You Run Too Hard</div><div class="vid-ch">Vo2maxProductions</div></div><span class="vid-arrow">↗</span></a>
         </div>
       </div>
     </div>
@@ -3026,14 +3097,13 @@ id="page-running" class="page">
       </div>
       <div class="wo-section-body">
         <div class="vid-grid">
-          <a href="https://youtube.com/watch?v=4BOTvaRaDms" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/4BOTvaRaDms/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">10 Min Daily Mobility Routine</div><div class="vid-ch">Tom Merrick</div></div></a>
-          <a href="https://youtube.com/watch?v=L_xrDAtykMI" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/L_xrDAtykMI/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Hip Mobility for Athletes</div><div class="vid-ch">Squat University</div></div></a>
-          <a href="https://youtube.com/watch?v=FSSDLDhbacc" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/FSSDLDhbacc/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">World's Greatest Stretch Tutorial</div><div class="vid-ch">Athlean-X</div></div></a>
-          <a href="https://youtube.com/watch?v=eTFTmDQbGNs" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/eTFTmDQbGNs/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Full Body Flexibility 15 Min</div><div class="vid-ch">MoveU</div></div></a>
-          <a href="https://youtube.com/watch?v=qULTwquOuT4" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/qULTwquOuT4/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Pre-Workout Mobility Routine</div><div class="vid-ch">Jeremy Ethier</div></div></a>
-          <a href="https://youtube.com/watch?v=GBrpbD5YQHY" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/GBrpbD5YQHY/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Hip Flexor Stretch Guide</div><div class="vid-ch">Bob & Brad</div></div></a>
-
-          <a href="https://youtube.com/watch?v=PKLSBdT5JZk" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/PKLSBdT5JZk/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Runner's Full Stretch Routine</div><div class="vid-ch">James Dunne</div></div></a>
+          <a href="https://www.youtube.com/watch?v=4BOTvaRaDms" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">10 Min Daily Mobility Routine</div><div class="vid-ch">Tom Merrick</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=L_xrDAtykMI" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Hip Mobility for Athletes</div><div class="vid-ch">Squat University</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=FSSDLDhbacc" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">World's Greatest Stretch Tutorial</div><div class="vid-ch">Athlean-X</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=eTFTmDQbGNs" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Full Body Flexibility 15 Min</div><div class="vid-ch">MoveU</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=qULTwquOuT4" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Pre-Workout Mobility Routine</div><div class="vid-ch">Jeremy Ethier</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=GBrpbD5YQHY" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Hip Flexor Stretch Guide</div><div class="vid-ch">Bob &amp; Brad</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://www.youtube.com/watch?v=PKLSBdT5JZk" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Runner's Full Stretch Routine</div><div class="vid-ch">James Dunne</div></div><span class="vid-arrow">↗</span></a>
         </div>
       </div>
     </div>
@@ -5537,21 +5607,30 @@ const BASE_QUESTS = [
 ];
 
 const WEEKLY_QUEST_POOL = [
-  { id:'wk_longrun',  label:'Complete Your Long Run',      icon:'🏔️', xp:800,  type:'weekly', dynamic:true  },
-  { id:'wk_miles',    label:'Log X Miles This Week',       icon:'🛣️', xp:900,  type:'weekly', dynamic:true  },
-  { id:'wk_pace',     label:'Run a Mile Under X:XX',       icon:'⚡', xp:750,  type:'weekly', dynamic:true  },
-  { id:'wk_4runs',    label:'Run on 4 Different Days',     icon:'🏃', xp:700,  type:'weekly', dynamic:false },
-  { id:'wk_ppl',      label:'Complete Push + Pull + Legs', icon:'💪', xp:800,  type:'weekly', dynamic:false },
-  { id:'wk_4lifts',   label:'4 Lifting Sessions',          icon:'🏋', xp:700,  type:'weekly', dynamic:false },
-  { id:'wk_liftrun',  label:'Lift + Run Same Day x2',      icon:'🔥', xp:900,  type:'weekly', dynamic:false },
-  { id:'wk_3lifts5',  label:'All 3 Lifts in 5 Days',       icon:'⚔️', xp:750,  type:'weekly', dynamic:false },
-  { id:'wk_4cat3',    label:'All 4 Categories — 3 Days',   icon:'🌟', xp:850,  type:'weekly', dynamic:false },
-  { id:'wk_4cat4',    label:'All 4 Categories — 4 Days',   icon:'💎', xp:1100, type:'weekly', dynamic:false },
-  { id:'wk_fullweek', label:'Full Week No Miss — 7 Days',  icon:'👑', xp:1200, type:'weekly', dynamic:false },
-  { id:'wk_70ksteps', label:'70K Total Steps This Week',   icon:'🚶', xp:800,  type:'weekly', dynamic:false },
-  { id:'wk_hydrate7', label:'Hydrate Every Day This Week', icon:'💧', xp:600,  type:'weekly', dynamic:false },
-  { id:'wk_fasted3',  label:'Fasted Workout x3',           icon:'⚡', xp:750,  type:'weekly', dynamic:false },
-  { id:'wk_weigh7',   label:'Log Weight Every Day',        icon:'⚖️', xp:600,  type:'weekly', dynamic:false },
+  // ── E/D rank (beginner) ──
+  { id:'wk_hydrate7', label:'Hydrate Every Day This Week', icon:'💧', xp:500,  type:'weekly', dynamic:false, minRank:0 },
+  { id:'wk_weigh7',   label:'Log Weight Every Day',        icon:'⚖️', xp:500,  type:'weekly', dynamic:false, minRank:0 },
+  { id:'wk_4lifts',   label:'4 Lifting Sessions',          icon:'🏋', xp:600,  type:'weekly', dynamic:false, minRank:0 },
+  { id:'wk_longrun',  label:'Complete Your Long Run',      icon:'🏔️', xp:700,  type:'weekly', dynamic:true,  minRank:0 },
+  { id:'wk_miles',    label:'Log X Miles This Week',       icon:'🛣️', xp:750,  type:'weekly', dynamic:true,  minRank:0 },
+  { id:'wk_70ksteps', label:'70K Total Steps This Week',   icon:'🚶', xp:650,  type:'weekly', dynamic:false, minRank:0 },
+  // ── C rank unlocks ──
+  { id:'wk_pace',     label:'Run a Mile Under X:XX',       icon:'⚡', xp:750,  type:'weekly', dynamic:true,  minRank:12600 },
+  { id:'wk_4runs',    label:'Run on 4 Different Days',     icon:'🏃', xp:700,  type:'weekly', dynamic:false, minRank:12600 },
+  { id:'wk_ppl',      label:'Complete Push + Pull + Legs', icon:'💪', xp:850,  type:'weekly', dynamic:false, minRank:12600 },
+  { id:'wk_fasted3',  label:'Fasted Workout x3',           icon:'⚡', xp:800,  type:'weekly', dynamic:false, minRank:12600 },
+  // ── B rank unlocks ──
+  { id:'wk_liftrun',  label:'Lift + Run Same Day x2',      icon:'🔥', xp:950,  type:'weekly', dynamic:false, minRank:21000 },
+  { id:'wk_3lifts5',  label:'All 3 Lifts in 5 Days',       icon:'⚔️', xp:900,  type:'weekly', dynamic:false, minRank:21000 },
+  { id:'wk_4cat3',    label:'All 4 Categories — 3 Days',   icon:'🌟', xp:950,  type:'weekly', dynamic:false, minRank:21000 },
+  // ── A rank unlocks ──
+  { id:'wk_4cat4',    label:'All 4 Categories — 4 Days',   icon:'💎', xp:1200, type:'weekly', dynamic:false, minRank:33245 },
+  { id:'wk_liftrun2', label:'Lift + Run Same Day x3',      icon:'🔥', xp:1100, type:'weekly', dynamic:false, minRank:33245 },
+  { id:'wk_90ksteps', label:'90K Total Steps This Week',   icon:'👟', xp:1000, type:'weekly', dynamic:false, minRank:33245 },
+  // ── Available at all ranks ──
+  { id:'wk_fullweek', label:'Full Week No Miss — 7 Days',  icon:'👑', xp:1000, type:'weekly', dynamic:false, minRank:0 },
+  { id:'wk_5runs',    label:'Run on 5 Different Days',     icon:'🏃', xp:1200, type:'weekly', dynamic:false, minRank:52837 },
+  { id:'wk_5cat5',    label:'All 4 Categories — 5 Days',   icon:'💎', xp:1500, type:'weekly', dynamic:false, minRank:52837 },
 ];
 // Keep WEEKLY_QUESTS alias for any legacy references
 const WEEKLY_QUESTS = WEEKLY_QUEST_POOL;
@@ -5559,16 +5638,22 @@ const WEEKLY_QUESTS = WEEKLY_QUEST_POOL;
 function getWeeklyQuestPool() {
   const data = getXPData();
   const rank = getRankForXP(data.totalXP);
-  const tier = getRunnerTier(rank.rank); // pass rank string
+  const tier = getRunnerTier(rank.rank);
   const hydrateQ = getHydrateQuest(rank.rank);
-  const allPool = WEEKLY_QUEST_POOL.map(q => {
-    const clone = {...q};
-    if (q.id === 'wk_longrun') clone.label = 'Complete a ' + tier.longRunMiles + ' Mile Run';
-    if (q.id === 'wk_miles')   clone.label = 'Log ' + tier.weeklyMiles + ' Miles This Week';
-    if (q.id === 'wk_pace')    clone.label = 'Run a Mile Under ' + formatPace(tier.paceSec);
-    if (q.id === 'wk_hydrate7') clone.label = 'Hit ' + hydrateQ.label + ' Every Day This Week';
-    return clone;
-  });
+  const allPool = WEEKLY_QUEST_POOL
+    .filter(q => rank.minXP >= (q.minRank || 0))  // only show unlocked quests for this rank
+    .map(q => {
+      const clone = {...q};
+      if (q.id === 'wk_longrun')  clone.label = 'Complete a ' + tier.longRunMiles + ' Mile Run';
+      if (q.id === 'wk_miles')    clone.label = 'Log ' + tier.weeklyMiles + ' Miles This Week';
+      if (q.id === 'wk_pace')     clone.label = 'Run a Mile Under ' + formatPace(tier.paceSec);
+      if (q.id === 'wk_hydrate7') clone.label = 'Hit ' + hydrateQ.label + ' Every Day This Week';
+      if (q.id === 'wk_liftrun2') clone.label = 'Lift + Run Same Day x3';
+      if (q.id === 'wk_5runs')    clone.label = 'Run on 5 Different Days';
+      if (q.id === 'wk_5cat5')    clone.label = 'All 4 Categories — 5 Days';
+      if (q.id === 'wk_90ksteps') clone.label = '90K Total Steps This Week';
+      return clone;
+    });
   const weekSeed = parseInt(getWeekStr().replace(/\D/g,'')) || 20260101;
   let s = weekSeed;
   const picks = []; const used = new Set();
@@ -7484,68 +7569,68 @@ function buildSkillTree() {
 
   const SKILLS = [
     { id:'runner',  name:'The Runner',     icon:'🏃', color:'#e74c3c', desc:'Miles on the road',
-      score: d => Math.min(100, Math.round((countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')+countQuestDone(d,'halfmarathon'))*2.5)),
+      score: d => Math.min(100, Math.round((countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')+countQuestDone(d,'halfmarathon'))*1.25)),
       nodes:[
-        {label:'First Run',    tip:'Log your first run of any distance.',                req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=1},
-        {label:'5 Sessions',   tip:'5 total runs. The legs are adapting.',               req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=5},
-        {label:'Road Warrior', tip:'15 sessions. You call yourself a runner now.',      req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=15},
-        {label:'35 Sessions',  tip:'35 sessions. The city knows your footsteps.',       req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=35},
-        {label:'Bankai',   tip:'80 sessions. Built for distance.',                  req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=80},
+        {label:'First Run',    tip:'Log your first run of any distance.',                        req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=1},
+        {label:'10 Sessions',  tip:'10 total runs. The legs are adapting.',                      req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=10},
+        {label:'Road Warrior', tip:'25 sessions. You call yourself a runner now.',               req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=25},
+        {label:'50 Sessions',  tip:'50 sessions. The city knows your footsteps.',                req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=50},
+        {label:'The Marathoner',tip:'80 sessions. You were built for this distance.',            req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=80},
       ]
     },
     { id:'lifter',  name:'The Lifter',     icon:'💪', color:'#e67e22', desc:'Push · pull · legs — building the frame',
-      score: d => Math.min(100, Math.round((countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs'))*2)),
+      score: d => Math.min(100, Math.round((countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs'))*1.25)),
       nodes:[
-        {label:'First Lift',   tip:'Complete your first Push, Pull, or Leg day.',       req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=1},
-        {label:'10 Sessions',  tip:'10 gym sessions. The habit is forming.',             req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=10},
-        {label:'The Builder',  tip:'25 sessions. The V-taper is loading.',              req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=25},
-        {label:'V-Taper',      tip:'60 sessions. That silhouette speaks for itself.',   req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=60},
-        {label:'Architect',    tip:'120 sessions. You built this body from scratch.',   req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=120},
+        {label:'First Lift',   tip:'Complete your first Push, Pull, or Leg day.',                req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=1},
+        {label:'15 Sessions',  tip:'15 gym sessions. The habit is forming.',                     req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=15},
+        {label:'The Builder',  tip:'35 sessions. The V-taper is loading.',                       req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=35},
+        {label:'V-Taper',      tip:'75 sessions. That silhouette speaks for itself.',            req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=75},
+        {label:'The Architect',tip:'150 sessions. You designed and built this body from scratch.',req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=150},
       ]
     },
     { id:'hooper',  name:'The Hooper',     icon:'🏀', color:'#ff6b35', desc:'Court sessions — cardio disguised as fun',
-      score: d => Math.min(100, Math.round((countQuestDone(d,'ball')+countQuestDone(d,'ballprac'))*5)),
+      score: d => Math.min(100, Math.round((countQuestDone(d,'ball')+countQuestDone(d,'ballprac'))*4)),
       nodes:[
-        {label:'First Bucket', tip:'Hit the court or practice for the first time.',     req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=1},
-        {label:'5 Sessions',   tip:'5 sessions. Got your game legs back.',              req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=5},
-        {label:'Court Regular',tip:'10 sessions. You belong on this court.',            req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=10},
-        {label:'Gym Rat',      tip:'25 sessions. First there, last to leave.',          req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=25},
-        {label:'The Hooper',   tip:'50 sessions. The court shaped the body.',           req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=50},
+        {label:'First Bucket', tip:'Hit the court or practice for the first time.',              req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=1},
+        {label:'10 Sessions',  tip:'10 sessions. Got your game legs back.',                      req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=10},
+        {label:'Court Regular',tip:'20 sessions. You belong on this court.',                     req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=20},
+        {label:'Gym Rat',      tip:'40 sessions. First there, last to leave.',                   req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=40},
+        {label:'Got Next',     tip:'75 sessions. They always call your name.',                   req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=75},
       ]
     },
     { id:'mover',   name:'The Mover',      icon:'🚶', color:'#2ecc71', desc:'Steps · walks — active every single day',
-      score: d => Math.min(100, Math.round((countQuestDone(d,'steps')+countQuestDone(d,'steps15')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor'))*3)),
+      score: d => Math.min(100, Math.round((countQuestDone(d,'steps')+countQuestDone(d,'steps15')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor'))*2)),
       nodes:[
-        {label:'First Steps',  tip:'First 10K step day or outdoor/indoor walk.',          req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=1},
-        {label:'One Week',     tip:'7 movement days. The baseline is locked in.',         req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=7},
-        {label:'The Walker',   tip:'14 days. You never just sit anymore.',                req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=14},
-        {label:'City Explorer',tip:'30 days. This city is your track.',                   req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=30},
-        {label:'Never Sits',   tip:'60 days. Moving is just who you are now.',            req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=60},
+        {label:'First Steps',  tip:'First 10K step day or outdoor/indoor walk.',                 req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=1},
+        {label:'Two Weeks',    tip:'14 movement days. The baseline is locked in.',               req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=14},
+        {label:'The Walker',   tip:'30 days. You never just sit anymore.',                       req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=30},
+        {label:'City Explorer',tip:'60 days. This city is your track.',                          req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=60},
+        {label:'Never Sits',   tip:'100 days of movement. It is not a habit — it is identity.', req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=100},
       ]
     },
     { id:'monk',    name:'The Monk',       icon:'🧘', color:'#1abc9c', desc:'Mobility · sleep · hydration · cold',
       score: d => Math.min(100, Math.round(
-        countQuestDone(d,'mobility')*4 +
-        countQuestDone(d,'sleep')*4 +
-        countQuestDone(d,'hydrate')*2 +
-        countQuestDone(d,'cold')*3
+        countQuestDone(d,'mobility')*3 +
+        countQuestDone(d,'sleep')*3 +
+        countQuestDone(d,'hydrate')*1.5 +
+        countQuestDone(d,'cold')*2.5
       )),
       nodes:[
-        {label:'First Recovery',tip:'Log your first mobility, sleep, or hydration.',   req:d=>countQuestDone(d,'mobility')+countQuestDone(d,'sleep')+countQuestDone(d,'hydrate')>=1},
-        {label:'Routine Built', tip:'10 combined wellness actions. Habit forming.',     req:d=>countQuestDone(d,'mobility')+countQuestDone(d,'sleep')+countQuestDone(d,'hydrate')>=10},
-        {label:'Cold Protocol', tip:'5 cold showers. The mind is hardening.',          req:d=>countQuestDone(d,'cold')>=5},
-        {label:'Injury Proof',  tip:'15 mobility sessions. Moving like you are 20.',   req:d=>countQuestDone(d,'mobility')>=15},
-        {label:'The Monk',      tip:'60 combined wellness days. Untouchable.',          req:d=>countQuestDone(d,'mobility')+countQuestDone(d,'sleep')+countQuestDone(d,'hydrate')+countQuestDone(d,'cold')>=60},
+        {label:'First Recovery',tip:'Log your first mobility, sleep, or hydration.',            req:d=>countQuestDone(d,'mobility')+countQuestDone(d,'sleep')+countQuestDone(d,'hydrate')>=1},
+        {label:'Routine Built', tip:'15 combined wellness actions. Habit forming.',              req:d=>countQuestDone(d,'mobility')+countQuestDone(d,'sleep')+countQuestDone(d,'hydrate')>=15},
+        {label:'Cold Protocol', tip:'10 cold showers. The mind is harder than the body.',       req:d=>countQuestDone(d,'cold')>=10},
+        {label:'Injury Proof',  tip:'30 mobility sessions. Moving like you are 22.',            req:d=>countQuestDone(d,'mobility')>=30},
+        {label:'The Monk',      tip:'100 combined wellness days. Fully dialed. Untouchable.',   req:d=>countQuestDone(d,'mobility')+countQuestDone(d,'sleep')+countQuestDone(d,'hydrate')+countQuestDone(d,'cold')>=100},
       ]
     },
     { id:'streak',  name:'Mr. Consistent', icon:'🔥', color:'#f0d878', desc:'Showing up every day — never breaking the chain',
-      score: d => Math.min(100, Math.round((d.streak||0)*3.3)),
+      score: d => Math.min(100, Math.round((d.streak||0)*2)),
       nodes:[
-        {label:'3-Day Chain',  tip:'3 days straight. The chain is starting.',           req:d=>(d.streak||0)>=3},
-        {label:'One Week',     tip:'7 days. You said you would and you did.',           req:d=>(d.streak||0)>=7},
-        {label:'Two Weeks',    tip:'14 days. The streak is your identity now.',         req:d=>(d.streak||0)>=14},
-        {label:'Month Strong', tip:'30 days. They were asleep. You were working.',      req:d=>(d.streak||0)>=30},
-        {label:'Untouchable',  tip:'60 days. At this point it is just who you are.',   req:d=>(d.streak||0)>=60},
+        {label:'3-Day Chain',     tip:'3 days straight. The chain is starting.',                req:d=>(d.streak||0)>=3},
+        {label:'One Week',        tip:'7 days. You said you would and you did.',                req:d=>(d.streak||0)>=7},
+        {label:'Three Weeks',     tip:'21 days. Discipline over motivation.',                   req:d=>(d.streak||0)>=21},
+        {label:'Month Strong',    tip:'30 days. They were asleep. You were working.',           req:d=>(d.streak||0)>=30},
+        {label:'Perfect Attendance',tip:'50 days no miss. You show up like a job.',            req:d=>(d.streak||0)>=50},
       ]
     },
   ];
