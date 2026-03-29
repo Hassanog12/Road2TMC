@@ -6,8 +6,19 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
-<title>Road to The Marathon Continues</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<title>R2TMC — The Grind</title>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -7870,7 +7881,7 @@ function initXPSystem() {
 
 
   // Patch — March 24 activity + weight (was missing from uploaded file)
-  if (!localStorage.getItem('grind_activity_patch_v24')) {
+  if (!localStorage.getItem('grind_activity_patch_v24b')) {
     if (!data.dailyQuests['2026-3-24']) data.dailyQuests['2026-3-24'] = {};
     data.dailyQuests['2026-3-24'].steps   = true;
     data.dailyQuests['2026-3-24'].run2    = true;
@@ -7894,11 +7905,11 @@ function initXPSystem() {
       saveWeightData(wdata24);
     }
     saveXPData(data);
-    localStorage.setItem('grind_activity_patch_v24','1');
+    localStorage.setItem('grind_activity_patch_v24b','1');
   }
 
   // Patch v11 — March 25 activity
-  if (!localStorage.getItem('grind_activity_patch_v11')) {
+  if (!localStorage.getItem('grind_activity_patch_v11b')) {
     if (!data.dailyQuests['2026-3-25']) data.dailyQuests['2026-3-25'] = {};
     data.dailyQuests['2026-3-25'].cold    = true;
     data.dailyQuests['2026-3-25'].hydrate = true;
@@ -7918,11 +7929,11 @@ function initXPSystem() {
     data.coinHistory.unshift({ icon:'💧', label:'2L Water',       amount:8,  date:'3/25/2026' });
     data.coinHistory.unshift({ icon:'🧊', label:'Cold Shower',    amount:9,  date:'3/25/2026' });
     if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0,50);
-    saveXPData(data); localStorage.setItem('grind_activity_patch_v11','1');
+    saveXPData(data); localStorage.setItem('grind_activity_patch_v11b','1');
   }
 
   // Patch v12 — March 26 activity
-  if (!localStorage.getItem('grind_activity_patch_v12')) {
+  if (!localStorage.getItem('grind_activity_patch_v12b')) {
     if (!data.dailyQuests['2026-3-26']) data.dailyQuests['2026-3-26'] = {};
     data.dailyQuests['2026-3-26'].push     = true;
     data.dailyQuests['2026-3-26'].outdoor  = true;
@@ -7942,11 +7953,11 @@ function initXPSystem() {
     data.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',   amount:11, date:'3/26/2026' });
     data.coinHistory.unshift({ icon:'💪', label:'Push Day',       amount:38, date:'3/26/2026' });
     if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0,50);
-    saveXPData(data); localStorage.setItem('grind_activity_patch_v12','1');
+    saveXPData(data); localStorage.setItem('grind_activity_patch_v12b','1');
   }
 
   // Patch v13 — March 27 activity
-  if (!localStorage.getItem('grind_activity_patch_v13')) {
+  if (!localStorage.getItem('grind_activity_patch_v13b')) {
     if (!data.dailyQuests['2026-3-27']) data.dailyQuests['2026-3-27'] = {};
     data.dailyQuests['2026-3-27'].cold     = true;
     data.dailyQuests['2026-3-27'].ballprac = true;
@@ -7964,11 +7975,11 @@ function initXPSystem() {
     data.coinHistory.unshift({ icon:'🏀', label:'Sports Practice', amount:16, date:'3/27/2026' });
     data.coinHistory.unshift({ icon:'🧊', label:'Cold Shower',    amount:9,  date:'3/27/2026' });
     if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0,50);
-    saveXPData(data); localStorage.setItem('grind_activity_patch_v13','1');
+    saveXPData(data); localStorage.setItem('grind_activity_patch_v13b','1');
   }
 
   // Patch v14 — March 28 activity + weight
-  if (!localStorage.getItem('grind_activity_patch_v14')) {
+  if (!localStorage.getItem('grind_activity_patch_v14b')) {
     if (!data.dailyQuests['2026-3-28']) data.dailyQuests['2026-3-28'] = {};
     data.dailyQuests['2026-3-28'].weigh   = true;
     data.dailyQuests['2026-3-28'].pull    = true;
@@ -7993,25 +8004,25 @@ function initXPSystem() {
     wdata14.current = 258.8;
     wdata14.log.unshift({ weight:258.8, date:'3/28/2026', _ts: new Date('2026-03-28').getTime() });
     saveWeightData(wdata14);
-    saveXPData(data); localStorage.setItem('grind_activity_patch_v14','1');
+    saveXPData(data); localStorage.setItem('grind_activity_patch_v14b','1');
   }
 
   // Patch v15 — force XP to 5,050 (just inside D rank at 5,000 with new thresholds)
-  if (!localStorage.getItem('grind_xp_patch_v15')) {
+  if (!localStorage.getItem('grind_xp_patch_v15b')) {
     data.totalXP = 4050;
     data.level   = getLevelFromXP(4050);
     saveXPData(data);
-    localStorage.setItem('grind_xp_patch_v15','1');
+    localStorage.setItem('grind_xp_patch_v15b','1');
   }
   // Patch — 2 eating out redemptions (-240 coins)
-  if (!localStorage.getItem('grind_eatout_patch_v1')) {
+  if (!localStorage.getItem('grind_eatout_patch_v2')) {
     data.coins = (data.coins||0) - 240;
     if (!data.coinHistory) data.coinHistory = [];
     data.coinHistory.unshift({ icon:'🍽️', label:'Eating Out', amount:-120, date:'3/27/2026' });
     data.coinHistory.unshift({ icon:'🍽️', label:'Eating Out', amount:-120, date:'3/28/2026' });
     if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0,50);
     saveXPData(data);
-    localStorage.setItem('grind_eatout_patch_v1','1');
+    localStorage.setItem('grind_eatout_patch_v2','1');
   }
 
   checkPunishment();
