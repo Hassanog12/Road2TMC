@@ -6,8 +6,19 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
-<title>Road to The Marathon Continues</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<title>R2TMC — The Grind</title>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -1904,10 +1915,9 @@ html, body {
       <!-- Main content -->
       <div style="display:flex;align-items:stretch;position:relative;z-index:1;padding:0 0 0;">
         <!-- Left: Big rank letter -->
-        <div style="padding:0 16px 0 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:100px;position:relative;">
-          <div id="rankLetterGlow" style="position:absolute;inset:0;opacity:0.08;filter:blur(18px);border-radius:4px;background:currentColor;pointer-events:none;"></div>
-          <div id="rankLetter" style="font-size:80px;line-height:0.85;letter-spacing:-2px;transition:all 0.4s;position:relative;z-index:1;"></div>
-          <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:#888;margin-top:6px;text-transform:uppercase;">RANK</div>
+        <div style="padding:0 16px 0 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:90px;">
+          <div id="rankLetter" style="font-size:64px;line-height:0.85;letter-spacing:-2px;transition:all 0.4s;text-shadow:0 0 30px currentColor;"></div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:#888;margin-top:4px;text-transform:uppercase;">RANK</div>
         </div>
 
         <!-- Center: Hunter info -->
@@ -2131,25 +2141,23 @@ html, body {
 </div>
 
 <!-- RANK UP OVERLAY — epic cinematic -->
-<div id="rankUpOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0);align-items:center;justify-content:center;flex-direction:column;overflow-y:auto;" onclick="closeRankUp()">
+<div id="rankUpOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0);align-items:center;justify-content:center;flex-direction:column;overflow:hidden;" onclick="closeRankUp()">
   <!-- Particle canvas -->
   <canvas id="rankUpCanvas" style="position:absolute;inset:0;pointer-events:none;"></canvas>
   <!-- BG glow sweep -->
   <div id="rankUpBg" style="position:absolute;inset:0;opacity:0;transition:opacity 0.6s;"></div>
 
-  <div id="rankUpContent" onclick="event.stopPropagation()" style="position:relative;z-index:2;text-align:center;opacity:0;transform:scale(0.5);transition:all 0.6s cubic-bezier(0.34,1.56,0.64,1);padding:32px 28px;max-width:520px;width:92%;margin:auto;background:rgba(0,0,0,0.55);border-radius:4px;">
+  <div id="rankUpContent" onclick="event.stopPropagation()" style="position:relative;z-index:2;text-align:center;opacity:0;transform:scale(0.5);transition:all 0.6s cubic-bezier(0.34,1.56,0.64,1);">
     <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:8px;color:#fff;text-transform:uppercase;margin-bottom:16px;opacity:0.7;">RANK UP</div>
     <!-- Chips row -->
-    <div id="rankUpChips" style="display:flex;justify-content:center;gap:4px;margin-bottom:20px;flex-wrap:wrap;"></div>
+    <div id="rankUpChips" style="display:flex;justify-content:center;gap:4px;margin-bottom:20px;"></div>
     <!-- Giant rank letter -->
-    <div id="rankUpLetter" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(100px,30vw,180px);line-height:0.85;letter-spacing:-4px;transition:all 0.3s;"></div>
-    <!-- Title — smaller -->
-    <div id="rankUpTitle" style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;letter-spacing:3px;margin-top:10px;line-height:1.2;opacity:0.75;"></div>
-    <!-- Runner tier — styled box -->
-    <div id="rankUpRunnerTier" style="display:none;"></div>
-    <div id="rankUpCoinReward" style="display:none;"></div>
+    <div id="rankUpLetter" style="font-family:'Bebas Neue',sans-serif;font-size:180px;line-height:0.85;letter-spacing:-4px;transition:all 0.3s;"></div>
+    <!-- Title -->
+    <div id="rankUpTitle" style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#fff;letter-spacing:3px;margin-top:12px;line-height:1.2;"></div>
+    <div id="rankUpCoinReward" style="display:none;text-align:center;margin-top:12px;padding:10px 14px;background:rgba(240,216,120,0.08);border:1px solid rgba(240,216,120,0.25);border-radius:2px;"></div>
     <div id="rankUpStatus" style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,0.5);letter-spacing:3px;margin-top:8px;text-transform:uppercase;"></div>
-    <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.12);margin-top:24px;text-transform:uppercase;">Tap outside to close · TMC 🏁</div>
+    <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;color:rgba(255,255,255,0.3);margin-top:20px;text-transform:uppercase;">Tap outside to close · TMC 🏁</div>
   </div>
 </div>
 
@@ -2385,16 +2393,16 @@ html, body {
 .ex-meta{text-align:right;flex-shrink:0;white-space:nowrap;}
 .ex-meta-val{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--white);line-height:1;}
 .ex-meta-lbl{font-family:'Space Mono',monospace;font-size:9px;color:#555;}
-.vid-grid{display:flex;flex-direction:column;gap:4px;padding:12px 14px;}
-.vid-card{background:#0a0a0a;border:1px solid var(--gray3);overflow:hidden;text-decoration:none;display:flex;align-items:center;gap:12px;padding:10px 14px;transition:border-color 0.2s;}
-.vid-card:hover{border-color:var(--gold);background:#111;}
-.vid-info{flex:1;min-width:0;}
-.vid-title{font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--white);letter-spacing:1px;line-height:1.2;margin-bottom:2px;}
+.vid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px;padding:12px 14px;}
+.vid-card{background:#060606;border:1px solid var(--gray3);overflow:hidden;text-decoration:none;display:block;transition:border-color 0.2s;}
+.vid-card:hover{border-color:var(--gold);}
+.vid-card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#111;}
+.vid-info{padding:6px 8px;}
+.vid-title{font-family:'Space Mono',monospace;font-size:9px;color:var(--white);line-height:1.4;margin-bottom:2px;}
 .vid-ch{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);}
-.vid-icon{font-size:16px;flex-shrink:0;opacity:0.7;}
-.vid-arrow{font-family:'Space Mono',monospace;font-size:9px;color:var(--gold);flex-shrink:0;letter-spacing:1px;}
 @media(max-width:600px){
   .wo-title{font-size:28px;}
+  .vid-grid{grid-template-columns:1fr 1fr;}
   .ex{grid-template-columns:18px 1fr auto;gap:0 6px;padding:9px 10px;}
 }
 </style>
@@ -2416,96 +2424,76 @@ html, body {
       <div style="font-family:'Space Mono',monospace;font-size:8px;color:rgba(200,168,75,0.5);margin-top:6px;letter-spacing:2px;text-transform:uppercase;">MON &amp; THU · SUNNAH FAST · TMC 🏁</div>
     </div>
 
-    <!-- UPPER CHEST -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">01</div>
-        <div class="wo-section-name">Upper Chest</div>
-        <div class="wo-section-tag">Clavicular Head</div>
+        <div class="wo-section-name">Incline Dumbbell Press</div>
+        <div class="wo-section-tag">Upper Chest</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Incline Dumbbell Press</div><div class="ex-cue">45° incline. Press up and slightly inward. 3 sec descent. Builds the upper chest shelf — the part that shows in a shirt.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">30–35 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">High-to-Low Cable Fly</div><div class="ex-cue">Cables set high. Bring hands together at chest level sweeping downward. Squeeze at the crossover. Direct upper chest isolation.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">Light</div></div></div>
-        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Incline Dumbbell Fly</div><div class="ex-cue">Same 45° bench. Wide arc — elbows slightly bent. Lower until chest stretch. Squeeze back up. Pure upper chest stretch.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">15–20 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Incline Dumbbell Press</div><div class="ex-cue">45° incline. Press up and slightly together. 3 sec descent. Builds the upper chest shelf. Feel the stretch at bottom.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">30–35 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Lateral Raises</div><div class="ex-cue">Raise to shoulder height. Pinky slightly higher. No swinging. Builds shoulder width = V-taper.</div></div><div class="ex-meta"><div class="ex-meta-val">4×12</div><div class="ex-meta-lbl">10–15 lbs</div></div></div>
       </div>
     </div>
 
-    <!-- MID / LOWER CHEST -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">02</div>
-        <div class="wo-section-name">Mid &amp; Lower Chest</div>
-        <div class="wo-section-tag">Sternal Head</div>
+        <div class="wo-section-name">Flat Dumbbell Press</div>
+        <div class="wo-section-tag">Chest Mass</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Flat Dumbbell Press</div><div class="ex-cue">Feel the stretch at the bottom — that's where the growth is. Primary mass builder for the chest. Drive feet into floor, arch slightly.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">35–40 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Low-to-High Cable Fly</div><div class="ex-cue">Cables set low. Sweep hands upward and together at face height. Targets the lower and outer chest sweep.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">Light</div></div></div>
-        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Chest Dips (Assisted if needed)</div><div class="ex-cue">Lean forward 30°. Lower until 90° at elbow. Drive up squeezing chest. Don't go too deep. The lean is what hits chest over tricep.</div></div><div class="ex-meta"><div class="ex-meta-val">3×8</div><div class="ex-meta-lbl">BW / Assisted</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Flat Dumbbell Press</div><div class="ex-cue">Feel the stretch at bottom. Primary chest mass builder. Drive feet into floor for stability.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">35–40 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Tricep Cable Pushdown</div><div class="ex-cue">Elbows pinned to sides. Squeeze hard at full extension. Slow return. Triceps = 2/3 of arm size.</div></div><div class="ex-meta"><div class="ex-meta-val">4×12</div><div class="ex-meta-lbl">30–40 lbs</div></div></div>
       </div>
     </div>
 
-    <!-- FRONT DELTS (ANTERIOR) -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">03</div>
-        <div class="wo-section-name">Front Shoulders</div>
-        <div class="wo-section-tag">Anterior Delts</div>
+        <div class="wo-section-name">Overhead Press + Tricep Extension</div>
+        <div class="wo-section-tag">Shoulders</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Seated Dumbbell Overhead Press</div><div class="ex-cue">Press straight up from shoulder height. Don't lean back excessively. 3 sec descent. Primary mass builder for front and mid delts.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">25–30 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Dumbbell Front Raise</div><div class="ex-cue">Arms straight, raise to shoulder height, pause 1 sec. No swinging. Pure anterior delt — these are already hit by pressing but this isolates them fully.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">10–15 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Arnold Press</div><div class="ex-cue">Start with palms facing you, rotate outward as you press. Hits front, side, and rear delt in one movement. Great shoulder finisher.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">20–25 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Seated Dumbbell Overhead Press</div><div class="ex-cue">Sit upright. Press straight up. Don't fully lock elbows. Control the descent. Wider silhouette.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">25–30 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Overhead Cable Tricep Extension</div><div class="ex-cue">Face away from cable. Extend arms forward. Squeeze at full extension. Hits the long head.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">25–35 lbs</div></div></div>
       </div>
     </div>
 
-    <!-- SIDE DELTS (LATERAL) -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">04</div>
-        <div class="wo-section-name">Side Shoulders</div>
-        <div class="wo-section-tag">Lateral Delts · V-Taper</div>
+        <div class="wo-section-name">Cable Fly + Chest Dips</div>
+        <div class="wo-section-tag">Finisher</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Dumbbell Lateral Raise</div><div class="ex-cue">Raise to shoulder height, pinky slightly higher than thumb. No swinging. This is the single most important exercise for shoulder width and V-taper. Do it slowly.</div></div><div class="ex-meta"><div class="ex-meta-val">4×15</div><div class="ex-meta-lbl">10–15 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Cable Lateral Raise</div><div class="ex-cue">Single arm, cable at ankle height. Pull outward and up. Cable keeps tension throughout — dumbbells drop off at the bottom. Do both sides.</div></div><div class="ex-meta"><div class="ex-meta-val">3×15</div><div class="ex-meta-lbl">Each side</div></div></div>
-        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Leaning Lateral Raise</div><div class="ex-cue">Hold a rack, lean away slightly. Single arm raise. The lean increases the range of motion at the bottom — better stretch and growth stimulus.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">Each side</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Low Cable Fly</div><div class="ex-cue">Cables low, arms wide, bring hands together at chest height. Squeeze for 1 sec. Isolates chest fully.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">Light</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Chest Dips (Assisted if needed)</div><div class="ex-cue">Lean forward for chest emphasis. Lower to 90°. Press up squeezing chest. Don't go too deep.</div></div><div class="ex-meta"><div class="ex-meta-val">3×8</div><div class="ex-meta-lbl">Bodyweight</div></div></div>
+        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Front Raises</div><div class="ex-cue">Arms straight, raise to shoulder height. Controlled. Hits anterior delts. Keep core tight.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">10–15 lbs</div></div></div>
       </div>
     </div>
 
-    <!-- TRICEPS -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">05</div>
-        <div class="wo-section-name">Triceps</div>
-        <div class="wo-section-tag">Long · Lateral · Medial Heads</div>
-        <div class="wo-section-chev">▼</div>
-      </div>
-      <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Overhead Cable Tricep Extension</div><div class="ex-cue">Face away from cable. Arms overhead, extend forward. Hits the long head — the biggest head, the one that makes arms look big from behind. Squeeze hard at full extension.</div></div><div class="ex-meta"><div class="ex-meta-val">4×12</div><div class="ex-meta-lbl">25–35 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Rope Cable Pushdown</div><div class="ex-cue">Elbows pinned to sides. At the bottom, pull the rope ends apart for extra contraction. Hits lateral and medial heads. Triceps = 2/3 of arm size.</div></div><div class="ex-meta"><div class="ex-meta-val">4×12</div><div class="ex-meta-lbl">30–40 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Dumbbell Skull Crusher</div><div class="ex-cue">Lie flat. Arms vertical, lower dumbbells toward forehead bending only at elbows. Isolates all three heads. Control the negative — this is where you build.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">15–20 lbs</div></div></div>
-      </div>
-    </div>
-
-    <div class="wo-section open">
-      <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
-        <div class="wo-section-num">06</div>
-        <div class="wo-section-name">Watch &amp; Learn</div>
+        <div class="wo-section-name">Watch & Learn</div>
         <div class="wo-section-tag">YouTube</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
         <div class="vid-grid">
-          <a href="https://www.youtube.com/watch?v=IOH7Y84HlQ0" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Beginner Push Day Full Workout</div><div class="vid-ch">Jeff Nippard</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=gRVjAtPip0Y" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Lateral Raises — Perfect Form</div><div class="vid-ch">Athlean-X</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=VmB1G1K7v94" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Perfect Chest Workout</div><div class="vid-ch">Jeremy Ethier</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=dSmHzbMJLeo" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Incline Press Mastery</div><div class="vid-ch">Jeff Nippard</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=WxnxmAhFGM8" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Tricep Pushdown Form</div><div class="vid-ch">Athlean-X</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=eozdVDA78K0" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Cable Fly Full Tutorial</div><div class="vid-ch">Scott Herman</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://youtube.com/watch?v=IOH7Y84HlQ0" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/IOH7Y84HlQ0/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Beginner Push Day Full Workout</div><div class="vid-ch">Jeff Nippard</div></div></a>
+          <a href="https://youtube.com/watch?v=gRVjAtPip0Y" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/gRVjAtPip0Y/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Lateral Raises — Perfect Form</div><div class="vid-ch">Athlean-X</div></div></a>
+          <a href="https://youtube.com/watch?v=VmB1G1K7v94" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/VmB1G1K7v94/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Perfect Chest Workout for Beginners</div><div class="vid-ch">Jeremy Ethier</div></div></a>
+          <a href="https://youtube.com/watch?v=L3pTnzqKaB8" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/L3pTnzqKaB8/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Dumbbell Only Push Day</div><div class="vid-ch">Austin Dunham</div></div></a>
+          <a href="https://youtube.com/watch?v=dSmHzbMJLeo" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/dSmHzbMJLeo/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Incline Press Mastery</div><div class="vid-ch">Jeff Nippard</div></div></a>
+          <a href="https://youtube.com/watch?v=WxnxmAhFGM8" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/WxnxmAhFGM8/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Tricep Pushdown Form Guide</div><div class="vid-ch">Athlean-X</div></div></a>
+          <a href="https://youtube.com/watch?v=eozdVDA78K0" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/eozdVDA78K0/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Cable Fly — Full Tutorial</div><div class="vid-ch">Scott Herman Fitness</div></div></a>
+          <a href="https://youtube.com/watch?v=Dkl_t3oNQ5M" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/Dkl_t3oNQ5M/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Chest Dips — How To</div><div class="vid-ch">Buff Dudes</div></div></a>
         </div>
       </div>
     </div>
@@ -2534,96 +2522,76 @@ html, body {
     </div>
     <div class="wo-tip" style="border-left-color:#3498db;">Pull with your elbows, not your hands. Initiate every rep by depressing your shoulder blade first. Feel the lat — don't just move the bar.</div>
 
-    <!-- LATS — WIDTH -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">01</div>
-        <div class="wo-section-name">Lats — Width</div>
-        <div class="wo-section-tag">Latissimus Dorsi</div>
+        <div class="wo-section-name">Lat Pulldown + Face Pulls</div>
+        <div class="wo-section-tag">Back Width</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Lat Pulldown (Wide Grip)</div><div class="ex-cue">Pull bar to upper chest, lean back slightly. Feel lats stretch at the top — that stretch is your friend. Builds the V from front and back.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">Mod weight</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Straight-Arm Pulldown</div><div class="ex-cue">Arms straight, cable at top. Pull bar to hips sweeping down. Pure lat isolation — no bicep involvement. Great for mind-muscle connection.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">Light</div></div></div>
-        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Assisted Pull-Up</div><div class="ex-cue">Dead hang to chin over bar. Full range every rep. Use the machine or a band. This is the king of lat exercises — work toward doing it unassisted.</div></div><div class="ex-meta"><div class="ex-meta-val">3×6</div><div class="ex-meta-lbl">Assisted</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Lat Pulldown</div><div class="ex-cue">Wide grip. Pull bar to upper chest. Lean back slightly. Feel lats stretch at top. Builds the V.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">Mod weight</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Face Pulls</div><div class="ex-cue">Rope at face height. Pull to forehead. Elbows high and wide. Rear delt and rotator cuff health.</div></div><div class="ex-meta"><div class="ex-meta-val">4×15</div><div class="ex-meta-lbl">Light</div></div></div>
       </div>
     </div>
 
-    <!-- MID BACK — THICKNESS -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">02</div>
-        <div class="wo-section-name">Mid Back — Thickness</div>
-        <div class="wo-section-tag">Rhomboids · Mid Traps</div>
+        <div class="wo-section-name">Dumbbell Row + Cable Row</div>
+        <div class="wo-section-tag">Back Thickness</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Dumbbell Row</div><div class="ex-cue">Brace on bench. Pull elbow back and up past hip. Squeeze the lat hard at the top, hold 1 sec. 3 sec lower. Heavy is good here.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">40–55 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Seated Cable Row (Close Grip)</div><div class="ex-cue">Pull to belly button. Squeeze shoulder blades together at end — this is the key movement, not just pulling the weight. Chest stays up the whole time.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">Mod weight</div></div></div>
-        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Chest-Supported Dumbbell Row</div><div class="ex-cue">Lie chest-down on incline bench. Row both dumbbells up. Takes the lower back out completely — pure upper back and rhomboid work.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">25–35 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Dumbbell Row</div><div class="ex-cue">Brace on bench. Pull elbow back and up past your hip. Squeeze lat at top. 3 sec lower.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">40–50 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Seated Cable Row</div><div class="ex-cue">Pull to belly button. Squeeze shoulder blades together at end. Chest stays up the whole time.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">Mod weight</div></div></div>
       </div>
     </div>
 
-    <!-- REAR DELTS -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">03</div>
-        <div class="wo-section-name">Rear Shoulders</div>
-        <div class="wo-section-tag">Posterior Delts</div>
+        <div class="wo-section-name">Bicep Curls + Hammer Curls</div>
+        <div class="wo-section-tag">Arms</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Face Pulls</div><div class="ex-cue">Rope at face height. Pull to forehead with elbows high and wide. Most people skip this — it's what keeps your shoulders healthy long-term. Do it every pull day.</div></div><div class="ex-meta"><div class="ex-meta-val">4×15</div><div class="ex-meta-lbl">Light</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Dumbbell Rear Delt Fly</div><div class="ex-cue">Hinge forward 45°. Raise arms outward to shoulder height, elbows slightly bent. Squeeze rear delts at the top. These are weak in most people — fix that now.</div></div><div class="ex-meta"><div class="ex-meta-val">3×15</div><div class="ex-meta-lbl">10–15 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Reverse Pec Deck</div><div class="ex-cue">Sit facing the pad. Arms out to sides on the handles. Sweep back as far as possible. Machine keeps tension consistent throughout — great finisher for rear delts.</div></div><div class="ex-meta"><div class="ex-meta-val">3×15</div><div class="ex-meta-lbl">Light</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Dumbbell Bicep Curl</div><div class="ex-cue">Full range. Supinate at top (rotate wrist). No swinging. Squeeze at peak. Slow negatives.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">20–25 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Hammer Curl</div><div class="ex-cue">Neutral grip throughout. Builds the brachialis — makes arm look thick from every angle.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">20–25 lbs</div></div></div>
       </div>
     </div>
 
-    <!-- TRAPS -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">04</div>
-        <div class="wo-section-name">Traps</div>
-        <div class="wo-section-tag">Upper Trapezius</div>
+        <div class="wo-section-name">Assisted Pull-Ups + Shrugs</div>
+        <div class="wo-section-tag">Finisher</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Dumbbell Shrugs</div><div class="ex-cue">Hold heavy dumbbells. Shrug straight up — no rolling. Hold 1 sec at top. Builds trap thickness visible from front and behind. Go heavy here.</div></div><div class="ex-meta"><div class="ex-meta-val">4×12</div><div class="ex-meta-lbl">55–70 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Cable Shrug</div><div class="ex-cue">Cable at waist height behind you, lean forward slightly. Shrug upward. Different angle than dumbbell shrugs — hits lower fibers of upper trap.</div></div><div class="ex-meta"><div class="ex-meta-val">3×15</div><div class="ex-meta-lbl">Mod weight</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Assisted Pull-Ups</div><div class="ex-cue">Use the machine or a band. Full range — dead hang to chin over bar. Best lat exercise there is.</div></div><div class="ex-meta"><div class="ex-meta-val">3×6</div><div class="ex-meta-lbl">Assisted</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Dumbbell Shrugs</div><div class="ex-cue">Hold heavy dumbbells. Shrug straight up — no rolling. Hold 1 sec at top. Builds trap thickness.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">50–60 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Incline Dumbbell Curl</div><div class="ex-cue">Sit on incline bench, arms hang straight. Curl up. Increased stretch = more peak activation.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">15–20 lbs</div></div></div>
       </div>
     </div>
 
-    <!-- BICEPS -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">05</div>
-        <div class="wo-section-name">Biceps</div>
-        <div class="wo-section-tag">Short Head · Long Head · Brachialis</div>
-        <div class="wo-section-chev">▼</div>
-      </div>
-      <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Dumbbell Bicep Curl</div><div class="ex-cue">Full range. Supinate at top — rotate wrist outward. No swinging. Squeeze at peak. Slow negatives build the most. Hits the short head (inner thickness).</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">20–25 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Incline Dumbbell Curl</div><div class="ex-cue">Sit on incline bench, arms hang straight. Curl up. The arm-behind-body position stretches the long head — more peak development. Don't rush.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">15–20 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Hammer Curl</div><div class="ex-cue">Neutral grip (palms facing each other) throughout. Hits the brachialis — the muscle under the bicep that pushes it up and makes arms look thick from every angle.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">20–25 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">D</div><div class="ex-body"><div class="ex-name">Cable Curl (Single Arm)</div><div class="ex-cue">Cable at ankle height. Curl up. Cable keeps tension at the bottom (unlike dumbbells). Both arms. Great finisher — go light and squeeze hard.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">Each side</div></div></div>
-      </div>
-    </div>
-
-    <div class="wo-section open">
-      <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
-        <div class="wo-section-num">06</div>
-        <div class="wo-section-name">Watch &amp; Learn</div>
+        <div class="wo-section-name">Watch & Learn</div>
         <div class="wo-section-tag">YouTube</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
         <div class="vid-grid">
-          <a href="https://www.youtube.com/watch?v=oBL8PFiKCPY" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Perfect Pull Day</div><div class="vid-ch">Jeff Nippard</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=6rgE9D2OQBE" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Dumbbell Row — Correct Form</div><div class="vid-ch">Athlean-X</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=wZzSRh55SCg" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Best Back Exercises for Beginners</div><div class="vid-ch">Jeremy Ethier</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=DMo3HJoawrU" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Face Pulls — Why You Need These</div><div class="vid-ch">Jeff Nippard</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=q7TqMVQPkY8" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Pull-Up Progression for Beginners</div><div class="vid-ch">Calisthenicmovement</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=3YvfRx31xDE" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Bicep Curls — Perfect Form</div><div class="vid-ch">Scott Herman Fitness</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://youtube.com/watch?v=oBL8PFiKCPY" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/oBL8PFiKCPY/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Perfect Pull Day for All Levels</div><div class="vid-ch">Jeff Nippard</div></div></a>
+          <a href="https://youtube.com/watch?v=6rgE9D2OQBE" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/6rgE9D2OQBE/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Dumbbell Row — Correct Form</div><div class="vid-ch">Athlean-X</div></div></a>
+          <a href="https://youtube.com/watch?v=wZzSRh55SCg" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/wZzSRh55SCg/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Best Back Exercises for Beginners</div><div class="vid-ch">Jeremy Ethier</div></div></a>
+          <a href="https://youtube.com/watch?v=3YvfRx31xDE" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/3YvfRx31xDE/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Bicep Curls — Perfect Form</div><div class="vid-ch">Scott Herman Fitness</div></div></a>
+          <a href="https://youtube.com/watch?v=cwqPYf2SQNE" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/cwqPYf2SQNE/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Lat Pulldown — Full Tutorial</div><div class="vid-ch">Athlean-X</div></div></a>
+          <a href="https://youtube.com/watch?v=DMo3HJoawrU" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/DMo3HJoawrU/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Face Pulls — Why You Need These</div><div class="vid-ch">Jeff Nippard</div></div></a>
+          <a href="https://youtube.com/watch?v=q7TqMVQPkY8" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/q7TqMVQPkY8/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Pull-Up Progression for Beginners</div><div class="vid-ch">Calisthenicmovement</div></div></a>
+          <a href="https://youtube.com/watch?v=8IPNh8GPCOs" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/8IPNh8GPCOs/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Hammer Curl vs Regular Curl</div><div class="vid-ch">Renaissance Periodization</div></div></a>
         </div>
       </div>
     </div>
@@ -2641,7 +2609,7 @@ html, body {
         <div class="wo-title">LEG <span>DAY</span></div>
         <div class="wo-sub">Biggest muscle group = biggest metabolic impact. Builds the base everything else sits on.</div>
       </div>
-      <div class="wo-badge">🦵 Wed &amp; Sat</div>
+      <div class="wo-badge">🦵 Wed & Sat</div>
     </div>
   </div>
   <div class="container" style="padding-top:12px;padding-bottom:48px;">
@@ -2652,96 +2620,76 @@ html, body {
       <div style="font-family:'Space Mono',monospace;font-size:8px;color:rgba(200,168,75,0.5);margin-top:6px;letter-spacing:2px;text-transform:uppercase;">MON &amp; THU · SUNNAH FAST · TMC 🏁</div>
     </div>
 
-    <!-- QUADS -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">01</div>
-        <div class="wo-section-name">Quads</div>
-        <div class="wo-section-tag">Rectus Femoris · Vastus Lateralis</div>
+        <div class="wo-section-name">Goblet Squat + Romanian Deadlift</div>
+        <div class="wo-section-tag">Compound</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Goblet Squat</div><div class="ex-cue">Hold dumbbell at chest. Sit deep between knees. Drive through heels. Back stays tall. Perfect beginner squat — builds quad sweep and depth.</div></div><div class="ex-meta"><div class="ex-meta-val">4×12</div><div class="ex-meta-lbl">25–35 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Leg Press</div><div class="ex-cue">Feet shoulder-width, mid-plate. Lower until 90° — go deeper for more quad. Drive through heels. Don't lock out at top. Great mass builder for all quad heads.</div></div><div class="ex-meta"><div class="ex-meta-val">4×12</div><div class="ex-meta-lbl">Moderate</div></div></div>
-        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Leg Extension Machine</div><div class="ex-cue">Squeeze hard at full extension, hold 1 sec. Lower controlled. Pure quad isolation — hits all four quad heads directly. No substitute for this.</div></div><div class="ex-meta"><div class="ex-meta-val">3×15</div><div class="ex-meta-lbl">Light-Mod</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Goblet Squat</div><div class="ex-cue">Hold dumbbell at chest. Sit deep between knees. Drive through heels. Back stays tall. Perfect beginner squat.</div></div><div class="ex-meta"><div class="ex-meta-val">4×12</div><div class="ex-meta-lbl">25–35 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Romanian Deadlift</div><div class="ex-cue">Hinge at hips. Back flat — no rounding. Lower until hamstring stretch. Drive hips forward on the way up.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">40–50 lbs</div></div></div>
       </div>
     </div>
 
-    <!-- HAMSTRINGS -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">02</div>
-        <div class="wo-section-name">Hamstrings</div>
-        <div class="wo-section-tag">Bicep Femoris · Semimembranosus</div>
+        <div class="wo-section-name">Lunges + Hip Thrusts</div>
+        <div class="wo-section-tag">Glutes & Quads</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Romanian Deadlift</div><div class="ex-cue">Hinge at hips, back flat. Lower until you feel the hamstring stretch — that's your depth. Drive hips forward on the way up. Most important ham exercise.</div></div><div class="ex-meta"><div class="ex-meta-val">4×10</div><div class="ex-meta-lbl">40–55 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Lying Leg Curl Machine</div><div class="ex-cue">Full range. Squeeze hamstring at peak, hold 1 sec. Lower very slowly — 3 sec negative. Hamstrings respond best to slow eccentrics. Do not rush this.</div></div><div class="ex-meta"><div class="ex-meta-val">4×12</div><div class="ex-meta-lbl">Light-Mod</div></div></div>
-        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Nordic Curl (Assisted)</div><div class="ex-cue">Kneel, anchor feet. Lower your body slowly toward floor, catch yourself, push back up. The hardest hamstring exercise there is. Use hands to help on the way up.</div></div><div class="ex-meta"><div class="ex-meta-val">3×5</div><div class="ex-meta-lbl">Assisted</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Dumbbell Walking Lunges</div><div class="ex-cue">Step forward, knee tracks over toe. Back knee nearly touches floor. Stay upright. Great for quads and glutes.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">20–25 lbs</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Hip Thrust</div><div class="ex-cue">Back on bench edge. Squeeze glutes HARD at top. Hold 1 sec. Lower controlled. Best glute builder.</div></div><div class="ex-meta"><div class="ex-meta-val">4×15</div><div class="ex-meta-lbl">BW or 25 lbs</div></div></div>
       </div>
     </div>
 
-    <!-- GLUTES -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">03</div>
-        <div class="wo-section-name">Glutes</div>
-        <div class="wo-section-tag">Gluteus Maximus · Medius</div>
+        <div class="wo-section-name">Leg Curl + Calf Raises</div>
+        <div class="wo-section-tag">Isolation</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Hip Thrust</div><div class="ex-cue">Back on bench edge. Squeeze glutes HARD at top — not just extend. Hold 1 sec. Lower controlled. The single best glute builder. Go heavy.</div></div><div class="ex-meta"><div class="ex-meta-val">4×15</div><div class="ex-meta-lbl">BW or 25 lbs</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Dumbbell Walking Lunges</div><div class="ex-cue">Step forward, knee tracks over toe. Back knee nearly touches floor. The glute stretch at the bottom is the point. Stay upright. Each step = one rep.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">20–25 lbs each</div></div></div>
-        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Cable Kickback</div><div class="ex-cue">Ankle attachment. Kick leg straight back and up, squeeze glute at top. Hold 1 sec. Isolates glute max directly. Do not swing the leg — control the whole way.</div></div><div class="ex-meta"><div class="ex-meta-val">3×15</div><div class="ex-meta-lbl">Each side</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Leg Curl Machine</div><div class="ex-cue">Full range. Squeeze hamstring at peak. Lower very slowly. Do not rush. Hamstrings need volume.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">Light-Mod</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Standing Calf Raises</div><div class="ex-cue">Full stretch at bottom. Pause at top. Your calves need volume to grow. Do all 4 sets slowly.</div></div><div class="ex-meta"><div class="ex-meta-val">4×20</div><div class="ex-meta-lbl">Bodyweight</div></div></div>
       </div>
     </div>
 
-    <!-- ADDUCTORS / ABDUCTORS -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">04</div>
-        <div class="wo-section-name">Inner &amp; Outer Thigh</div>
-        <div class="wo-section-tag">Adductors · Abductors · Glute Med</div>
+        <div class="wo-section-name">Leg Press + Wall Sit</div>
+        <div class="wo-section-tag">Finisher</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Abductor Machine (Outer Thigh)</div><div class="ex-cue">Slow and controlled outward. Squeeze at full range. Builds glute medius — what gives the glute a rounded look from the side. Often skipped. Don't skip it.</div></div><div class="ex-meta"><div class="ex-meta-val">3×15</div><div class="ex-meta-lbl">Light-Mod</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Adductor Machine (Inner Thigh)</div><div class="ex-cue">Slow squeeze inward. Controls knee tracking during squats. Weak adductors = knee cave = injury. Train them.</div></div><div class="ex-meta"><div class="ex-meta-val">3×15</div><div class="ex-meta-lbl">Light-Mod</div></div></div>
-        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Step-Ups</div><div class="ex-cue">Use a bench or box. Drive through the heel of the top leg. Step up fully. Single-leg stability, glute medius, and glute max. Great for running performance too.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">Each leg</div></div></div>
+        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Leg Press</div><div class="ex-cue">Feet shoulder-width. Lower until 90°. Drive through heels. Don't lock out at top. Great quad builder.</div></div><div class="ex-meta"><div class="ex-meta-val">3×12</div><div class="ex-meta-lbl">Moderate</div></div></div>
+        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Wall Sit</div><div class="ex-cue">Back flat against wall, thighs parallel. Hold. Builds quad endurance — helps running too.</div></div><div class="ex-meta"><div class="ex-meta-val">3×45s</div><div class="ex-meta-lbl">Bodyweight</div></div></div>
+        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Step-Ups</div><div class="ex-cue">Use a bench or step. Drive knee up. Step up fully. Great single-leg stability and glute builder.</div></div><div class="ex-meta"><div class="ex-meta-val">3×10</div><div class="ex-meta-lbl">Each leg</div></div></div>
       </div>
     </div>
 
-    <!-- CALVES -->
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">05</div>
-        <div class="wo-section-name">Calves</div>
-        <div class="wo-section-tag">Gastrocnemius · Soleus</div>
-        <div class="wo-section-chev">▼</div>
-      </div>
-      <div class="wo-section-body">
-        <div class="ex"><div class="ex-num">A</div><div class="ex-body"><div class="ex-name">Standing Calf Raise</div><div class="ex-cue">Full stretch at bottom — pause 1 sec in the stretch. Slow raise to the top. Pause 1 sec at peak. Hits gastrocnemius (visible calf). Calves need high volume to grow — do all sets.</div></div><div class="ex-meta"><div class="ex-meta-val">4×20</div><div class="ex-meta-lbl">Bodyweight</div></div></div>
-        <div class="ex"><div class="ex-num">B</div><div class="ex-body"><div class="ex-name">Seated Calf Raise</div><div class="ex-cue">Knee bent = gastrocnemius off = soleus dominant. The soleus is the flat calf muscle below the gastrocnemius — building it pushes the gastroc up and makes the calf look bigger.</div></div><div class="ex-meta"><div class="ex-meta-val">4×20</div><div class="ex-meta-lbl">25 lbs on lap</div></div></div>
-        <div class="ex"><div class="ex-num">C</div><div class="ex-body"><div class="ex-name">Wall Sit</div><div class="ex-cue">Back flat against wall, thighs parallel. Hold. Builds quad endurance and helps running. If it's easy, add dumbbells on your lap.</div></div><div class="ex-meta"><div class="ex-meta-val">3×45s</div><div class="ex-meta-lbl">Bodyweight</div></div></div>
-      </div>
-    </div>
-
-    <div class="wo-section open">
-      <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
-        <div class="wo-section-num">06</div>
-        <div class="wo-section-name">Watch &amp; Learn</div>
+        <div class="wo-section-name">Watch & Learn</div>
         <div class="wo-section-tag">YouTube</div>
         <div class="wo-section-chev">▼</div>
       </div>
       <div class="wo-section-body">
         <div class="vid-grid">
-          <a href="https://www.youtube.com/watch?v=Dy28gy8X-xo" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Best Leg Day for Beginners</div><div class="vid-ch">Jeff Nippard</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=1uDiW5--rAE" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Goblet Squat — Perfect Form</div><div class="vid-ch">Alan Thrall</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=XxWcirHIwVo" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Romanian Deadlift Form Guide</div><div class="vid-ch">Athlean-X</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=ky1Gv4S1hO4" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Hip Thrusts for Beginners</div><div class="vid-ch">Jeremy Ethier</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=YyvSfVjQeL0" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Leg Press — How to Do It Right</div><div class="vid-ch">Athlean-X</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=xXvdMRsqXMI" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Calf Raises — Do This Instead</div><div class="vid-ch">Renaissance Periodization</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://youtube.com/watch?v=Dy28gy8X-xo" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/Dy28gy8X-xo/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Best Leg Day for Beginners</div><div class="vid-ch">Jeff Nippard</div></div></a>
+          <a href="https://youtube.com/watch?v=1uDiW5--rAE" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/1uDiW5--rAE/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Goblet Squat — Perfect Form</div><div class="vid-ch">Alan Thrall</div></div></a>
+          <a href="https://youtube.com/watch?v=XxWcirHIwVo" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/XxWcirHIwVo/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Romanian Deadlift Form Guide</div><div class="vid-ch">Athlean-X</div></div></a>
+          <a href="https://youtube.com/watch?v=ky1Gv4S1hO4" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/ky1Gv4S1hO4/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Hip Thrusts for Beginners</div><div class="vid-ch">Jeremy Ethier</div></div></a>
+          <a href="https://youtube.com/watch?v=YyvSfVjQeL0" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/YyvSfVjQeL0/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Leg Press — How to Do It Right</div><div class="vid-ch">Athlean-X</div></div></a>
+          <a href="https://youtube.com/watch?v=xXvdMRsqXMI" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/xXvdMRsqXMI/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Calf Raises — Do This Instead</div><div class="vid-ch">Renaissance Periodization</div></div></a>
+          <a href="https://youtube.com/watch?v=TIq4_oMmpio" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/TIq4_oMmpio/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Walking Lunges for Beginners</div><div class="vid-ch">Scott Herman Fitness</div></div></a>
+          <a href="https://youtube.com/watch?v=3KQ4X7TA5UE" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/3KQ4X7TA5UE/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Hamstring Curl Technique</div><div class="vid-ch">NASM</div></div></a>
         </div>
       </div>
     </div>
@@ -2818,44 +2766,6 @@ id="page-running" class="page">
     </div>
   </div>
   <div class="container" style="padding-top:12px;padding-bottom:48px;">
-
-    <!-- FASTED RUNNING BANNER — Mon & Thu only — always at top -->
-    <div id="fastedBanner-running" style="display:none;margin-bottom:10px;position:relative;overflow:hidden;border:1px solid rgba(200,168,75,0.25);background:#000;">
-      <!-- Animated shimmer line -->
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#c8a84b,#f0d878,#c8a84b,transparent);background-size:200% 100%;animation:badgeShine 2.5s ease-in-out infinite;"></div>
-      <div style="display:flex;align-items:stretch;gap:0;">
-        <!-- Left accent column -->
-        <div style="width:4px;flex-shrink:0;background:linear-gradient(180deg,#c8a84b 0%,#f0d878 50%,#c8a84b 100%);"></div>
-        <!-- Main content -->
-        <div style="padding:14px 18px;flex:1;">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-            <span style="font-size:22px;line-height:1;">🌙</span>
-            <div>
-              <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--gold);letter-spacing:2px;line-height:1;">FASTED RUN — SUNNAH MONDAY &amp; THURSDAY</div>
-              <div style="font-family:'Space Mono',monospace;font-size:8px;color:rgba(200,168,75,0.5);letter-spacing:2px;text-transform:uppercase;margin-top:2px;">Following the practice of the Prophet ﷺ</div>
-            </div>
-          </div>
-          <!-- 3-column info row -->
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:6px;">
-            <div style="background:rgba(200,168,75,0.06);border:1px solid rgba(200,168,75,0.12);padding:8px 10px;">
-              <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;">FAT BURN</div>
-              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#666;line-height:1.5;margin-top:2px;">Fasted Zone 2 maximises fat oxidation. Glycogen is low — the body burns fat first.</div>
-            </div>
-            <div style="background:rgba(200,168,75,0.06);border:1px solid rgba(200,168,75,0.12);padding:8px 10px;">
-              <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;">MENTAL EDGE</div>
-              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#666;line-height:1.5;margin-top:2px;">Running while fasted builds discipline other people will never understand. That's the point.</div>
-            </div>
-            <div style="background:rgba(200,168,75,0.06);border:1px solid rgba(200,168,75,0.12);padding:8px 10px;">
-              <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;">SUNNAH</div>
-              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#666;line-height:1.5;margin-top:2px;">The Prophet ﷺ fasted Mon & Thu voluntarily. You're running those same days. Barakah in the miles.</div>
-            </div>
-          </div>
-          <div style="font-family:'Space Mono',monospace;font-size:8px;color:#444;margin-top:8px;letter-spacing:1px;">Tip: sip water before you go, keep it Zone 2, and make du'a at the door. Bismillah — then run.</div>
-        </div>
-      </div>
-      <!-- Bottom shimmer line -->
-      <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(200,168,75,0.2),transparent);"></div>
-    </div>
 
     <!-- RUNNER TIER CARD -->
     <div id="runnerTierCard" style="background:#0a0a0a;border:1px solid var(--border);padding:16px 18px;margin-bottom:14px;position:relative;overflow:hidden;">
@@ -2940,6 +2850,45 @@ id="page-running" class="page">
     </div>
 
     <div class="wo-tip" style="border-left-color:#e74c3c;">Zone 2 = conversational pace. Heart rate under 137. 80% of your runs should feel almost too easy. Slow down now → run faster in 3 months.</div>
+
+    <!-- FASTED RUNNING BANNER — Mon & Thu only -->
+    <div id="fastedBanner-running" style="display:none;margin-bottom:10px;position:relative;overflow:hidden;border:1px solid rgba(200,168,75,0.25);background:#000;">
+      <!-- Animated shimmer line -->
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#c8a84b,#f0d878,#c8a84b,transparent);background-size:200% 100%;animation:badgeShine 2.5s ease-in-out infinite;"></div>
+      <div style="display:flex;align-items:stretch;gap:0;">
+        <!-- Left accent column -->
+        <div style="width:4px;flex-shrink:0;background:linear-gradient(180deg,#c8a84b 0%,#f0d878 50%,#c8a84b 100%);"></div>
+        <!-- Main content -->
+        <div style="padding:14px 18px;flex:1;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <span style="font-size:22px;line-height:1;">🌙</span>
+            <div>
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--gold);letter-spacing:2px;line-height:1;">FASTED RUN — SUNNAH MONDAY &amp; THURSDAY</div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:rgba(200,168,75,0.5);letter-spacing:2px;text-transform:uppercase;margin-top:2px;">Following the practice of the Prophet ﷺ</div>
+            </div>
+          </div>
+          <!-- 3-column info row -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:6px;">
+            <div style="background:rgba(200,168,75,0.06);border:1px solid rgba(200,168,75,0.12);padding:8px 10px;">
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;">FAT BURN</div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#666;line-height:1.5;margin-top:2px;">Fasted Zone 2 maximises fat oxidation. Glycogen is low — the body burns fat first.</div>
+            </div>
+            <div style="background:rgba(200,168,75,0.06);border:1px solid rgba(200,168,75,0.12);padding:8px 10px;">
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;">MENTAL EDGE</div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#666;line-height:1.5;margin-top:2px;">Running while fasted builds discipline other people will never understand. That's the point.</div>
+            </div>
+            <div style="background:rgba(200,168,75,0.06);border:1px solid rgba(200,168,75,0.12);padding:8px 10px;">
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;">SUNNAH</div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#666;line-height:1.5;margin-top:2px;">The Prophet ﷺ fasted Mon & Thu voluntarily. You're running those same days. Barakah in the miles.</div>
+            </div>
+          </div>
+          <div style="font-family:'Space Mono',monospace;font-size:8px;color:#444;margin-top:8px;letter-spacing:1px;">Tip: sip water before you go, keep it Zone 2, and make du'a at the door. Bismillah — then run.</div>
+        </div>
+      </div>
+      <!-- Bottom shimmer line -->
+      <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(200,168,75,0.2),transparent);"></div>
+    </div>
+
     <div class="wo-section open">
       <div class="wo-section-hdr" onclick="this.parentElement.classList.toggle('open')">
         <div class="wo-section-num">01</div>
@@ -3013,14 +2962,14 @@ id="page-running" class="page">
       </div>
       <div class="wo-section-body">
         <div class="vid-grid">
-          <a href="https://www.youtube.com/watch?v=9L2b2khySLE" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">How to Start Running for Beginners</div><div class="vid-ch">Global Triathlon Network</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=kVnyY17VS9Y" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Couch to 5K — The Right Way</div><div class="vid-ch">James Dunne</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=brFHyOtTwH4" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Run Faster and Longer</div><div class="vid-ch">Jeff Nippard</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=tBcGPOGnVMI" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">How to Breathe When Running</div><div class="vid-ch">James Dunne</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=_kGESn8ArrU" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">5K Training Plan for Beginners</div><div class="vid-ch">The Run Experience</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=s8oCByMJAM8" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Zone 2 Training Explained</div><div class="vid-ch">Peter Attia</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=MkROmL-v5GY" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Running Form for Beginners</div><div class="vid-ch">Global Running Day</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=wrCMJxA0EBY" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Why You Run Too Hard</div><div class="vid-ch">Vo2maxProductions</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://youtube.com/watch?v=9L2b2khySLE" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/9L2b2khySLE/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">How to Start Running for Beginners</div><div class="vid-ch">Global Triathlon Network</div></div></a>
+          <a href="https://youtube.com/watch?v=kVnyY17VS9Y" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/kVnyY17VS9Y/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Couch to 5K — The Right Way</div><div class="vid-ch">James Dunne</div></div></a>
+          <a href="https://youtube.com/watch?v=brFHyOtTwH4" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/brFHyOtTwH4/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Run Faster and Longer</div><div class="vid-ch">Jeff Nippard</div></div></a>
+          <a href="https://youtube.com/watch?v=tBcGPOGnVMI" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/tBcGPOGnVMI/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">How to Breathe When Running</div><div class="vid-ch">James Dunne</div></div></a>
+          <a href="https://youtube.com/watch?v=_kGESn8ArrU" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/_kGESn8ArrU/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">5K Training Plan for Beginners</div><div class="vid-ch">The Run Experience</div></div></a>
+          <a href="https://youtube.com/watch?v=s8oCByMJAM8" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/s8oCByMJAM8/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Zone 2 Training Explained</div><div class="vid-ch">Peter Attia</div></div></a>
+          <a href="https://youtube.com/watch?v=MkROmL-v5GY" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/MkROmL-v5GY/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Running Form for Beginners</div><div class="vid-ch">Global Running Day</div></div></a>
+          <a href="https://youtube.com/watch?v=wrCMJxA0EBY" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/wrCMJxA0EBY/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Why You Run Too Hard</div><div class="vid-ch">Vo2maxProductions</div></div></a>
         </div>
       </div>
     </div>
@@ -3086,13 +3035,14 @@ id="page-running" class="page">
       </div>
       <div class="wo-section-body">
         <div class="vid-grid">
-          <a href="https://www.youtube.com/watch?v=4BOTvaRaDms" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">10 Min Daily Mobility Routine</div><div class="vid-ch">Tom Merrick</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=L_xrDAtykMI" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Hip Mobility for Athletes</div><div class="vid-ch">Squat University</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=FSSDLDhbacc" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">World's Greatest Stretch Tutorial</div><div class="vid-ch">Athlean-X</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=eTFTmDQbGNs" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Full Body Flexibility 15 Min</div><div class="vid-ch">MoveU</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=qULTwquOuT4" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Pre-Workout Mobility Routine</div><div class="vid-ch">Jeremy Ethier</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=GBrpbD5YQHY" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Hip Flexor Stretch Guide</div><div class="vid-ch">Bob &amp; Brad</div></div><span class="vid-arrow">↗</span></a>
-          <a href="https://www.youtube.com/watch?v=PKLSBdT5JZk" target="_blank" rel="noopener" class="vid-card"><span class="vid-icon">▶</span><div class="vid-info"><div class="vid-title">Runner's Full Stretch Routine</div><div class="vid-ch">James Dunne</div></div><span class="vid-arrow">↗</span></a>
+          <a href="https://youtube.com/watch?v=4BOTvaRaDms" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/4BOTvaRaDms/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">10 Min Daily Mobility Routine</div><div class="vid-ch">Tom Merrick</div></div></a>
+          <a href="https://youtube.com/watch?v=L_xrDAtykMI" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/L_xrDAtykMI/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Hip Mobility for Athletes</div><div class="vid-ch">Squat University</div></div></a>
+          <a href="https://youtube.com/watch?v=FSSDLDhbacc" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/FSSDLDhbacc/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">World's Greatest Stretch Tutorial</div><div class="vid-ch">Athlean-X</div></div></a>
+          <a href="https://youtube.com/watch?v=eTFTmDQbGNs" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/eTFTmDQbGNs/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Full Body Flexibility 15 Min</div><div class="vid-ch">MoveU</div></div></a>
+          <a href="https://youtube.com/watch?v=qULTwquOuT4" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/qULTwquOuT4/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Pre-Workout Mobility Routine</div><div class="vid-ch">Jeremy Ethier</div></div></a>
+          <a href="https://youtube.com/watch?v=GBrpbD5YQHY" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/GBrpbD5YQHY/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Hip Flexor Stretch Guide</div><div class="vid-ch">Bob & Brad</div></div></a>
+
+          <a href="https://youtube.com/watch?v=PKLSBdT5JZk" target="_blank" class="vid-card"><img src="https://img.youtube.com/vi/PKLSBdT5JZk/mqdefault.jpg" alt="" loading="lazy"><div class="vid-info"><div class="vid-title">Runner's Full Stretch Routine</div><div class="vid-ch">James Dunne</div></div></a>
         </div>
       </div>
     </div>
@@ -3546,62 +3496,35 @@ function resetLastRace() {
   if (!log.length) return;
   const last = log[0];
   const rt = RACE_TYPES[last.type] || {};
-
-  // Pre-calculate rank/level coin reversal before confirm
-  const data = getXPData();
-  const xpBefore    = data.totalXP || 0;
-  const xpAfter     = Math.max(0, xpBefore - last.xp);
-  const levelBefore = getLevelFromXP(xpBefore);
-  const levelAfter  = getLevelFromXP(xpAfter);
-  let bonusCoins = 0;
-  for (const r of RANKS) {
-    if (r.minXP > xpAfter && r.minXP <= xpBefore) bonusCoins += RANK_COIN_REWARDS[r.rank] || 0;
-  }
-  for (let l = levelAfter + 1; l <= levelBefore; l++) bonusCoins += LEVEL_COIN_REWARDS[l] || 0;
-  const totalCoinsLost = last.coins + bonusCoins;
-
   showResetConfirm(
     '↩ Undo Last Race',
-    'Remove <span style="color:' + (rt.color||'var(--gold)') + ';">' + last.icon + ' ' + last.label + ' on ' + last.date + '</span>?<br>XP lost: <span style="color:#e74c3c;">-' + last.xp + '</span> · Coins lost: <span style="color:#e74c3c;">-' + totalCoinsLost + ' 🪙</span>.',
+    'Remove <span style="color:' + (rt.color||'var(--gold)') + ';">' + last.icon + ' ' + last.label + ' on ' + last.date + '</span>? This will deduct <span style="color:#e74c3c;">-' + last.xp + ' XP</span> and <span style="color:#e74c3c;">-' + last.coins + ' 🪙</span>.',
     () => {
+      // Remove from race log
       log.shift();
       saveRaceLog(log);
 
-      const data2 = getXPData();
-      data2.totalXP = xpAfter;
-      data2.level   = levelAfter;
-      data2.coins   = Math.max(0, (data2.coins || 0) - totalCoinsLost);
+      // Deduct XP + coins
+      const data = getXPData();
+      data.totalXP = Math.max(0, (data.totalXP||0) - last.xp);
+      data.coins   = Math.max(0, (data.coins||0)   - last.coins);
 
-      // Remove race + ALL associated run quests from that day
+      // Remove race + run quest from that day
       const dStr = last.dateStr;
-      if (dStr && data2.dailyQuests[dStr]) {
-        delete data2.dailyQuests[dStr]['race'];
-        delete data2.dailyQuests[dStr]['run5k'];
-        delete data2.dailyQuests[dStr]['run10k'];
-        delete data2.dailyQuests[dStr]['run1'];
-        delete data2.dailyQuests[dStr]['longrun'];
-        delete data2.dailyQuests[dStr]['halfmarathon'];
+      if (dStr && data.dailyQuests[dStr]) {
+        delete data.dailyQuests[dStr]['race'];
+        delete data.dailyQuests[dStr]['run5k'];
+        delete data.dailyQuests[dStr]['run10k'];
+        delete data.dailyQuests[dStr]['run1'];
       }
 
-      // Remove race coin history entry
-      if (data2.coinHistory) {
-        const idx = data2.coinHistory.findIndex(e => e.label && e.label.includes('Race') && e.date === last.date);
-        if (idx !== -1) data2.coinHistory.splice(idx, 1);
-        // Remove any rank/level reward entries that are now above the post-reset XP
-        data2.coinHistory = data2.coinHistory.filter(e => {
-          if (e.icon === '🏆') {
-            const rankMatch = RANKS.find(r => e.label === r.rank + ' Rank Achieved');
-            if (rankMatch && rankMatch.minXP > xpAfter) return false;
-          }
-          if (e.icon === '⬆️') {
-            const lvlMatch = e.label && e.label.match(/Level (\d+) Reward/);
-            if (lvlMatch && parseInt(lvlMatch[1]) > levelAfter) return false;
-          }
-          return true;
-        });
+      // Remove from coin history
+      if (data.coinHistory) {
+        const idx = data.coinHistory.findIndex(e => e.label && e.label.includes('Race') && e.date === last.date);
+        if (idx !== -1) data.coinHistory.splice(idx, 1);
       }
 
-      saveXPData(data2);
+      saveXPData(data);
       buildRaceHistory();
       updateHunterCard();
       buildBadges();
@@ -5220,17 +5143,16 @@ function buildMilestones() {} // removed — redundant with skill tree
 // RANKS + XP SYSTEM
 // ═══════════════════════════════════════
 const RANKS = [
-  // E→D in ~3 days, D→C in 1 week, C→B in 2 weeks, B→A in 4 weeks,
-  // A→S in 7 weeks, S→S+ in 11 weeks, S+→NL by Sept (~17 weeks)
-  // Streak mult 2x makes this very achievable for locked-in play
+  // Calibrated for 9-month NL grind: 6 active days/week + 3 weeklies avg
+  // D: ~2wk | C: ~1mo | B: ~2.5mo | A: ~4mo | S: ~6mo | S+: ~8mo | NL: ~9mo
   { rank:'E',   title:'Weakest Hunter of All Mankind', minXP:0,       color:'#e74c3c', glow:'rgba(231,76,60,0.6)',    barColor:'linear-gradient(90deg,#c0392b,#e74c3c)' },
-  { rank:'D',   title:'Recruit',            minXP:4200,    color:'#e67e22', glow:'rgba(230,126,34,0.6)',   barColor:'linear-gradient(90deg,#d35400,#e67e22)' },
-  { rank:'C',   title:'Low Level Threat',               minXP:12600,   color:'#f1c40f', glow:'rgba(241,196,15,0.6)',   barColor:'linear-gradient(90deg,#d4ac0d,#f1c40f)' },
-  { rank:'B',   title:'Seasoned Veteran',               minXP:21000,   color:'#2ecc71', glow:'rgba(46,204,113,0.6)',   barColor:'linear-gradient(90deg,#27ae60,#2ecc71)' },
-  { rank:'A',   title:'Monarch in Training',            minXP:33245,   color:'#1abc9c', glow:'rgba(26,188,156,0.6)',   barColor:'linear-gradient(90deg,#16a085,#1abc9c)' },
-  { rank:'S',   title:'Solo Carry',                   minXP:52837,  color:'#3498db', glow:'rgba(52,152,219,0.6)',   barColor:'linear-gradient(90deg,#2980b9,#3498db)' },
-  { rank:'S+',  title:'Marathon Monarch',        minXP:84184,  color:'#a855f7', glow:'rgba(168,85,247,0.7)',  barColor:'linear-gradient(90deg,#7c3aed,#a855f7)' },
-  { rank:'NL',  title:'National Level Hunter',          minXP:134340,  color:'#ffffff', glow:'rgba(255,255,255,0.9)', barColor:'linear-gradient(90deg,#ccc,#fff,#ccc)',
+  { rank:'D',   title:'Recruit',                       minXP:4000,    color:'#e67e22', glow:'rgba(230,126,34,0.6)',   barColor:'linear-gradient(90deg,#d35400,#e67e22)' },
+  { rank:'C',   title:'Low Level Threat',              minXP:12000,   color:'#f1c40f', glow:'rgba(241,196,15,0.6)',   barColor:'linear-gradient(90deg,#d4ac0d,#f1c40f)' },
+  { rank:'B',   title:'Seasoned Veteran',              minXP:30000,   color:'#2ecc71', glow:'rgba(46,204,113,0.6)',   barColor:'linear-gradient(90deg,#27ae60,#2ecc71)' },
+  { rank:'A',   title:'Monarch in Training',           minXP:55000,   color:'#1abc9c', glow:'rgba(26,188,156,0.6)',   barColor:'linear-gradient(90deg,#16a085,#1abc9c)' },
+  { rank:'S',   title:'Solo Carry',                    minXP:85000,   color:'#3498db', glow:'rgba(52,152,219,0.6)',   barColor:'linear-gradient(90deg,#2980b9,#3498db)' },
+  { rank:'S+',  title:'Marathon Monarch',              minXP:120000,  color:'#a855f7', glow:'rgba(168,85,247,0.7)',  barColor:'linear-gradient(90deg,#7c3aed,#a855f7)' },
+  { rank:'NL',  title:'National Level Hunter',         minXP:180000,  color:'#ffffff', glow:'rgba(255,255,255,0.9)', barColor:'linear-gradient(90deg,#ccc,#fff,#ccc)',
     lore:'National Level. The highest tier. There is no rank above this — only the ones who earned it. You are no longer training toward something. You became it. The Marathon built this.' },
 ];
 
@@ -5254,7 +5176,6 @@ function getXPData() {
       lastStreakSkillDate: d.lastStreakSkillDate|| null,
       longestStreak:      d.longestStreak      || 0,
       claimedMilestones:  d.claimedMilestones  || {},
-      punishedDates:      d.punishedDates       || {},
     };
   } catch { return { totalXP:0, level:1, coins:0, dailyQuests:{}, weeklyQuests:{}, streak:0, lastActiveDate:null, redeemedRewards:{}, coinHistory:[] }; }
 }
@@ -5371,9 +5292,6 @@ function updateHunterCard() {
   // Rank letter — animated per rank
   const rl = document.getElementById('rankLetter');
   if (rl) { applyRankIconToElement('rankLetter', rank); }
-  // Rank glow slab
-  const rlg = document.getElementById('rankLetterGlow');
-  if (rlg) rlg.style.background = rank.color;
 
   // Hunter title
   const ht = document.getElementById('hunterTitle');
@@ -5407,22 +5325,16 @@ function updateHunterCard() {
   const hwl = document.getElementById('hunterWeightLost');
   if (hwl) { hwl.textContent = (wLost >= 0 ? '-' : '+') + Math.abs(wLost); hwl.style.color = parseFloat(wLost) >= 0 ? '#2ecc71' : '#e74c3c'; }
 
-  // XP bar — use rAF so transition fires after paint (avoids 0→value snap on page load)
+  // XP bar
   const xpBar = document.getElementById('xpBar');
   const xpDisplay = document.getElementById('xpDisplay');
   if (xpBar) {
     const rangeStart = rank.minXP;
     const rangeEnd = nextRank ? nextRank.minXP : rank.minXP + 10000;
     const pct = nextRank ? Math.min(100, ((data.totalXP - rangeStart) / (rangeEnd - rangeStart)) * 100) : 100;
+    xpBar.style.width = pct + '%';
     xpBar.style.background = rank.barColor || rank.color;
     if (xpDisplay) xpDisplay.textContent = nextRank ? data.totalXP.toLocaleString('en-US') + ' / ' + rangeEnd.toLocaleString('en-US') + ' XP' : 'MAX RANK';
-    // Force width to 0 first so transition always plays
-    xpBar.style.transition = 'none';
-    xpBar.style.width = '0%';
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      xpBar.style.transition = 'width 0.8s ease';
-      xpBar.style.width = pct + '%';
-    }));
   }
 
   // Level bar
@@ -5430,14 +5342,8 @@ function updateHunterCard() {
   const levelDisplay = document.getElementById('levelDisplay');
   if (levelBar) {
     const prog = xpProgressInLevel(data.totalXP);
-    const lvPct = (prog.current / prog.needed) * 100;
+    levelBar.style.width = ((prog.current / prog.needed) * 100) + '%';
     if (levelDisplay) levelDisplay.textContent = 'LVL ' + level + '  ·  ' + prog.current + '/' + prog.needed;
-    levelBar.style.transition = 'none';
-    levelBar.style.width = '0%';
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      levelBar.style.transition = 'width 0.8s ease';
-      levelBar.style.width = lvPct + '%';
-    }));
   }
 
   // Card border + profile rank letter
@@ -5449,23 +5355,9 @@ function updateHunterCard() {
   setAccentColor(rank);
 }
 
-// ── Water scaling by rank ──
-// ── Water scaling by rank — 4 clean steps, easy to track in oz ──
-// 2L=67oz · 2.5L=84oz · 3L=101oz · 1 Gallon=128oz
-const WATER_BY_RANK = {
-  E:   { label:'2L Water',   oz:67,  xp:60,  icon:'💧' },
-  D:   { label:'2L Water',   oz:67,  xp:60,  icon:'💧' },
-  C:   { label:'2.5L Water', oz:84,  xp:75,  icon:'💧' },
-  B:   { label:'2.5L Water', oz:84,  xp:75,  icon:'💧' },
-  A:   { label:'3L Water',   oz:101, xp:90,  icon:'💧' },
-  S:   { label:'3L Water',   oz:101, xp:90,  icon:'💧' },
-  'S+':{ label:'1 Gallon',   oz:128, xp:110, icon:'🪣' },
-  NL:  { label:'1 Gallon',   oz:128, xp:110, icon:'🪣' },
-};
-function getHydrateQuest(rankStr) {
-  const w = WATER_BY_RANK[rankStr] || WATER_BY_RANK['E'];
-  return { id:'hydrate', label:w.label + ' (' + w.oz + 'oz)', icon:w.icon, xp:w.xp, type:'wellness', row:'wellness' };
-}
+// ── Quest pool ──
+// ═══════════════════════════════════════
+// RUNNER TIER SYSTEM
 // ═══════════════════════════════════════
 const RUNNER_TIERS = {
   rookie:     { icon:'◆', label:'Tortoise',    ranks:['E'],        weeklyMiles:8,  longRunMiles:3,  paceSec:720, cardioQuests:['run1','run2','run5k'],   longRunLabel:'3 Mile Long Run (5K)' },
@@ -5507,20 +5399,15 @@ function checkRunnerTierUp(prevRankStr, newRankStr) {
 
 function showRunnerTierUp(tier) {
   if (tier.label === 'Bankai') { showBankaiSequence(); return; }
-  // Full-screen overlay — cannot click out, must tap to continue
-  var overlay = document.createElement('div');
-  overlay.style.cssText = 'position:fixed;inset:0;z-index:10001;background:rgba(0,0,0,0.95);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;cursor:pointer;animation:levelUpPop 0.4s ease both;';
-  overlay.innerHTML =
-    '<div style="font-family:Space Mono,monospace;font-size:9px;letter-spacing:5px;color:var(--gold);text-transform:uppercase;margin-bottom:12px;opacity:0.7;">Running Tier Unlocked 🏃</div>'
-    + '<div style="font-family:Bebas Neue,sans-serif;font-size:clamp(52px,14vw,96px);line-height:0.9;letter-spacing:2px;color:#fff;text-shadow:0 0 40px var(--gold),0 0 80px rgba(200,168,75,0.4);text-align:center;">' + tier.label.toUpperCase() + '</div>'
-    + '<div style="width:60px;height:2px;background:var(--gold);margin:16px auto;opacity:0.5;"></div>'
-    + '<div style="font-family:Space Mono,monospace;font-size:10px;color:var(--muted);text-align:center;line-height:1.8;">'
-    + 'Weekly Target: ' + tier.weeklyMiles + ' mi &nbsp;·&nbsp; Long Run: ' + (tier.longRunLabel || tier.longRunMiles + ' mi') + '</div>'
-    + '<div style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:2px;color:#333;margin-top:36px;text-transform:uppercase;">Tap to continue</div>';
-  document.body.appendChild(overlay);
-  overlay.onclick = function(){ overlay.remove(); };
-  // Auto-dismiss after 6s
-  setTimeout(function(){ if(overlay.parentNode){ overlay.style.opacity='0'; overlay.style.transition='opacity 0.5s'; setTimeout(function(){if(overlay.parentNode)overlay.remove();},500); } }, 6000);
+  var toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#0a0a0a;border:1px solid var(--gold);padding:14px 24px;z-index:10002;text-align:center;animation:levelUpPop 0.4s ease both;min-width:260px;';
+  toast.innerHTML =
+    '<div style="font-family:Space Mono,monospace;font-size:9px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;">Running Tier Unlocked</div>'
+    + '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;color:#fff;letter-spacing:2px;">' + tier.label.toUpperCase() + '</div>'
+    + '<div style="font-family:Space Mono,monospace;font-size:9px;color:#888;margin-top:6px;">Week: ' + tier.weeklyMiles + ' mi · Long run: ' + (tier.longRunLabel || tier.longRunMiles + ' mi') + '</div>';
+  document.body.appendChild(toast);
+  toast.onclick = function(){ toast.remove(); };
+  setTimeout(function(){ if(toast.parentNode){ toast.style.opacity='0'; toast.style.transition='opacity 0.5s'; setTimeout(function(){toast.remove();},500); } }, 4500);
 }
 function showBankaiSequence() {
   var overlay = document.createElement('div');
@@ -5580,7 +5467,6 @@ const BASE_QUESTS = [
   { id:'steps',        label:'10K Steps',       icon:'🚶', xp:175,  type:'movement', row:'movement' },
   { id:'ballprac',      label:'Sports Practice',  icon:'🏀', xp:125,  type:'movement', row:'movement'    },
   { id:'outdoor',      label:'Outdoor Walk',    icon:'🌳', xp:90,   type:'movement', row:'movement' },
-  { id:'indoor',       label:'Indoor Walk',     icon:'🏢', xp:90,   type:'movement', row:'movement' },
   // ── Wellness ──
   { id:'hydrate',      label:'2L Water',        icon:'💧', xp:60,   type:'wellness', row:'wellness' },
   { id:'sleep',        label:'8hrs Sleep',      icon:'😴', xp:100,  type:'wellness', row:'wellness' },
@@ -5589,37 +5475,28 @@ const BASE_QUESTS = [
   // ── Hidden ──
   { id:'weigh',        label:'Weigh In',        icon:'⚖️', xp:50,   type:'wellness', row:'hidden' },
   { id:'book',         label:'Book Logged',     icon:'📖', xp:0,    type:'wellness', row:'hidden' },
-  { id:'fasted',       label:'Fasted Workout',  icon:'⚡', xp:180,  type:'wellness', row:'hidden' },
+  { id:'fasted',       label:'Fasted Workout',  icon:'⚡', xp:180,  type:'lifting',  row:'hidden' },
   { id:'steps15',      label:'15K Steps',       icon:'👟', xp:150,  type:'movement', row:'hidden' },
   { id:'ball',         label:'Sports Game',     icon:'🏀', xp:250,  type:'cardio',   row:'hidden' },
   { id:'race',         label:'Race Day',        icon:'🥇', xp:1500, type:'cardio',   row:'hidden' },
 ];
 
 const WEEKLY_QUEST_POOL = [
-  // ── E/D rank (beginner) ──
-  { id:'wk_hydrate7', label:'Hydrate Every Day This Week', icon:'💧', xp:500,  type:'weekly', dynamic:false, minRank:0 },
-  { id:'wk_weigh7',   label:'Log Weight Every Day',        icon:'⚖️', xp:500,  type:'weekly', dynamic:false, minRank:0 },
-  { id:'wk_4lifts',   label:'4 Lifting Sessions',          icon:'🏋', xp:600,  type:'weekly', dynamic:false, minRank:0 },
-  { id:'wk_longrun',  label:'Complete Your Long Run',      icon:'🏔️', xp:700,  type:'weekly', dynamic:true,  minRank:0 },
-  { id:'wk_miles',    label:'Log X Miles This Week',       icon:'🛣️', xp:750,  type:'weekly', dynamic:true,  minRank:0 },
-  { id:'wk_70ksteps', label:'70K Total Steps This Week',   icon:'🚶', xp:650,  type:'weekly', dynamic:false, minRank:0 },
-  // ── C rank unlocks ──
-  { id:'wk_pace',     label:'Run a Mile Under X:XX',       icon:'⚡', xp:750,  type:'weekly', dynamic:true,  minRank:12600 },
-  { id:'wk_4runs',    label:'Run on 4 Different Days',     icon:'🏃', xp:700,  type:'weekly', dynamic:false, minRank:12600 },
-  { id:'wk_ppl',      label:'Complete Push + Pull + Legs', icon:'💪', xp:850,  type:'weekly', dynamic:false, minRank:12600 },
-  { id:'wk_fasted3',  label:'Fasted Workout x3',           icon:'⚡', xp:800,  type:'weekly', dynamic:false, minRank:12600 },
-  // ── B rank unlocks ──
-  { id:'wk_liftrun',  label:'Lift + Run Same Day x2',      icon:'🔥', xp:950,  type:'weekly', dynamic:false, minRank:21000 },
-  { id:'wk_3lifts5',  label:'All 3 Lifts in 5 Days',       icon:'⚔️', xp:900,  type:'weekly', dynamic:false, minRank:21000 },
-  { id:'wk_4cat3',    label:'All 4 Categories — 3 Days',   icon:'🌟', xp:950,  type:'weekly', dynamic:false, minRank:21000 },
-  // ── A rank unlocks ──
-  { id:'wk_4cat4',    label:'All 4 Categories — 4 Days',   icon:'💎', xp:1200, type:'weekly', dynamic:false, minRank:33245 },
-  { id:'wk_liftrun2', label:'Lift + Run Same Day x3',      icon:'🔥', xp:1100, type:'weekly', dynamic:false, minRank:33245 },
-  { id:'wk_90ksteps', label:'90K Total Steps This Week',   icon:'👟', xp:1000, type:'weekly', dynamic:false, minRank:33245 },
-  // ── Available at all ranks ──
-  { id:'wk_fullweek', label:'Full Week No Miss — 7 Days',  icon:'👑', xp:1000, type:'weekly', dynamic:false, minRank:0 },
-  { id:'wk_5runs',    label:'Run on 5 Different Days',     icon:'🏃', xp:1200, type:'weekly', dynamic:false, minRank:52837 },
-  { id:'wk_5cat5',    label:'All 4 Categories — 5 Days',   icon:'💎', xp:1500, type:'weekly', dynamic:false, minRank:52837 },
+  { id:'wk_longrun',  label:'Complete Your Long Run',      icon:'🏔️', xp:800,  type:'weekly', dynamic:true  },
+  { id:'wk_miles',    label:'Log X Miles This Week',       icon:'🛣️', xp:900,  type:'weekly', dynamic:true  },
+  { id:'wk_pace',     label:'Run a Mile Under X:XX',       icon:'⚡', xp:750,  type:'weekly', dynamic:true  },
+  { id:'wk_4runs',    label:'Run on 4 Different Days',     icon:'🏃', xp:700,  type:'weekly', dynamic:false },
+  { id:'wk_ppl',      label:'Complete Push + Pull + Legs', icon:'💪', xp:800,  type:'weekly', dynamic:false },
+  { id:'wk_4lifts',   label:'4 Lifting Sessions',          icon:'🏋', xp:700,  type:'weekly', dynamic:false },
+  { id:'wk_liftrun',  label:'Lift + Run Same Day x2',      icon:'🔥', xp:900,  type:'weekly', dynamic:false },
+  { id:'wk_3lifts5',  label:'All 3 Lifts in 5 Days',       icon:'⚔️', xp:750,  type:'weekly', dynamic:false },
+  { id:'wk_4cat3',    label:'All 4 Categories — 3 Days',   icon:'🌟', xp:850,  type:'weekly', dynamic:false },
+  { id:'wk_4cat4',    label:'All 4 Categories — 4 Days',   icon:'💎', xp:1100, type:'weekly', dynamic:false },
+  { id:'wk_fullweek', label:'Full Week No Miss — 7 Days',  icon:'👑', xp:1200, type:'weekly', dynamic:false },
+  { id:'wk_70ksteps', label:'70K Total Steps This Week',   icon:'🚶', xp:800,  type:'weekly', dynamic:false },
+  { id:'wk_hydrate7', label:'Hydrate Every Day This Week', icon:'💧', xp:600,  type:'weekly', dynamic:false },
+  { id:'wk_fasted3',  label:'Fasted Workout x3',           icon:'⚡', xp:750,  type:'weekly', dynamic:false },
+  { id:'wk_weigh7',   label:'Log Weight Every Day',        icon:'⚖️', xp:600,  type:'weekly', dynamic:false },
 ];
 // Keep WEEKLY_QUESTS alias for any legacy references
 const WEEKLY_QUESTS = WEEKLY_QUEST_POOL;
@@ -5627,22 +5504,14 @@ const WEEKLY_QUESTS = WEEKLY_QUEST_POOL;
 function getWeeklyQuestPool() {
   const data = getXPData();
   const rank = getRankForXP(data.totalXP);
-  const tier = getRunnerTier(rank.rank);
-  const hydrateQ = getHydrateQuest(rank.rank);
-  const allPool = WEEKLY_QUEST_POOL
-    .filter(q => rank.minXP >= (q.minRank || 0))  // only show unlocked quests for this rank
-    .map(q => {
-      const clone = {...q};
-      if (q.id === 'wk_longrun')  clone.label = 'Complete a ' + tier.longRunMiles + ' Mile Run';
-      if (q.id === 'wk_miles')    clone.label = 'Log ' + tier.weeklyMiles + ' Miles This Week';
-      if (q.id === 'wk_pace')     clone.label = 'Run a Mile Under ' + formatPace(tier.paceSec);
-      if (q.id === 'wk_hydrate7') clone.label = 'Hit ' + hydrateQ.label + ' Every Day This Week';
-      if (q.id === 'wk_liftrun2') clone.label = 'Lift + Run Same Day x3';
-      if (q.id === 'wk_5runs')    clone.label = 'Run on 5 Different Days';
-      if (q.id === 'wk_5cat5')    clone.label = 'All 4 Categories — 5 Days';
-      if (q.id === 'wk_90ksteps') clone.label = '90K Total Steps This Week';
-      return clone;
-    });
+  const tier = getRunnerTier(rank.rank); // pass rank string
+  const allPool = WEEKLY_QUEST_POOL.map(q => {
+    const clone = {...q};
+    if (q.id === 'wk_longrun') clone.label = 'Complete a ' + tier.longRunMiles + ' Mile Run';
+    if (q.id === 'wk_miles')   clone.label = 'Log ' + tier.weeklyMiles + ' Miles This Week';
+    if (q.id === 'wk_pace')    clone.label = 'Run a Mile Under ' + formatPace(tier.paceSec);
+    return clone;
+  });
   const weekSeed = parseInt(getWeekStr().replace(/\D/g,'')) || 20260101;
   let s = weekSeed;
   const picks = []; const used = new Set();
@@ -5694,19 +5563,11 @@ function buildQuestGrid() {
     if (id === 'longrun') return { ...q, label: tier.longRunMiles + ' Mile Long Run' };
     return q;
   }).filter(Boolean);
-  movementQuests = ['steps'].map(id => BASE_QUESTS.find(q => q.id === id)).filter(Boolean);
-  // Wellness: hydrate (scaled by rank) + mobility always show, rotate sleep/cold as 3rd slot daily
-  // Mon (1) or Thu (4): fasted workout replaces hydrate — harder to hit hydrate goal while fasting
+  movementQuests = ['outdoor'].map(id => BASE_QUESTS.find(q => q.id === id)).filter(Boolean);
+  // Wellness: hydrate + mobility always show, rotate sleep/cold as 3rd slot daily
   const daySeed = parseInt(today.replace(/-/g,'')) || 1;
   const wellnessThird = (daySeed % 2 === 0) ? 'sleep' : 'cold';
-  const hydrateQuest = getHydrateQuest(rank.rank);
-  const fastedQuest = BASE_QUESTS.find(q => q.id === 'fasted');
-  const isFastedDay = (new Date().getDay() === 1 || new Date().getDay() === 4);
-  // Mon/Thu: Mobility → Sleep/Cold → Fasted (hydrate replaced, fasted goes last)
-  // Other days: Hydrate → Mobility → Sleep/Cold
-  const wellnessQuests = isFastedDay && fastedQuest
-    ? [BASE_QUESTS.find(q => q.id === 'mobility'), BASE_QUESTS.find(q => q.id === wellnessThird), fastedQuest].filter(Boolean)
-    : [hydrateQuest, BASE_QUESTS.find(q => q.id === 'mobility'), BASE_QUESTS.find(q => q.id === wellnessThird)].filter(Boolean);
+  const wellnessQuests = ['hydrate','mobility', wellnessThird].map(id => BASE_QUESTS.find(q => q.id === id)).filter(Boolean);
 
   const rows = [
     { id:'questRow-workout',     quests: liftingQuests.slice(0,3)   },
@@ -5723,49 +5584,15 @@ function buildQuestGrid() {
     const el = document.getElementById(row.id);
     if (!el) return;
     el.innerHTML = '';
-    if (row.id !== 'questRow-consistency') {
-      row.quests.forEach(q => {
-        const questVal = data.dailyQuests[today] && data.dailyQuests[today][q.id];
-        const isLocked = questVal === 'locked';
-        const isDone = !!questVal && !isLocked;
-        if (isDone) totalEarned += q.xp;
-        el.appendChild(makeQuestTile(q, isDone, 'daily', isLocked));
-      });
-    }
-    // Inject walk + sports tiles into movement row (reordered: walk, 10K steps, sports)
+    row.quests.forEach(q => {
+      const questVal = data.dailyQuests[today] && data.dailyQuests[today][q.id];
+      const isLocked = questVal === 'locked';
+      const isDone = !!questVal && !isLocked;
+      if (isDone) totalEarned += q.xp;
+      el.appendChild(makeQuestTile(q, isDone, 'daily', isLocked));
+    });
+    // Inject Sports tile into movement row
     if (row.id === 'questRow-consistency') {
-      // Clear what was appended (steps tile) and rebuild in correct order
-      el.innerHTML = '';
-
-      // 1. Walk tile first
-      var daySeedWalk = parseInt(today.replace(/-/g,'')) || 1;
-      var walkId = (daySeedWalk % 2 !== 0) ? 'outdoor' : 'indoor';
-      var altWalkId = (walkId === 'outdoor') ? 'indoor' : 'outdoor';
-      var walkQ = BASE_QUESTS.find(function(q){ return q.id === walkId; });
-      var altWalkDone = data.dailyQuests[today] && data.dailyQuests[today][altWalkId] && data.dailyQuests[today][altWalkId] !== 'locked';
-      if (altWalkDone) {
-        var altWalkQ = BASE_QUESTS.find(function(q){ return q.id === altWalkId; });
-        if (altWalkQ) {
-          totalEarned += altWalkQ.xp;
-          el.appendChild(makeQuestTile(altWalkQ, true, 'daily', false));
-        }
-      } else if (walkQ) {
-        var wv = data.dailyQuests[today] && data.dailyQuests[today][walkId];
-        var wl = wv === 'locked'; var wd = !!wv && !wl;
-        if (wd) totalEarned += walkQ.xp;
-        el.appendChild(makeQuestTile(walkQ, wd, 'daily', wl));
-      }
-
-      // 2. 10K Steps tile
-      row.quests.forEach(q => {
-        const questVal = data.dailyQuests[today] && data.dailyQuests[today][q.id];
-        const isLocked = questVal === 'locked';
-        const isDone = !!questVal && !isLocked;
-        if (isDone) totalEarned += q.xp;
-        el.appendChild(makeQuestTile(q, isDone, 'daily', isLocked));
-      });
-
-      // 3. Sports tile last
       const todayQ = data.dailyQuests[today] || {};
       const pracDone = !!todayQ['ballprac'] && todayQ['ballprac'] !== 'locked';
       const gameDone = !!todayQ['ball'] && todayQ['ball'] !== 'locked';
@@ -5796,6 +5623,14 @@ function buildQuestGrid() {
         };
       }
       el.appendChild(sportsTile);
+      // Steps last (highest XP in movement row)
+      var stepsQ2 = BASE_QUESTS.find(function(q){ return q.id==='steps'; });
+      if (stepsQ2) {
+        var sv2 = data.dailyQuests[today] && data.dailyQuests[today]['steps'];
+        var sl2 = sv2==='locked'; var sd2 = !!sv2&&!sl2;
+        if (sd2) totalEarned += stepsQ2.xp;
+        el.appendChild(makeQuestTile(stepsQ2, sd2, 'daily', sl2));
+      }
     }
   });
 
@@ -5806,7 +5641,7 @@ function buildQuestGrid() {
     var neglectMap = [
       { hdr:'hdr-workout',     ids:['push','pull','legs'] },
       { hdr:'hdr-running',     ids:['run1','run2','run5k','run10k','longrun','halfmarathon'] },
-      { hdr:'hdr-consistency', ids:['steps','steps15','outdoor','indoor','ballprac','ball'] },
+      { hdr:'hdr-consistency', ids:['steps','steps15','outdoor','ballprac','ball'] },
       { hdr:'hdr-misc',        ids:['hydrate','mobility','sleep','cold','fasted','weigh'] },
     ];
     var last4 = [];
@@ -5872,13 +5707,8 @@ function earnQuestXP(questId, type, e) {
   const today = getTodayStr();
   const weekStr = getWeekStr();
   const allQuests = [...BASE_QUESTS, ...WEEKLY_QUESTS];
-  let quest = allQuests.find(q => q.id === questId);
+  const quest = allQuests.find(q => q.id === questId);
   if (!quest) return;
-  // Swap in rank-scaled hydrate quest so XP and label are correct
-  if (questId === 'hydrate') {
-    const rank = getRankForXP(data.totalXP);
-    quest = getHydrateQuest(rank.rank);
-  }
 
   // Check already done
   // Run quest guard — if a higher run quest is already completed today, bail immediately
@@ -6004,8 +5834,6 @@ function earnQuestXP(questId, type, e) {
   }
   if (newRank.rank !== prevRank.rank) {
     awardRankCoins(newRank.rank, data);
-    // Auto-advance runner tier — clear any manual override so rank→tier auto-maps
-    localStorage.removeItem('runnerTierOverride');
   }
 
   saveXPData(data);
@@ -6027,17 +5855,13 @@ function earnQuestXP(questId, type, e) {
   buildCoinHistory();
   buildBadges();
 
-  // Queue: milestones → level ups → rank up (level ups ALWAYS fire before rank ups)
+  // Queue: milestones first, then level/rank popup after
   function showLevelOrRank() {
-    if (levelsGained.length > 0 && newRank.rank !== prevRank.rank) {
-      // Level ups first, then rank up after they finish
-      setTimeout(() => showLevelUpSequence(levelsGained, prevLevel, data, () => {
-        setTimeout(() => showRankUp(newRank), 400);
-      }), 400);
-    } else if (newRank.rank !== prevRank.rank) {
+    if (newRank.rank !== prevRank.rank) {
+      checkRunnerTierUp(prevRank.rank, newRank.rank);
       setTimeout(() => showRankUp(newRank), 400);
     } else if (levelsGained.length > 0) {
-      setTimeout(() => showLevelUpSequence(levelsGained, prevLevel, data, null), 400);
+      setTimeout(() => showLevelUpSequence(levelsGained, prevLevel, data), 400);
     }
   }
 
@@ -6084,33 +5908,21 @@ function resetDailyQuests(e) {
   let xpToRemove = 0, coinsToRemove = 0;
   doneIds.forEach(id => { const q = allQ.find(x => x.id === id); if (q) { xpToRemove += Math.round(q.xp * mult); coinsToRemove += Math.round(q.xp / 8); } });
 
-  // Snapshot XP/level/rank BEFORE mutation so comparisons are accurate
-  const xpBefore    = data.totalXP || 0;
-  const levelBefore = getLevelFromXP(xpBefore);
-  const xpAfter     = Math.max(0, xpBefore - xpToRemove);
-  const levelAfter  = getLevelFromXP(xpAfter);
-  // Calculate bonus coins to revert: rank-up rewards + level milestone rewards
-  let bonusCoinsToRemove = 0;
-  for (const r of RANKS) {
-    if (r.minXP > xpAfter && r.minXP <= xpBefore) bonusCoinsToRemove += RANK_COIN_REWARDS[r.rank] || 0;
-  }
-  for (let l = levelAfter + 1; l <= levelBefore; l++) bonusCoinsToRemove += LEVEL_COIN_REWARDS[l] || 0;
-  const totalCoinsLost = coinsToRemove + bonusCoinsToRemove;
-
   showResetConfirm('Reset Today\'s Quests',
-    'This will undo today\'s completions and reset your streak.<br>XP lost: <span style="color:#e74c3c;">-' + xpToRemove + '</span> · Coins lost: <span style="color:#e74c3c;">-' + totalCoinsLost + '</span>',
+    'This will undo today\'s completions and reset your streak.<br>XP lost: <span style="color:#e74c3c;">-' + xpToRemove + '</span> · Coins lost: <span style="color:#e74c3c;">-' + coinsToRemove + '</span>',
     () => {
       delete data.dailyQuests[today];
-      data.totalXP = xpAfter;
-      data.coins   = Math.max(0, (data.coins || 0) - totalCoinsLost);
-      data.level   = levelAfter;
+      data.totalXP = Math.max(0, (data.totalXP || 0) - xpToRemove);
+      data.coins   = Math.max(0, (data.coins   || 0) - coinsToRemove);
+      data.level   = getLevelFromXP(data.totalXP);
+      // Restore streak — if today was active, subtract 1 (back to yesterday's streak)
+      // but don't go below 0, and set lastActiveDate to yesterday so chain isn't broken
       const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
       const yd = yesterday.getFullYear() + '-' + (yesterday.getMonth()+1) + '-' + yesterday.getDate();
       const prevDayDone = data.dailyQuests[yd] || {};
       const prevDayActive = Object.values(prevDayDone).some(Boolean);
       data.streak = Math.max(0, (data.streak || 1) - 1);
       data.lastActiveDate = prevDayActive ? yd : null;
-      // Wipe all coin history entries from today (quest + rank + level coins)
       const todayDateStr = new Date().toLocaleDateString();
       if (data.coinHistory) data.coinHistory = data.coinHistory.filter(e => e.date !== todayDateStr);
       saveXPData(data);
@@ -6131,46 +5943,16 @@ function resetWeeklyQuests(e) {
   let xpToRemove = 0, coinsToRemove = 0;
   doneIds.forEach(id => { const q = allQ.find(x => x.id === id); if (q) { xpToRemove += Math.round(q.xp * mult); coinsToRemove += Math.round(q.xp / 8); } });
 
-  // Snapshot XP/level/rank BEFORE mutation
-  const wXPBefore    = data.totalXP || 0;
-  const wLevelBefore = getLevelFromXP(wXPBefore);
-  const wXPAfter     = Math.max(0, wXPBefore - xpToRemove);
-  const wLevelAfter  = getLevelFromXP(wXPAfter);
-  let wBonusCoins = 0;
-  for (const r of RANKS) {
-    if (r.minXP > wXPAfter && r.minXP <= wXPBefore) wBonusCoins += RANK_COIN_REWARDS[r.rank] || 0;
-  }
-  for (let l = wLevelAfter + 1; l <= wLevelBefore; l++) wBonusCoins += LEVEL_COIN_REWARDS[l] || 0;
-  const wTotalCoinsLost = coinsToRemove + wBonusCoins;
-
   showResetConfirm('Reset Weekly Challenges',
-    'This will undo this week\'s completions.<br>XP lost: <span style="color:#e74c3c;">-' + xpToRemove + '</span> · Coins lost: <span style="color:#e74c3c;">-' + wTotalCoinsLost + '</span>',
+    'This will undo this week\'s completions.<br>XP lost: <span style="color:#e74c3c;">-' + xpToRemove + '</span> · Coins lost: <span style="color:#e74c3c;">-' + coinsToRemove + '</span>',
     () => {
       if (data.weeklyQuests) delete data.weeklyQuests[weekStr];
-      data.totalXP = wXPAfter;
-      data.coins   = Math.max(0, (data.coins || 0) - wTotalCoinsLost);
-      data.level   = wLevelAfter;
+      data.totalXP = Math.max(0, (data.totalXP || 0) - xpToRemove);
+      data.coins   = Math.max(0, (data.coins   || 0) - coinsToRemove);
+      data.level   = getLevelFromXP(data.totalXP);
       if (data.coinHistory) {
-        // Build a set of icon+label pairs for completed weekly quests
-        const resetPairs = new Set(doneIds.map(id => {
-          const q = allQ.find(x => x.id === id);
-          return q ? q.icon + '|' + q.label : null;
-        }).filter(Boolean));
-        data.coinHistory = data.coinHistory.filter(e => {
-          // Remove matching quest coin entries
-          if (resetPairs.has((e.icon || '') + '|' + (e.label || ''))) return false;
-          // Remove rank reward entries for ranks now above post-reset XP
-          if (e.icon === '🏆') {
-            const rankMatch = RANKS.find(r => e.label === r.rank + ' Rank Achieved');
-            if (rankMatch && rankMatch.minXP > wXPAfter) return false;
-          }
-          // Remove level milestone entries for levels now above post-reset level
-          if (e.icon === '⬆️') {
-            const lvlMatch = e.label && e.label.match(/Level (\d+) Reward/);
-            if (lvlMatch && parseInt(lvlMatch[1]) > wLevelAfter) return false;
-          }
-          return true;
-        });
+        const resetLabels = new Set(doneIds.map(id => { const q = allQ.find(x => x.id === id); return q ? q.label : null; }).filter(Boolean));
+        data.coinHistory = data.coinHistory.filter(e => !resetLabels.has(e.label));
       }
       saveXPData(data);
       buildQuestGrid(); updateHunterCard(); buildProfileStats(getXPData()); buildBadges(); buildCoinHistory(); buildSkillTree();
@@ -6580,17 +6362,13 @@ const LEVEL_UP_QUOTES = [
 
 function showLevelUp(newLevel, newStatus) {
   // Legacy single-level call — wrap in sequence
-  showLevelUpSequence([newLevel], newLevel - 1, getXPData(), null);
+  showLevelUpSequence([newLevel], newLevel - 1, getXPData());
 }
 
-function showLevelUpSequence(levels, prevLevel, data, onComplete) {
-  if (!levels || levels.length === 0) { if (onComplete) onComplete(); return; }
+function showLevelUpSequence(levels, prevLevel, data) {
+  if (!levels || levels.length === 0) return;
   const overlay = document.getElementById('levelUpOverlay');
-  if (!overlay) { if (onComplete) onComplete(); return; }
-
-  // Block backdrop click when multiple level-ups remain
-  overlay._onComplete = onComplete;
-  overlay._levelsTotal = levels.length;
+  if (!overlay) return;
 
   // Detect status change
   const prevStatus = getStatusTitle(0, data.streak, 0, { ...data, totalXP: 0, dailyQuests: data.dailyQuests });
@@ -6628,16 +6406,12 @@ function showLevelUpSequence(levels, prevLevel, data, onComplete) {
     if (stepIdx >= levels.length) {
       // Final step — show badges + status + quote
       showFinalLevelUp(levels[levels.length-1], newStatusTitle, statusChanged, prevStatusTitle, newBadges, data, MILESTONES);
-      // Allow close now (final screen)
-      overlay._blockClose = false;
       return;
     }
     const lvl = levels[stepIdx];
     stepIdx++;
     _renderLevelFrame(lvl, MILESTONES, levels.length > 1);
     overlay.style.display = 'flex';
-    // Block close while more levels to show
-    overlay._blockClose = (stepIdx < levels.length);
     // If multiple levels, auto-advance after 900ms each, except last
     if (levels.length > 1 && stepIdx < levels.length) {
       clearTimeout(window._lvlTimeout);
@@ -6818,13 +6592,7 @@ function spawnMilestoneBurst(color, level) {
 }
 function closeLevelUp() {
   const o = document.getElementById('levelUpOverlay');
-  if (!o) return;
-  // Block dismissal if multiple levels still queued
-  if (o._blockClose) return;
-  o.style.display = 'none';
-  const cb = o._onComplete;
-  o._onComplete = null;
-  if (cb) setTimeout(cb, 200);
+  if (o) o.style.display = 'none';
 }
 
 // ── Rank Up overlay ──
@@ -6921,16 +6689,13 @@ function applyRankIconToElement(elId, rank) {
   const el = document.getElementById(elId);
   if (!el) return;
   const anim = RANK_ANIM[rank.rank] || 'none';
-  // Preserve existing font-size — only clear layout-breaking styles
-  const existingSize = el.style.fontSize;
   el.textContent = rank.rank;
+  el.style.fontSize = '';
   el.style.background = '';
   el.style.border = '';
   el.style.borderRadius = '';
   el.style.padding = '';
   el.className = 'rank-letter-base' + (anim !== 'none' ? ' rank-anim-' + anim : '');
-  // Restore font-size if it was set; otherwise use a sensible fallback
-  if (existingSize) el.style.fontSize = existingSize;
   el.style.color = rank.color;
   el.style.textShadow = anim === 'none' ? '0 0 20px ' + rank.glow : '';
 }
@@ -6975,31 +6740,31 @@ function showRankUp(rank) {
   }
 
   const bgMap = {
-    E:'rgba(0,0,0,0.97)',
-    D:'radial-gradient(ellipse at center,rgba(230,126,34,0.35) 0%,rgba(0,0,0,0.97) 55%)',
-    C:'radial-gradient(ellipse at center,rgba(241,196,15,0.38) 0%,rgba(0,0,0,0.97) 55%)',
-    B:'radial-gradient(ellipse at 50% 60%,rgba(46,204,113,0.40) 0%,rgba(0,0,0,0.97) 55%)',
-    A:'radial-gradient(ellipse at center,rgba(26,188,156,0.44) 0%,rgba(0,0,0,0.97) 50%)',
-    S:'radial-gradient(ellipse at 35% 40%,rgba(52,152,219,0.55) 0%,rgba(0,0,10,0.98) 45%),radial-gradient(ellipse at 65% 60%,rgba(0,80,255,0.35) 0%,transparent 50%)',
-    'S+':'radial-gradient(ellipse at 40% 35%,rgba(168,85,247,0.60) 0%,rgba(10,0,25,0.98) 45%),radial-gradient(ellipse at 60% 65%,rgba(80,0,200,0.45) 0%,transparent 45%)',
-    NL:'radial-gradient(ellipse at center,rgba(255,255,200,0.30) 0%,rgba(200,168,75,0.20) 25%,rgba(0,0,0,0.98) 60%)',
+    E:'rgba(0,0,0,0.92)',
+    D:'radial-gradient(ellipse at center,rgba(230,126,34,0.2) 0%,rgba(0,0,0,0.95) 65%)',
+    C:'radial-gradient(ellipse at center,rgba(241,196,15,0.22) 0%,rgba(0,0,0,0.95) 65%)',
+    B:'radial-gradient(ellipse at 50% 60%,rgba(46,204,113,0.24) 0%,rgba(0,0,0,0.95) 65%)',
+    A:'radial-gradient(ellipse at center,rgba(26,188,156,0.28) 0%,rgba(0,0,0,0.96) 60%)',
+    S:'radial-gradient(ellipse at 35% 40%,rgba(52,152,219,0.4) 0%,rgba(0,0,20,0.97) 50%),radial-gradient(ellipse at 65% 60%,rgba(0,80,255,0.2) 0%,transparent 55%)',
+    'S+':'radial-gradient(ellipse at 40% 35%,rgba(168,85,247,0.45) 0%,rgba(10,0,25,0.98) 55%),radial-gradient(ellipse at 60% 65%,rgba(80,0,200,0.3) 0%,transparent 50%)',
+    NL:'radial-gradient(ellipse at center,rgba(255,255,200,0.18) 0%,rgba(200,168,75,0.12) 30%,rgba(0,0,0,0.98) 70%)',
   };
   if (bg) { bg.style.background = bgMap[rank.rank] || bgMap.E; bg.style.opacity='1'; }
-  setTimeout(() => { overlay.style.background = bgMap[rank.rank] || 'rgba(0,0,0,0.97)'; }, 50);
+  setTimeout(() => { overlay.style.background = bgMap[rank.rank] || 'rgba(0,0,0,0.92)'; }, 50);
   setTimeout(() => { if(content){content.style.opacity='1';content.style.transform='scale(1)';} }, 100);
 
   const ptypeMap = { E:'none',D:'sparks',C:'stars',B:'emerald',A:'teal',S:'supernova','S+':'cosmos',NL:'godmode' };
   spawnRankParticles(rank.color, ptypeMap[rank.rank]||'sparks');
 
-  // Rank coin reward — bigger text
+  // Rank coin reward
   const rankReward = RANK_COIN_REWARDS[rank.rank] || 0;
   const rankCoinEl = document.getElementById('rankUpCoinReward');
   if (rankReward > 0) {
     if (rankCoinEl) {
-      rankCoinEl.style.cssText = 'display:block;text-align:center;margin-top:16px;padding:14px 16px;background:rgba(240,216,120,0.07);border:1px solid rgba(240,216,120,0.2);border-radius:3px;';
+      rankCoinEl.style.cssText = 'display:block;text-align:center;margin-top:14px;padding:10px 14px;background:rgba(240,216,120,0.08);border:1px solid rgba(240,216,120,0.25);border-radius:2px;';
       rankCoinEl.innerHTML =
-        '<div style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:3px;color:#555;text-transform:uppercase;margin-bottom:8px;">Coin Reward</div>'
-        + '<div style="font-family:Bebas Neue,sans-serif;font-size:54px;color:#f0d878;text-shadow:0 0 28px #f0d87899,0 0 56px #c8a84b44;letter-spacing:3px;line-height:1;">+' + rankReward + ' <span style="font-size:40px;">🪙</span></div>';
+        '<div style="font-family:Space Mono,monospace;font-size:7px;letter-spacing:3px;color:#666;text-transform:uppercase;margin-bottom:6px;">Coin Reward</div>'
+        + '<div style="font-family:Bebas Neue,sans-serif;font-size:42px;color:#f0d878;text-shadow:0 0 24px #f0d87888,0 0 48px #c8a84b44;letter-spacing:3px;line-height:1;">+' + rankReward + ' <span style="font-size:30px;">🪙</span></div>';
     }
     if (!window._coinRainFired) {
       window._coinRainFired = true;
@@ -7007,30 +6772,6 @@ function showRankUp(rank) {
     }
   } else {
     if (rankCoinEl) rankCoinEl.style.display = 'none';
-  }
-
-  // Runner tier unlock — distinct styled box with complementary accent color
-  const rankRunnerEl = document.getElementById('rankUpRunnerTier');
-  if (rankRunnerEl) {
-    const newTier = getRunnerTier(rank.rank);
-    const prevRankIdx = RANKS.findIndex(r => r.rank === rank.rank);
-    const prevRankObj = prevRankIdx > 0 ? RANKS[prevRankIdx - 1] : null;
-    const prevTier = prevRankObj ? getRunnerTier(prevRankObj.rank) : null;
-    if (prevTier && prevTier.label !== newTier.label) {
-      // Use the rank's own color for the left border accent
-      const ac = rank.color;
-      rankRunnerEl.style.cssText = 'display:block;margin-top:16px;';
-      rankRunnerEl.innerHTML =
-        '<div style="background:rgba(0,0,0,0.6);border:1px solid ' + ac + '44;border-left:3px solid ' + ac + ';padding:14px 16px;text-align:left;border-radius:2px;">'
-        + '<div style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:3px;color:' + ac + ';text-transform:uppercase;margin-bottom:6px;">🏃 Running Tier Unlocked</div>'
-        + '<div style="font-family:Bebas Neue,sans-serif;font-size:clamp(28px,8vw,38px);color:#fff;letter-spacing:2px;line-height:1;">' + newTier.label.toUpperCase() + '</div>'
-        + '<div style="display:flex;gap:16px;margin-top:6px;flex-wrap:wrap;">'
-        + '<div style="font-family:Space Mono,monospace;font-size:9px;color:#666;">' + newTier.weeklyMiles + ' mi / week</div>'
-        + '<div style="font-family:Space Mono,monospace;font-size:9px;color:#666;">' + (newTier.longRunLabel || newTier.longRunMiles + ' mi long run') + '</div>'
-        + '</div></div>';
-    } else {
-      rankRunnerEl.style.display = 'none';
-    }
   }
 }
 
@@ -7125,7 +6866,8 @@ function spawnRankParticles(color, type) {
 
 
 // ── PUNISHMENT SYSTEM ──
-// Streak-scaled penalty: 10 coins per day of streak broken, min 15, max 150
+// If yesterday had 0 quests completed and user had XP > 0, show a warning
+// and deduct a small amount of coins (not XP — never take away progress)
 function checkPunishment() {
   const data = getXPData();
   if (data.totalXP === 0) return; // new hunter, no punishment
@@ -7138,30 +6880,29 @@ function checkPunishment() {
   if (questsDoneYesterday === 0 && (data.streak || 0) === 0 && data.lastActiveDate && data.lastActiveDate !== yd) {
     const alreadyPunished = data.punishedDates && data.punishedDates[yd];
     if (!alreadyPunished) {
-      // Scale by the streak that was broken — longer streak = harsher penalty
-      const brokenStreak = data.longestStreak || 1;
-      const penalty = Math.min(150, Math.max(15, brokenStreak * 10));
-      const actualPenalty = Math.min(penalty, data.coins || 0); // can't go below 0
-      if (actualPenalty > 0) {
-        data.coins = Math.max(0, (data.coins || 0) - actualPenalty);
+      const penalty = Math.min(20, Math.floor((data.coins || 0) * 0.05)); // 5% of coins, max 20
+      if (penalty > 0) {
+        data.coins = Math.max(0, (data.coins || 0) - penalty);
         if (!data.punishedDates) data.punishedDates = {};
         data.punishedDates[yd] = true;
         if (!data.coinHistory) data.coinHistory = [];
-        data.coinHistory.unshift({ icon:'⚠️', label:'Missed Day Penalty (' + yd + ')', amount: -actualPenalty, date: new Date().toLocaleDateString() });
+        data.coinHistory.unshift({ icon:'⚠️', label:'Missed Day Penalty (' + yd + ')', amount: -penalty, date: new Date().toLocaleDateString() });
         saveXPData(data);
-        showPunishmentToast(actualPenalty, brokenStreak);
+        // Show a non-intrusive toast warning
+        showPunishmentToast(penalty);
       }
     }
   }
 }
 
-function showPunishmentToast(penalty, streak) {
+function showPunishmentToast(penalty) {
   const toast = document.createElement('div');
-  toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a0a0a;border:1px solid rgba(231,76,60,0.5);color:#e74c3c;font-family:Space Mono,monospace;font-size:10px;letter-spacing:2px;padding:10px 20px;z-index:9999;text-transform:uppercase;text-align:center;pointer-events:none;animation:fadeIn 0.3s ease;max-width:90vw;';
-  toast.innerHTML = '⚠️ ' + streak + '-DAY STREAK BROKEN · -' + penalty + ' 🪙 · The grind does not forgive';
+  toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a0a0a;border:1px solid rgba(231,76,60,0.5);color:#e74c3c;font-family:Space Mono,monospace;font-size:10px;letter-spacing:2px;padding:10px 20px;z-index:9999;text-transform:uppercase;text-align:center;pointer-events:none;animation:fadeIn 0.3s ease;';
+  toast.innerHTML = '⚠️ MISSED DAY · -' + penalty + ' 🪙 · Association Warning Logged';
   document.body.appendChild(toast);
-  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.5s'; setTimeout(() => toast.remove(), 500); }, 5000);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.5s'; setTimeout(() => toast.remove(), 500); }, 4000);
 }
+// ── END PUNISHMENT SYSTEM ──
 // ═══════════════════════════════════════
 // ═══════════════════════════════════════
 // ═══════════════════════════════════════
@@ -7197,7 +6938,7 @@ const SKILL_LEVELS = {
   lifter: [2,2,2,2,2,2,3,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,6,6,6,6,7,7],
   hooper: [1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,4,4,4,4,4,5,5],
   mover:  [2,2,2,2,3,3,3,3,3,4,4,4,4,5,5,5,6,6,7,7,8,8,9,9,10,11,11,12,13,14],
-  monk:   [3,3,4,4,5,5,6,6,7,7,8,8,9,10,11,12,13,14,15,16,18,20,22,24,26,28,30,33,36,40],
+  monk:   [2,2,2,2,3,3,3,3,3,3,4,4,4,4,5,5,5,6,6,6,7,7,8,8,9,9,10,11,11,12],
   streak: [2,2,3,3,4,4,5,5,6,6,7,7,8,9,10,10,11,12,14,15,16,18,19,21,23,20,20,20,20,20],
 };
 const SKILL_TOTALS = {
@@ -7205,7 +6946,7 @@ const SKILL_TOTALS = {
   lifter: 120,
   hooper: 74,
   mover: 185,
-  monk: 443,
+  monk: 167,
   streak: 340,
 };
 
@@ -7222,7 +6963,7 @@ function getSkillLevel(skillId, data) {
   const RUN_IDS  = ['run1','run2','run5k','run10k','longrun','halfmarathon'];
   const LIFT_IDS = ['push','pull','legs'];
   const HOOP_IDS = ['ballprac','ball'];
-  const MOVE_IDS = ['steps','steps15','outdoor','indoor'];
+  const MOVE_IDS = ['steps','steps15','outdoor'];
   const MONK_IDS = ['hydrate','mobility','sleep','cold','fasted','weigh'];
 
   if (skillId === 'streak') {
@@ -7336,7 +7077,8 @@ const HIDDEN_MILESTONES = [
   // Mover
   { id:'hm_move20',  check: d => countMover(d) >= 20,   coins:60,  title:'CITY MOVER',       icon:'🚶', color:'#2ecc71' },
   { id:'hm_move50',  check: d => countMover(d) >= 50,   coins:100, title:'NEVER SITS',       icon:'🚶', color:'#2ecc71' },
-  { id:'hm_move100', check: d => countMover(d) >= 100,  coins:175, title:'THE WALKER',       icon:'🚶', color:'#2ecc71' },  // Monk
+  { id:'hm_move100', check: d => countMover(d) >= 100,  coins:175, title:'THE WALKER',       icon:'🚶', color:'#2ecc71' },
+  // Monk
   { id:'hm_cold10',  check: d => countQuestDone(d,'cold') >= 10,    coins:80,  title:'ICE PROTOCOL',    icon:'🧊', color:'#1abc9c' },
   { id:'hm_weigh20', check: d => countQuestDone(d,'weigh') >= 20,   coins:60,  title:'SCALE MASTER',    icon:'⚖️', color:'#1abc9c' },
   { id:'hm_hydrate30',check:d => countQuestDone(d,'hydrate') >= 30, coins:70,  title:'HYDRATION LOCKED',icon:'💧', color:'#3498db' },
@@ -7352,7 +7094,7 @@ const HIDDEN_MILESTONES = [
 function countAllRuns(d)  { return ['run1','run5k','run10k','longrun','halfmarathon'].reduce((s,id)=>s+countQuestDone(d,id),0); }
 function countAllLifts(d) { return ['push','pull','legs'].reduce((s,id)=>s+countQuestDone(d,id),0); }
 function countHoops(d)    { return ['ballprac','ball'].reduce((s,id)=>s+countQuestDone(d,id),0); }
-function countMover(d)    { return ['steps','steps15','outdoor','indoor'].reduce((s,id)=>s+countQuestDone(d,id),0); }
+function countMover(d)    { return ['steps','steps15','outdoor'].reduce((s,id)=>s+countQuestDone(d,id),0); }
 
 function checkHiddenMilestones(data) {
   if (!data.claimedMilestones) data.claimedMilestones = {};
@@ -7558,68 +7300,68 @@ function buildSkillTree() {
 
   const SKILLS = [
     { id:'runner',  name:'The Runner',     icon:'🏃', color:'#e74c3c', desc:'Miles on the road',
-      score: d => Math.min(100, Math.round((countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')+countQuestDone(d,'halfmarathon'))*1.25)),
+      score: d => Math.min(100, Math.round((countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')+countQuestDone(d,'halfmarathon'))*2.5)),
       nodes:[
-        {label:'First Run',    tip:'Log your first run of any distance.',                        req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=1},
-        {label:'10 Sessions',  tip:'10 total runs. The legs are adapting.',                      req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=10},
-        {label:'Road Warrior', tip:'25 sessions. You call yourself a runner now.',               req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=25},
-        {label:'50 Sessions',  tip:'50 sessions. The city knows your footsteps.',                req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=50},
-        {label:'The Marathoner',tip:'80 sessions. You were built for this distance.',            req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=80},
+        {label:'First Run',    tip:'Log your first run of any distance.',                req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=1},
+        {label:'5 Sessions',   tip:'5 total runs. The legs are adapting.',               req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=5},
+        {label:'Road Warrior', tip:'15 sessions. You call yourself a runner now.',      req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=15},
+        {label:'35 Sessions',  tip:'35 sessions. The city knows your footsteps.',       req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=35},
+        {label:'Bankai',   tip:'80 sessions. Built for distance.',                  req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=80},
       ]
     },
     { id:'lifter',  name:'The Lifter',     icon:'💪', color:'#e67e22', desc:'Push · pull · legs — building the frame',
-      score: d => Math.min(100, Math.round((countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs'))*1.25)),
+      score: d => Math.min(100, Math.round((countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs'))*2)),
       nodes:[
-        {label:'First Lift',   tip:'Complete your first Push, Pull, or Leg day.',                req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=1},
-        {label:'15 Sessions',  tip:'15 gym sessions. The habit is forming.',                     req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=15},
-        {label:'The Builder',  tip:'35 sessions. The V-taper is loading.',                       req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=35},
-        {label:'V-Taper',      tip:'75 sessions. That silhouette speaks for itself.',            req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=75},
-        {label:'The Architect',tip:'150 sessions. You designed and built this body from scratch.',req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=150},
+        {label:'First Lift',   tip:'Complete your first Push, Pull, or Leg day.',       req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=1},
+        {label:'10 Sessions',  tip:'10 gym sessions. The habit is forming.',             req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=10},
+        {label:'The Builder',  tip:'25 sessions. The V-taper is loading.',              req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=25},
+        {label:'V-Taper',      tip:'60 sessions. That silhouette speaks for itself.',   req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=60},
+        {label:'Architect',    tip:'120 sessions. You built this body from scratch.',   req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=120},
       ]
     },
     { id:'hooper',  name:'The Hooper',     icon:'🏀', color:'#ff6b35', desc:'Court sessions — cardio disguised as fun',
-      score: d => Math.min(100, Math.round((countQuestDone(d,'ball')+countQuestDone(d,'ballprac'))*4)),
+      score: d => Math.min(100, Math.round((countQuestDone(d,'ball')+countQuestDone(d,'ballprac'))*5)),
       nodes:[
-        {label:'First Bucket', tip:'Hit the court or practice for the first time.',              req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=1},
-        {label:'10 Sessions',  tip:'10 sessions. Got your game legs back.',                      req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=10},
-        {label:'Court Regular',tip:'20 sessions. You belong on this court.',                     req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=20},
-        {label:'Gym Rat',      tip:'40 sessions. First there, last to leave.',                   req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=40},
-        {label:'Got Next',     tip:'75 sessions. They always call your name.',                   req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=75},
+        {label:'First Bucket', tip:'Hit the court or practice for the first time.',     req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=1},
+        {label:'5 Sessions',   tip:'5 sessions. Got your game legs back.',              req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=5},
+        {label:'Court Regular',tip:'10 sessions. You belong on this court.',            req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=10},
+        {label:'Gym Rat',      tip:'25 sessions. First there, last to leave.',          req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=25},
+        {label:'The Hooper',   tip:'50 sessions. The court shaped the body.',           req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=50},
       ]
     },
     { id:'mover',   name:'The Mover',      icon:'🚶', color:'#2ecc71', desc:'Steps · walks — active every single day',
-      score: d => Math.min(100, Math.round((countQuestDone(d,'steps')+countQuestDone(d,'steps15')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor'))*2)),
+      score: d => Math.min(100, Math.round((countQuestDone(d,'steps')+countQuestDone(d,'steps15')+countQuestDone(d,'outdoor'))*3)),
       nodes:[
-        {label:'First Steps',  tip:'First 10K step day or outdoor/indoor walk.',                 req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=1},
-        {label:'Two Weeks',    tip:'14 movement days. The baseline is locked in.',               req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=14},
-        {label:'The Walker',   tip:'30 days. You never just sit anymore.',                       req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=30},
-        {label:'City Explorer',tip:'60 days. This city is your track.',                          req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=60},
-        {label:'Never Sits',   tip:'100 days of movement. It is not a habit — it is identity.', req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')+countQuestDone(d,'indoor')>=100},
+        {label:'First Steps',  tip:'First 10K step day or outdoor walk.',               req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=1},
+        {label:'One Week',     tip:'7 movement days. The baseline is locked in.',       req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=7},
+        {label:'The Walker',   tip:'14 days. You never just sit anymore.',              req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=14},
+        {label:'City Explorer',tip:'30 days. This city is your track.',                 req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=30},
+        {label:'Never Sits',   tip:'60 days. Moving is just who you are now.',          req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=60},
       ]
     },
     { id:'monk',    name:'The Monk',       icon:'🧘', color:'#1abc9c', desc:'Mobility · sleep · hydration · cold',
       score: d => Math.min(100, Math.round(
-        countQuestDone(d,'mobility')*3 +
-        countQuestDone(d,'sleep')*3 +
-        countQuestDone(d,'hydrate')*1.5 +
-        countQuestDone(d,'cold')*2.5
+        countQuestDone(d,'mobility')*4 +
+        countQuestDone(d,'sleep')*4 +
+        countQuestDone(d,'hydrate')*2 +
+        countQuestDone(d,'cold')*3
       )),
       nodes:[
-        {label:'First Recovery',tip:'Log your first mobility, sleep, or hydration.',            req:d=>countQuestDone(d,'mobility')+countQuestDone(d,'sleep')+countQuestDone(d,'hydrate')>=1},
-        {label:'Routine Built', tip:'15 combined wellness actions. Habit forming.',              req:d=>countQuestDone(d,'mobility')+countQuestDone(d,'sleep')+countQuestDone(d,'hydrate')>=15},
-        {label:'Cold Protocol', tip:'10 cold showers. The mind is harder than the body.',       req:d=>countQuestDone(d,'cold')>=10},
-        {label:'Injury Proof',  tip:'30 mobility sessions. Moving like you are 22.',            req:d=>countQuestDone(d,'mobility')>=30},
-        {label:'The Monk',      tip:'100 combined wellness days. Fully dialed. Untouchable.',   req:d=>countQuestDone(d,'mobility')+countQuestDone(d,'sleep')+countQuestDone(d,'hydrate')+countQuestDone(d,'cold')>=100},
+        {label:'First Recovery',tip:'Log your first mobility, sleep, or hydration.',   req:d=>countQuestDone(d,'mobility')+countQuestDone(d,'sleep')+countQuestDone(d,'hydrate')>=1},
+        {label:'Routine Built', tip:'10 combined wellness actions. Habit forming.',     req:d=>countQuestDone(d,'mobility')+countQuestDone(d,'sleep')+countQuestDone(d,'hydrate')>=10},
+        {label:'Cold Protocol', tip:'5 cold showers. The mind is hardening.',          req:d=>countQuestDone(d,'cold')>=5},
+        {label:'Injury Proof',  tip:'15 mobility sessions. Moving like you are 20.',   req:d=>countQuestDone(d,'mobility')>=15},
+        {label:'The Monk',      tip:'60 combined wellness days. Untouchable.',          req:d=>countQuestDone(d,'mobility')+countQuestDone(d,'sleep')+countQuestDone(d,'hydrate')+countQuestDone(d,'cold')>=60},
       ]
     },
     { id:'streak',  name:'Mr. Consistent', icon:'🔥', color:'#f0d878', desc:'Showing up every day — never breaking the chain',
-      score: d => Math.min(100, Math.round((d.streak||0)*2)),
+      score: d => Math.min(100, Math.round((d.streak||0)*3.3)),
       nodes:[
-        {label:'3-Day Chain',     tip:'3 days straight. The chain is starting.',                req:d=>(d.streak||0)>=3},
-        {label:'One Week',        tip:'7 days. You said you would and you did.',                req:d=>(d.streak||0)>=7},
-        {label:'Three Weeks',     tip:'21 days. Discipline over motivation.',                   req:d=>(d.streak||0)>=21},
-        {label:'Month Strong',    tip:'30 days. They were asleep. You were working.',           req:d=>(d.streak||0)>=30},
-        {label:'Perfect Attendance',tip:'50 days no miss. You show up like a job.',            req:d=>(d.streak||0)>=50},
+        {label:'3-Day Chain',  tip:'3 days straight. The chain is starting.',           req:d=>(d.streak||0)>=3},
+        {label:'One Week',     tip:'7 days. You said you would and you did.',           req:d=>(d.streak||0)>=7},
+        {label:'Two Weeks',    tip:'14 days. The streak is your identity now.',         req:d=>(d.streak||0)>=14},
+        {label:'Month Strong', tip:'30 days. They were asleep. You were working.',      req:d=>(d.streak||0)>=30},
+        {label:'Untouchable',  tip:'60 days. At this point it is just who you are.',   req:d=>(d.streak||0)>=60},
       ]
     },
   ];
@@ -7757,21 +7499,50 @@ function showWeeklyRecap() {
   const now = new Date();
   const allQuests = [...BASE_QUESTS, ...WEEKLY_QUESTS];
   let totalDays = 0, totalXP = 0;
-  const wdata = getWeightData();
-  const log = wdata.log || [];
-  const weightChange = log.length > 1 ? (log[0].weight - log[Math.min(7,log.length-1)].weight).toFixed(1) : null;
 
-  for (let i = 1; i <= 7; i++) {
-    const d = new Date(now); d.setDate(now.getDate() - i);
+  // ── Anchor to previous Mon–Sun window ──
+  const dow = now.getDay(); // 0=Sun,1=Mon...
+  // Find last Sunday (end of prev week)
+  const lastSun = new Date(now);
+  lastSun.setDate(now.getDate() - (dow === 0 ? 7 : dow));
+  lastSun.setHours(0,0,0,0);
+  // Find last Monday (start of prev week)
+  const lastMon = new Date(lastSun);
+  lastMon.setDate(lastSun.getDate() - 6);
+
+  // XP — only count Mon–Sun of last week
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(lastMon);
+    d.setDate(lastMon.getDate() + i);
     const dStr = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
     const dayDone = data.dailyQuests[dStr] || {};
-    const ids = Object.keys(dayDone).filter(k=>dayDone[k]);
+    const ids = Object.keys(dayDone).filter(k=>dayDone[k] && dayDone[k]!=='locked');
     if (ids.length > 0) {
       totalDays++;
-      const mult = Math.min(2.0, 1+Math.floor((data.streak||0)/7)*0.15);
-      ids.forEach(id => { const q=allQuests.find(x=>x.id===id); if(q) totalXP+=Math.round(q.xp*mult); });
+      ids.forEach(id => { const q=allQuests.find(x=>x.id===id); if(q) totalXP+=q.xp; });
     }
   }
+
+  // Weight — find Sunday weigh-in of last week vs Sunday before that
+  const wdata = getWeightData();
+  const log = wdata.log || [];
+  const lastSunStr = lastSun.toLocaleDateString('en-US');
+  const prevSun = new Date(lastSun); prevSun.setDate(lastSun.getDate() - 7);
+  const prevSunStr = prevSun.toLocaleDateString('en-US');
+  // Find closest entry within each week window (last 7 days of that week)
+  function findWeekWeight(weekEndDate) {
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(weekEndDate); d.setDate(weekEndDate.getDate() - i);
+      const dStr = d.toLocaleDateString('en-US');
+      const entry = log.find(function(e){ return e.date === dStr; });
+      if (entry) return entry.weight;
+    }
+    return null;
+  }
+  const thisWeekW  = findWeekWeight(lastSun);
+  const priorWeekW = findWeekWeight(prevSun);
+  const weightChange = (thisWeekW !== null && priorWeekW !== null)
+    ? (thisWeekW - priorWeekW).toFixed(1) : null;
 
   const grade = totalDays>=6?'🔥 ELITE':totalDays>=4?'💪 SOLID':totalDays>=2?'📈 BUILDING':'⚠️ ROUGH ONE';
   const gc = totalDays>=6?'#f0d878':totalDays>=4?'#2ecc71':totalDays>=2?'#1abc9c':'#e74c3c';
@@ -8098,153 +7869,165 @@ function initXPSystem() {
     saveXPData(data);
     localStorage.setItem('grind_activity_patch_v7', '1');
   }
-  // Patch v8 — force Level 10 (2350 XP — solidly into L10, still E rank)
-  if (!localStorage.getItem('grind_xp_patch_v8b')) {
-    data = getXPData();
-    data.totalXP = Math.max(data.totalXP || 0, 2350);
-    data.level   = getLevelFromXP(data.totalXP);
+  // Patch v8 — set XP to LVL 8, halfway E rank (1929 XP)
+  if (!localStorage.getItem('grind_xp_patch_v8')) {
+    data.totalXP = 1929;
+    data.level   = getLevelFromXP(1929);
     saveXPData(data);
     localStorage.setItem('grind_xp_patch_v8', '1');
-    localStorage.setItem('grind_xp_patch_v8b', '1');
   }
 
 
 
-  // Patch v12 — Tuesday March 24 activities + treat yourself x2
-  if (!localStorage.getItem('grind_activity_patch_v12')) {
-    data = getXPData();
+
+  // Patch — March 24 activity + weight (was missing from uploaded file)
+  if (!localStorage.getItem('grind_activity_patch_v24')) {
     if (!data.dailyQuests['2026-3-24']) data.dailyQuests['2026-3-24'] = {};
-    data.dailyQuests['2026-3-24'].sleep   = true;
     data.dailyQuests['2026-3-24'].steps   = true;
     data.dailyQuests['2026-3-24'].run2    = true;
-    // run2 locks run1
-    data.dailyQuests['2026-3-24'].run1    = 'locked';
     data.dailyQuests['2026-3-24'].outdoor = true;
     data.dailyQuests['2026-3-24'].hydrate = true;
+    data.dailyQuests['2026-3-24'].sleep   = true;
     data.dailyQuests['2026-3-24'].weigh   = true;
-    // XP for Tuesday (no streak mult yet — streak was 7, mult = 1 + floor(7/7)*0.05 = 1.05)
-    var tueMult = Math.min(1.5, 1 + Math.floor(7 / 7) * 0.05); // 1.05
-    var tueXP = Math.round((100 + 175 + 220 + 90 + 60 + 50) * tueMult); // 695 * 1.05 = ~730
-    var tueCoins = Math.round((100 + 175 + 220 + 90 + 60 + 50) / 8); // ~84
-    data.totalXP = (data.totalXP || 0) + tueXP;
-    data.coins   = (data.coins   || 0) + tueCoins;
-    // Subtract Treat Yourself x2 (150 each = 300 total)
-    data.coins   = Math.max(0, data.coins - 300);
-    data.level   = getLevelFromXP(data.totalXP);
-    data.streak  = 8;
-    data.lastActiveDate = '2026-3-24';
-    if (!data.longestStreak || data.streak > data.longestStreak) data.longestStreak = data.streak;
-    data.streakSkillProgress = (data.streakSkillProgress || 0) + 1;
-    data.lastStreakSkillDate = '2026-3-24';
+    data.coins = (data.coins||0) + 87;
     if (!data.coinHistory) data.coinHistory = [];
-    // Treat yourself deductions first (most recent)
-    data.coinHistory.unshift({ icon:'🎁', label:'Treat Yourself',    amount:-150, date:'3/24/2026' });
-    data.coinHistory.unshift({ icon:'🎁', label:'Treat Yourself',    amount:-150, date:'3/24/2026' });
-    // Earned coins
-    data.coinHistory.unshift({ icon:'⚖️', label:'Weigh In — 259.5 lbs', amount:6,  date:'3/24/2026' });
-    data.coinHistory.unshift({ icon:'💧', label:'2L Water',          amount:7,  date:'3/24/2026' });
-    data.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',      amount:11, date:'3/24/2026' });
-    data.coinHistory.unshift({ icon:'🏃', label:'2 Mile Run',        amount:27, date:'3/24/2026' });
-    data.coinHistory.unshift({ icon:'🚶', label:'10K Steps',         amount:22, date:'3/24/2026' });
-    data.coinHistory.unshift({ icon:'😴', label:'8hrs Sleep',        amount:12, date:'3/24/2026' });
-    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
-    // Weight log
-    var wdata12 = getWeightData();
-    if (!wdata12.log) wdata12.log = [];
-    wdata12.current = 259.5;
-    // Only add if not already logged
-    if (!wdata12.log.some(function(e){ return e.date === '3/24/2026'; })) {
-      wdata12.log.unshift({ weight: 259.5, date: '3/24/2026', _ts: new Date('2026-03-24').getTime() });
-    }
-    saveWeightData(wdata12);
-    // Mark redeemed Treat Yourself x2
-    if (!data.redeemedRewards) data.redeemedRewards = {};
-    data.redeemedRewards['snack'] = (data.redeemedRewards['snack'] || 0) + 2;
-    saveXPData(data);
-    localStorage.setItem('grind_activity_patch_v12', '1');
-  }
-  // Patch v13 — force Level 10 hard floor (2350 XP), streak 8 floor
-  if (!localStorage.getItem('grind_data_patch_v13')) {
-    data = getXPData();
-    if ((data.totalXP || 0) < 2350) {
-      data.totalXP = 2350;
-      data.level   = getLevelFromXP(2350); // = 10
-    } else {
-      data.level = getLevelFromXP(data.totalXP);
-    }
-    if ((data.streak || 0) < 8) {
-      data.streak = 8;
-      data.lastActiveDate = '2026-3-24';
-      data.longestStreak = Math.max(data.longestStreak || 0, 8);
+    data.coinHistory.unshift({ icon:'⚖️', label:'Weight Logged',  amount:6,  date:'3/24/2026' });
+    data.coinHistory.unshift({ icon:'💤', label:'8hrs Sleep',     amount:12, date:'3/24/2026' });
+    data.coinHistory.unshift({ icon:'💧', label:'2L Water',       amount:8,  date:'3/24/2026' });
+    data.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',   amount:11, date:'3/24/2026' });
+    data.coinHistory.unshift({ icon:'🏃', label:'Run 2 Miles',    amount:28, date:'3/24/2026' });
+    data.coinHistory.unshift({ icon:'🚶', label:'10K Steps',      amount:22, date:'3/24/2026' });
+    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0,50);
+    const wdata24 = getWeightData();
+    if (!wdata24.log) wdata24.log = [];
+    if (!wdata24.log.some(function(e){ return e.date==='3/24/2026'; })) {
+      wdata24.log.unshift({ weight:259.5, date:'3/24/2026', _ts: new Date('2026-03-24').getTime() });
+      saveWeightData(wdata24);
     }
     saveXPData(data);
-    localStorage.setItem('grind_data_patch_v13', '1');
+    localStorage.setItem('grind_activity_patch_v24','1');
   }
-  // Patch v14 — Wednesday March 25: steps + outdoor + hoops game + hydrate + cold shower
-  if (!localStorage.getItem('grind_activity_patch_v14')) {
-    data = getXPData();
+
+  // Patch v11 — March 25 activity
+  if (!localStorage.getItem('grind_activity_patch_v11')) {
     if (!data.dailyQuests['2026-3-25']) data.dailyQuests['2026-3-25'] = {};
-    data.dailyQuests['2026-3-25'].steps   = true;
-    data.dailyQuests['2026-3-25'].outdoor = true;
-    data.dailyQuests['2026-3-25'].ball    = true;
-    data.dailyQuests['2026-3-25'].hydrate = true;
     data.dailyQuests['2026-3-25'].cold    = true;
-    // XP with streak 8 mult (1.05)
-    var wedMult = Math.min(1.5, 1 + Math.floor(8 / 7) * 0.05); // 1.05
-    var wedXP   = Math.round((175 + 90 + 250 + 60 + 70) * wedMult); // ~677
-    var wedCoins = Math.round((175 + 90 + 250 + 60 + 70) / 8);      // ~81
-    data.totalXP = (data.totalXP || 0) + wedXP;
-    data.coins   = (data.coins   || 0) + wedCoins;
+    data.dailyQuests['2026-3-25'].hydrate = true;
+    data.dailyQuests['2026-3-25'].ball    = true;
+    data.dailyQuests['2026-3-25'].outdoor = true;
+    data.dailyQuests['2026-3-25'].steps   = true;
+    data.totalXP = (data.totalXP||0) + 645;
+    data.coins   = (data.coins||0)   + 81;
     data.level   = getLevelFromXP(data.totalXP);
-    data.streak  = 9;
-    data.lastActiveDate = '2026-3-25';
+    data.streak  = 9; data.lastActiveDate = '2026-3-25';
     if (!data.longestStreak || data.streak > data.longestStreak) data.longestStreak = data.streak;
-    data.streakSkillProgress = (data.streakSkillProgress || 0) + 1;
-    data.lastStreakSkillDate = '2026-3-25';
+    data.streakSkillProgress = (data.streakSkillProgress||0) + 1;
     if (!data.coinHistory) data.coinHistory = [];
-    data.coinHistory.unshift({ icon:'🧊', label:'Cold Shower',    amount: Math.round(70/8),  date:'3/25/2026' });
-    data.coinHistory.unshift({ icon:'💧', label:'2L Water',       amount: Math.round(60/8),  date:'3/25/2026' });
-    data.coinHistory.unshift({ icon:'🏀', label:'Sports Game',    amount: Math.round(250/8), date:'3/25/2026' });
-    data.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',   amount: Math.round(90/8),  date:'3/25/2026' });
-    data.coinHistory.unshift({ icon:'🚶', label:'10K Steps',      amount: Math.round(175/8), date:'3/25/2026' });
-    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
-    saveXPData(data);
-    localStorage.setItem('grind_activity_patch_v14', '1');
-  }
-  // Patch v15 — scrub run5k/longrun/halfmarathon from daily quests unless from a real logged race,
-  // and clear badge prev-state caches so they recompute from actual data
-  if (!localStorage.getItem('grind_activity_patch_v15')) {
-    data = getXPData();
-    const raceLog = getRaceLog();
-    // Build a set of date strings that have a legitimate logged race
-    const raceDates = new Set(raceLog.map(r => r.dateStr).filter(Boolean));
-    const runQuestsToScrub = ['run5k','longrun','halfmarathon'];
-    Object.keys(data.dailyQuests).forEach(dStr => {
-      if (!raceDates.has(dStr)) {
-        runQuestsToScrub.forEach(id => {
-          if (data.dailyQuests[dStr] && data.dailyQuests[dStr][id]) {
-            delete data.dailyQuests[dStr][id];
-          }
-        });
-      }
-    });
-    saveXPData(data);
-    // Clear badge caches so they recompute from clean data
-    localStorage.removeItem('grind_badges_prev_v2');
-    localStorage.removeItem('grind_badges_prev_lvl_v2');
-    localStorage.setItem('grind_activity_patch_v15', '1');
+    data.coinHistory.unshift({ icon:'🚶', label:'10K Steps',      amount:22, date:'3/25/2026' });
+    data.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',   amount:11, date:'3/25/2026' });
+    data.coinHistory.unshift({ icon:'🏀', label:'Sports Game',    amount:31, date:'3/25/2026' });
+    data.coinHistory.unshift({ icon:'💧', label:'2L Water',       amount:8,  date:'3/25/2026' });
+    data.coinHistory.unshift({ icon:'🧊', label:'Cold Shower',    amount:9,  date:'3/25/2026' });
+    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0,50);
+    saveXPData(data); localStorage.setItem('grind_activity_patch_v11','1');
   }
 
-  // Patch v16 — force level 13, rank E (3128 XP)
-  if (!localStorage.getItem('grind_data_patch_v16')) {
-    data = getXPData();
-    data.totalXP = 3128;
-    data.level   = getLevelFromXP(3128); // = 13
-    saveXPData(data);
-    localStorage.setItem('grind_data_patch_v16', '1');
+  // Patch v12 — March 26 activity
+  if (!localStorage.getItem('grind_activity_patch_v12')) {
+    if (!data.dailyQuests['2026-3-26']) data.dailyQuests['2026-3-26'] = {};
+    data.dailyQuests['2026-3-26'].push     = true;
+    data.dailyQuests['2026-3-26'].outdoor  = true;
+    data.dailyQuests['2026-3-26'].steps    = true;
+    data.dailyQuests['2026-3-26'].ballprac = true;
+    data.dailyQuests['2026-3-26'].mobility = true;
+    data.totalXP = (data.totalXP||0) + 770;
+    data.coins   = (data.coins||0)   + 97;
+    data.level   = getLevelFromXP(data.totalXP);
+    data.streak  = 10; data.lastActiveDate = '2026-3-26';
+    if (!data.longestStreak || data.streak > data.longestStreak) data.longestStreak = data.streak;
+    data.streakSkillProgress = (data.streakSkillProgress||0) + 1;
+    if (!data.coinHistory) data.coinHistory = [];
+    data.coinHistory.unshift({ icon:'🧘', label:'Mobility',       amount:10, date:'3/26/2026' });
+    data.coinHistory.unshift({ icon:'🏀', label:'Sports Practice', amount:16, date:'3/26/2026' });
+    data.coinHistory.unshift({ icon:'🚶', label:'10K Steps',      amount:22, date:'3/26/2026' });
+    data.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',   amount:11, date:'3/26/2026' });
+    data.coinHistory.unshift({ icon:'💪', label:'Push Day',       amount:38, date:'3/26/2026' });
+    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0,50);
+    saveXPData(data); localStorage.setItem('grind_activity_patch_v12','1');
   }
 
-  setTimeout(checkWeeklyRecap, 1200);
+  // Patch v13 — March 27 activity
+  if (!localStorage.getItem('grind_activity_patch_v13')) {
+    if (!data.dailyQuests['2026-3-27']) data.dailyQuests['2026-3-27'] = {};
+    data.dailyQuests['2026-3-27'].cold     = true;
+    data.dailyQuests['2026-3-27'].ballprac = true;
+    data.dailyQuests['2026-3-27'].outdoor  = true;
+    data.dailyQuests['2026-3-27'].steps    = true;
+    data.totalXP = (data.totalXP||0) + 460;
+    data.coins   = (data.coins||0)   + 58;
+    data.level   = getLevelFromXP(data.totalXP);
+    data.streak  = 11; data.lastActiveDate = '2026-3-27';
+    if (!data.longestStreak || data.streak > data.longestStreak) data.longestStreak = data.streak;
+    data.streakSkillProgress = (data.streakSkillProgress||0) + 1;
+    if (!data.coinHistory) data.coinHistory = [];
+    data.coinHistory.unshift({ icon:'🚶', label:'10K Steps',      amount:22, date:'3/27/2026' });
+    data.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',   amount:11, date:'3/27/2026' });
+    data.coinHistory.unshift({ icon:'🏀', label:'Sports Practice', amount:16, date:'3/27/2026' });
+    data.coinHistory.unshift({ icon:'🧊', label:'Cold Shower',    amount:9,  date:'3/27/2026' });
+    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0,50);
+    saveXPData(data); localStorage.setItem('grind_activity_patch_v13','1');
+  }
+
+  // Patch v14 — March 28 activity + weight
+  if (!localStorage.getItem('grind_activity_patch_v14')) {
+    if (!data.dailyQuests['2026-3-28']) data.dailyQuests['2026-3-28'] = {};
+    data.dailyQuests['2026-3-28'].weigh   = true;
+    data.dailyQuests['2026-3-28'].pull    = true;
+    data.dailyQuests['2026-3-28'].hydrate = true;
+    data.dailyQuests['2026-3-28'].outdoor = true;
+    data.dailyQuests['2026-3-28'].steps   = true;
+    data.totalXP = (data.totalXP||0) + 675;
+    data.coins   = (data.coins||0)   + 85;
+    data.level   = getLevelFromXP(data.totalXP);
+    data.streak  = 12; data.lastActiveDate = '2026-3-28';
+    if (!data.longestStreak || data.streak > data.longestStreak) data.longestStreak = data.streak;
+    data.streakSkillProgress = (data.streakSkillProgress||0) + 1;
+    if (!data.coinHistory) data.coinHistory = [];
+    data.coinHistory.unshift({ icon:'🚶', label:'10K Steps',      amount:22, date:'3/28/2026' });
+    data.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',   amount:11, date:'3/28/2026' });
+    data.coinHistory.unshift({ icon:'💧', label:'2L Water',       amount:8,  date:'3/28/2026' });
+    data.coinHistory.unshift({ icon:'🏋', label:'Pull Day',       amount:38, date:'3/28/2026' });
+    data.coinHistory.unshift({ icon:'⚖️', label:'Weight Logged',  amount:6,  date:'3/28/2026' });
+    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0,50);
+    const wdata14 = getWeightData();
+    if (!wdata14.log) wdata14.log = [];
+    wdata14.current = 258.8;
+    wdata14.log.unshift({ weight:258.8, date:'3/28/2026', _ts: new Date('2026-03-28').getTime() });
+    saveWeightData(wdata14);
+    saveXPData(data); localStorage.setItem('grind_activity_patch_v14','1');
+  }
+
+  // Patch v15 — force XP to 5,050 (just inside D rank at 5,000 with new thresholds)
+  if (!localStorage.getItem('grind_xp_patch_v15')) {
+    data.totalXP = 4050;
+    data.level   = getLevelFromXP(4050);
+    saveXPData(data);
+    localStorage.setItem('grind_xp_patch_v15','1');
+  }
+  // Patch — 2 eating out redemptions (-240 coins)
+  if (!localStorage.getItem('grind_eatout_patch_v1')) {
+    data.coins = (data.coins||0) - 240;
+    if (!data.coinHistory) data.coinHistory = [];
+    data.coinHistory.unshift({ icon:'🍽️', label:'Eating Out', amount:-120, date:'3/27/2026' });
+    data.coinHistory.unshift({ icon:'🍽️', label:'Eating Out', amount:-120, date:'3/28/2026' });
+    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0,50);
+    saveXPData(data);
+    localStorage.setItem('grind_eatout_patch_v1','1');
+  }
+
+  checkPunishment();
+  updateHunterCard();
+  setTimeout(checkWeeklyRecap, 1200); // slight delay so app loads first
   buildQuestGrid();
   updateResetButtonStates();
   buildRewardShop();
@@ -8563,7 +8346,6 @@ setTimeout(positionAccentBar, 500);
 // ── INIT ──
 showPage('roadmap');
 initXPSystem();
-updateHunterCard();
 renderWeightProfile();
 
 
