@@ -6,8 +6,19 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
-<title>Road to The Marathon Continues</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<title>R2TMC — The Grind</title>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -1652,6 +1663,25 @@ body::after {
   margin-top: auto;
   padding-top: 10px;
 }
+
+@keyframes rewardPulse {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(0.93); }
+  60%  { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+@keyframes rewardFlash {
+  0%   { background: var(--gold); color: #000; box-shadow: 0 0 0px rgba(26,138,74,0); }
+  15%  { background: #fff; color: #000; box-shadow: 0 0 18px rgba(255,255,255,0.6); }
+  40%  { background: #1a8a4a; color: #fff; box-shadow: 0 0 24px rgba(26,138,74,0.8); }
+  100% { background: #1a8a4a; color: #fff; box-shadow: 0 0 8px rgba(26,138,74,0.3); }
+}
+.reward-btn-redeeming {
+  animation: rewardFlash 1.2s ease forwards;
+  transform: scale(0.95);
+  transition: transform 0.1s;
+}
+
 .reward-tile.unlocked {
   background: rgba(26,138,74,0.1);
   border-color: rgba(26,138,74,0.4);
@@ -4679,6 +4709,7 @@ function buildBadges() {
     wrap.dataset.badgeTier = tier.label;
     wrap.dataset.badgeTierColor = tier.text;
     wrap.dataset.badgeDesc = badge.desc;
+    wrap.dataset.badgeEarned = isEarned ? '1' : '0';
 
     // Hover — lift the hex
     ringDiv.onmouseenter = () => { ringDiv.style.transform = 'translateY(-4px) scale(1.06)'; };
@@ -5905,12 +5936,28 @@ function resetDailyQuests(e) {
   let xpToRemove = 0, coinsToRemove = 0;
   doneIds.forEach(id => { const q = allQ.find(x => x.id === id); if (q) { xpToRemove += Math.round(q.xp * mult); coinsToRemove += Math.round(q.xp / 8); } });
 
+  // Also calculate level/rank bonus coins that must be refunded
+  const oldLevel = getLevelFromXP(data.totalXP);
+  const newXP = Math.max(0, (data.totalXP || 0) - xpToRemove);
+  const newLevel = getLevelFromXP(newXP);
+  const oldRank = getRankForXP(data.totalXP);
+  const newRank = getRankForXP(newXP);
+  let levelCoinRefund = 0;
+  for (let l = newLevel + 1; l <= oldLevel; l++) {
+    if (LEVEL_COIN_REWARDS[l]) levelCoinRefund += LEVEL_COIN_REWARDS[l];
+  }
+  let rankCoinRefund = 0;
+  if (oldRank.rank !== newRank.rank && RANK_COIN_REWARDS[oldRank.rank]) {
+    rankCoinRefund = RANK_COIN_REWARDS[oldRank.rank];
+  }
+  const totalCoinRefund = coinsToRemove + levelCoinRefund + rankCoinRefund;
+
   showResetConfirm('Reset Today\'s Quests',
-    'This will undo today\'s completions and reset your streak.<br>XP lost: <span style="color:#e74c3c;">-' + xpToRemove + '</span> · Coins lost: <span style="color:#e74c3c;">-' + coinsToRemove + '</span>',
+    'This will undo today\'s completions and reset your streak.<br>XP lost: <span style="color:#e74c3c;">-' + xpToRemove + '</span> · Coins lost: <span style="color:#e74c3c;">-' + totalCoinRefund + '</span>',
     () => {
       delete data.dailyQuests[today];
       data.totalXP = Math.max(0, (data.totalXP || 0) - xpToRemove);
-      data.coins   = Math.max(0, (data.coins   || 0) - coinsToRemove);
+      data.coins   = Math.max(0, (data.coins   || 0) - totalCoinRefund);
       data.level   = getLevelFromXP(data.totalXP);
       // Restore streak — if today was active, subtract 1 (back to yesterday's streak)
       // but don't go below 0, and set lastActiveDate to yesterday so chain isn't broken
@@ -5940,16 +5987,38 @@ function resetWeeklyQuests(e) {
   let xpToRemove = 0, coinsToRemove = 0;
   doneIds.forEach(id => { const q = allQ.find(x => x.id === id); if (q) { xpToRemove += Math.round(q.xp * mult); coinsToRemove += Math.round(q.xp / 8); } });
 
+  // Also calculate level/rank bonus coins that must be refunded
+  const oldLevel = getLevelFromXP(data.totalXP);
+  const newXP = Math.max(0, (data.totalXP || 0) - xpToRemove);
+  const newLevel = getLevelFromXP(newXP);
+  const oldRankW = getRankForXP(data.totalXP);
+  const newRankW = getRankForXP(newXP);
+  let levelCoinRefundW = 0;
+  for (let l = newLevel + 1; l <= oldLevel; l++) {
+    if (LEVEL_COIN_REWARDS[l]) levelCoinRefundW += LEVEL_COIN_REWARDS[l];
+  }
+  let rankCoinRefundW = 0;
+  if (oldRankW.rank !== newRankW.rank && RANK_COIN_REWARDS[oldRankW.rank]) {
+    rankCoinRefundW = RANK_COIN_REWARDS[oldRankW.rank];
+  }
+  const totalCoinRefundW = coinsToRemove + levelCoinRefundW + rankCoinRefundW;
+
   showResetConfirm('Reset Weekly Challenges',
-    'This will undo this week\'s completions.<br>XP lost: <span style="color:#e74c3c;">-' + xpToRemove + '</span> · Coins lost: <span style="color:#e74c3c;">-' + coinsToRemove + '</span>',
+    'This will undo this week\'s completions.<br>XP lost: <span style="color:#e74c3c;">-' + xpToRemove + '</span> · Coins lost: <span style="color:#e74c3c;">-' + totalCoinRefundW + '</span>',
     () => {
       if (data.weeklyQuests) delete data.weeklyQuests[weekStr];
       data.totalXP = Math.max(0, (data.totalXP || 0) - xpToRemove);
-      data.coins   = Math.max(0, (data.coins   || 0) - coinsToRemove);
+      data.coins   = Math.max(0, (data.coins   || 0) - totalCoinRefundW);
       data.level   = getLevelFromXP(data.totalXP);
       if (data.coinHistory) {
         const resetLabels = new Set(doneIds.map(id => { const q = allQ.find(x => x.id === id); return q ? q.label : null; }).filter(Boolean));
-        data.coinHistory = data.coinHistory.filter(e => !resetLabels.has(e.label));
+        // Also purge level/rank bonus entries triggered by this week's quests
+        data.coinHistory = data.coinHistory.filter(e => {
+          if (resetLabels.has(e.label)) return false;
+          if (levelCoinRefundW > 0 && e.icon === '⬆️' && e.label && e.label.startsWith('Level ')) return false;
+          if (rankCoinRefundW > 0 && e.icon === '🏆' && e.label && e.label.endsWith('Rank Achieved')) return false;
+          return true;
+        });
       }
       saveXPData(data);
       buildQuestGrid(); updateHunterCard(); buildProfileStats(getXPData()); buildBadges(); buildCoinHistory(); buildSkillTree();
@@ -6058,30 +6127,87 @@ function buildRewardShop() {
         + '<div class="reward-btn-wrap">'
         + (isRedeemed
           ? '<div style="font-family:Space Mono,monospace;font-size:10px;color:var(--muted);letter-spacing:1px;padding:6px 0;">REDEEMED ✓</div>'
-          : '<button onclick="cashReward(\'' + r.id + '\')" style="font-family:Space Mono,monospace;font-size:10px;letter-spacing:1px;background:' + (canAfford ? 'var(--gold)' : 'var(--gray3)') + ';color:' + (canAfford ? '#000' : 'var(--muted)') + ';border:none;padding:8px 10px;cursor:' + (canAfford ? 'pointer' : 'not-allowed') + ';text-transform:uppercase;width:100%;">REDEEM</button>')
+          : '<button onclick="cashReward(\'' + r.id + '\',this)" style="font-family:Space Mono,monospace;font-size:10px;letter-spacing:1px;background:' + (canAfford ? 'var(--gold)' : 'var(--gray3)') + ';color:' + (canAfford ? '#000' : 'var(--muted)') + ';border:none;padding:8px 10px;cursor:' + (canAfford ? 'pointer' : 'not-allowed') + ';text-transform:uppercase;width:100%;">REDEEM</button>')
         + '</div>';
       shop.appendChild(tile);
     });
   });
 }
 
-function cashReward(rewardId) {
+function cashReward(rewardId, btn) {
   const data = getXPData();
   const reward = REWARDS.find(r => r.id === rewardId);
   if (!reward) return;
   const timesRedeemed = (data.redeemedRewards && data.redeemedRewards[rewardId]) || 0;
   if (!reward.renewable && timesRedeemed > 0) return;
   if (data.coins < reward.cost) { alert('Not enough coins!'); return; }
-  data.coins -= reward.cost;
-  if (!data.redeemedRewards) data.redeemedRewards = {};
-  data.redeemedRewards[rewardId] = timesRedeemed + 1;
-  if (!data.coinHistory) data.coinHistory = [];
-  data.coinHistory.unshift({ icon: reward.icon || '🎁', label: reward.name, amount: -reward.cost, date: new Date().toLocaleDateString(), redeemed: true });
-  if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
-  saveXPData(data);
-  buildRewardShop();
-  buildCoinHistory();
-  updateHunterCard();
+
+  // Button press animation
+  const pressBtn = btn || (event && event.target);
+  if (pressBtn && pressBtn.tagName === 'BUTTON') {
+    pressBtn.disabled = true;
+    pressBtn.style.transition = 'all 0.12s ease';
+    pressBtn.style.transform = 'scale(0.93)';
+    // Step 1: quick press-down
+    setTimeout(() => {
+      pressBtn.style.transform = 'scale(1.02)';
+    }, 120);
+    // Step 2: flash white → settle green
+    setTimeout(() => {
+      pressBtn.textContent = 'REDEEMED ✓';
+      pressBtn.style.background = '#fff';
+      pressBtn.style.color = '#000';
+      pressBtn.style.transform = 'scale(1)';
+      pressBtn.style.boxShadow = '0 0 18px rgba(255,255,255,0.5)';
+    }, 220);
+    setTimeout(() => {
+      pressBtn.style.background = '#1a8a4a';
+      pressBtn.style.color = '#fff';
+      pressBtn.style.boxShadow = '0 0 20px rgba(26,138,74,0.7)';
+    }, 400);
+    setTimeout(() => {
+      pressBtn.style.boxShadow = '0 0 6px rgba(26,138,74,0.25)';
+    }, 900);
+    // Spend float
+    const rect = pressBtn.getBoundingClientRect();
+    (function(cost, x, y) {
+      const el = document.createElement("div");
+      el.className = "xp-float";
+      el.textContent = '🪙 −' + cost;
+      el.style.left = (x - 30) + "px";
+      el.style.top = (y - 10) + "px";
+      el.style.color = "#e74c3c";
+      el.style.fontSize = "18px";
+      el.style.fontWeight = "bold";
+      el.style.animation = "floatXP 1.6s ease-out forwards";
+      document.body.appendChild(el);
+      setTimeout(function() { el.remove(); }, 1700);
+    })(reward.cost, rect.left + rect.width / 2, rect.top);
+    // Delay before shop rebuilds — let the animation breathe
+    setTimeout(() => {
+      data.coins -= reward.cost;
+      if (!data.redeemedRewards) data.redeemedRewards = {};
+      data.redeemedRewards[rewardId] = timesRedeemed + 1;
+      if (!data.coinHistory) data.coinHistory = [];
+      data.coinHistory.unshift({ icon: reward.icon || '🎁', label: reward.name, amount: -reward.cost, date: new Date().toLocaleDateString(), redeemed: true });
+      if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
+      saveXPData(data);
+      buildRewardShop();
+      buildCoinHistory();
+      updateHunterCard();
+    }, 1400);
+  } else {
+    data.coins -= reward.cost;
+    if (!data.redeemedRewards) data.redeemedRewards = {};
+    data.redeemedRewards[rewardId] = timesRedeemed + 1;
+    if (!data.coinHistory) data.coinHistory = [];
+    data.coinHistory.unshift({ icon: reward.icon || '🎁', label: reward.name, amount: -reward.cost, date: new Date().toLocaleDateString(), redeemed: true });
+    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
+    saveXPData(data);
+    buildRewardShop();
+    buildCoinHistory();
+    updateHunterCard();
+  }
 }
 
 function buildCoinHistory() {
@@ -8380,31 +8506,40 @@ document.addEventListener('touchstart', function(e) {
 const _badgeTip = document.createElement('div');
 _badgeTip.id = 'globalBadgeTip';
 _badgeTip.style.cssText = [
-  'position:fixed','z-index:9200','width:170px',
+  'position:fixed','z-index:9200',
+  'width:min(220px,calc(100vw - 24px))',
   'background:#080808','border:1px solid #2a2a2a',
-  'padding:10px 12px','text-align:center',
+  'padding:12px 14px','text-align:center',
   'pointer-events:none','opacity:0',
   'transition:opacity 0.15s ease',
   'font-family:Space Mono,monospace',
+  'word-break:break-word','white-space:normal',
+  'box-shadow:0 4px 24px rgba(0,0,0,0.7)',
 ].join(';');
 document.body.appendChild(_badgeTip);
 
 function _showBadgeTip(wrap, rect) {
   if (!wrap.dataset.badgeName) return;
+  // Only show tooltip on earned badges (data-badge-earned="1"), not locked ones
+  if (wrap.dataset.badgeEarned !== '1') return;
   const color = wrap.dataset.badgeTierColor || '#888';
   _badgeTip.innerHTML =
     '<div style="font-size:22px;margin-bottom:5px;">' + wrap.dataset.badgeIcon + '</div>'
-    + '<div style="font-family:Bebas Neue,sans-serif;font-size:14px;color:#fff;letter-spacing:1px;margin-bottom:3px;">' + wrap.dataset.badgeName + '</div>'
+    + '<div style="font-family:Bebas Neue,sans-serif;font-size:14px;color:#fff;letter-spacing:1px;margin-bottom:3px;line-height:1.2;">' + wrap.dataset.badgeName + '</div>'
     + '<div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:' + color + ';margin-bottom:6px;">' + wrap.dataset.badgeTier + '</div>'
-    + '<div style="font-size:9px;color:#888;line-height:1.5;">' + wrap.dataset.badgeDesc + '</div>';
+    + '<div style="font-size:9px;color:#888;line-height:1.6;white-space:normal;word-break:break-word;">' + wrap.dataset.badgeDesc + '</div>';
   _badgeTip.style.opacity = '0';
   _badgeTip.style.display = 'block';
-  const TW = 170, GAP = 10, PAD = 8;
-  const tipH = _badgeTip.offsetHeight || 110;
+  const TW = Math.min(220, window.innerWidth - 24);
+  const GAP = 10, PAD = 8;
+  const tipH = _badgeTip.offsetHeight || 120;
   let top = rect.top - tipH - GAP;
   if (top < 60) top = rect.bottom + GAP;
+  // Clamp bottom too so it doesn't go off screen
+  if (top + tipH > window.innerHeight - PAD) top = window.innerHeight - tipH - PAD;
   let left = rect.left + rect.width / 2 - TW / 2;
   left = Math.max(PAD, Math.min(left, window.innerWidth - TW - PAD));
+  _badgeTip.style.width = TW + 'px';
   _badgeTip.style.top = top + 'px';
   _badgeTip.style.left = left + 'px';
   _badgeTip.style.opacity = '1';
@@ -8432,7 +8567,7 @@ document.addEventListener('touchstart', function(e) {
   const wrap = e.target.closest('[data-badge-name]');
   if (!wrap) return;
   _showBadgeTip(wrap, wrap.getBoundingClientRect());
-  setTimeout(_hideBadgeTip, 2500);
+  setTimeout(_hideBadgeTip, 3000);
 }, { passive:true });
 
 // ── SKILL TREE TOOLTIP — global element, same pattern as badge tooltip ──
