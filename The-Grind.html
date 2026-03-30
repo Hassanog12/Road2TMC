@@ -6,8 +6,19 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
-<title>Road to The Marathon Continues</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<title>R2TMC — The Grind</title>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -5493,7 +5504,7 @@ const WEEKLY_QUESTS = WEEKLY_QUEST_POOL;
 function getWeeklyQuestPool() {
   const data = getXPData();
   const rank = getRankForXP(data.totalXP);
-  const tier = getRunnerTier(rank.rank); // pass rank string
+  const tier = getRunnerTier(rank.rank);
   const allPool = WEEKLY_QUEST_POOL.map(q => {
     const clone = {...q};
     if (q.id === 'wk_longrun') clone.label = 'Complete a ' + tier.longRunMiles + ' Mile Run';
@@ -5501,7 +5512,16 @@ function getWeeklyQuestPool() {
     if (q.id === 'wk_pace')    clone.label = 'Run a Mile Under ' + formatPace(tier.paceSec);
     return clone;
   });
-  const weekSeed = parseInt(getWeekStr().replace(/\D/g,'')) || 20260101;
+  // ── Override for specific weeks ──
+  const thisWeek = getWeekStr();
+  const WEEKLY_OVERRIDES = {
+    '2026-W14': ['wk_70ksteps','wk_fullweek','wk_hydrate7'],
+  };
+  if (WEEKLY_OVERRIDES[thisWeek]) {
+    return WEEKLY_OVERRIDES[thisWeek].map(id => allPool.find(q => q.id === id)).filter(Boolean);
+  }
+  // Default random selection
+  const weekSeed = parseInt(thisWeek.replace(/\D/g,'')) || 20260101;
   let s = weekSeed;
   const picks = []; const used = new Set();
   for (let attempt = 0; picks.length < 3 && attempt < 100; attempt++) {
