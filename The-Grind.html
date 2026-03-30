@@ -6,8 +6,19 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
-<title>Road to The Marathon Continues</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<title>R2TMC — The Grind</title>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -5132,16 +5143,15 @@ function buildMilestones() {} // removed — redundant with skill tree
 // RANKS + XP SYSTEM
 // ═══════════════════════════════════════
 const RANKS = [
-  // Calibrated for 9-month NL grind: 6 active days/week + 3 weeklies avg
-  // D: ~2wk | C: ~1mo | B: ~2.5mo | A: ~4mo | S: ~6mo | S+: ~8mo | NL: ~9mo
+  // 7 days × 600 XP + 2 weeklies avg → NL in ~9 months
   { rank:'E',   title:'Weakest Hunter of All Mankind', minXP:0,       color:'#e74c3c', glow:'rgba(231,76,60,0.6)',    barColor:'linear-gradient(90deg,#c0392b,#e74c3c)' },
-  { rank:'D',   title:'Recruit',                       minXP:4000,    color:'#e67e22', glow:'rgba(230,126,34,0.6)',   barColor:'linear-gradient(90deg,#d35400,#e67e22)' },
-  { rank:'C',   title:'Low Level Threat',              minXP:12000,   color:'#f1c40f', glow:'rgba(241,196,15,0.6)',   barColor:'linear-gradient(90deg,#d4ac0d,#f1c40f)' },
+  { rank:'D',   title:'Recruit',                       minXP:5000,    color:'#e67e22', glow:'rgba(230,126,34,0.6)',   barColor:'linear-gradient(90deg,#d35400,#e67e22)' },
+  { rank:'C',   title:'Low Level Threat',              minXP:15000,   color:'#f1c40f', glow:'rgba(241,196,15,0.6)',   barColor:'linear-gradient(90deg,#d4ac0d,#f1c40f)' },
   { rank:'B',   title:'Seasoned Veteran',              minXP:30000,   color:'#2ecc71', glow:'rgba(46,204,113,0.6)',   barColor:'linear-gradient(90deg,#27ae60,#2ecc71)' },
-  { rank:'A',   title:'Monarch in Training',           minXP:55000,   color:'#1abc9c', glow:'rgba(26,188,156,0.6)',   barColor:'linear-gradient(90deg,#16a085,#1abc9c)' },
+  { rank:'A',   title:'Monarch in Training',           minXP:50000,   color:'#1abc9c', glow:'rgba(26,188,156,0.6)',   barColor:'linear-gradient(90deg,#16a085,#1abc9c)' },
   { rank:'S',   title:'Solo Carry',                    minXP:85000,   color:'#3498db', glow:'rgba(52,152,219,0.6)',   barColor:'linear-gradient(90deg,#2980b9,#3498db)' },
-  { rank:'S+',  title:'Marathon Monarch',              minXP:120000,  color:'#a855f7', glow:'rgba(168,85,247,0.7)',  barColor:'linear-gradient(90deg,#7c3aed,#a855f7)' },
-  { rank:'NL',  title:'National Level Hunter',         minXP:180000,  color:'#ffffff', glow:'rgba(255,255,255,0.9)', barColor:'linear-gradient(90deg,#ccc,#fff,#ccc)',
+  { rank:'S+',  title:'Marathon Monarch',              minXP:130000,  color:'#a855f7', glow:'rgba(168,85,247,0.7)',  barColor:'linear-gradient(90deg,#7c3aed,#a855f7)' },
+  { rank:'NL',  title:'National Level Hunter',         minXP:200000,  color:'#ffffff', glow:'rgba(255,255,255,0.9)', barColor:'linear-gradient(90deg,#ccc,#fff,#ccc)',
     lore:'National Level. The highest tier. There is no rank above this — only the ones who earned it. You are no longer training toward something. You became it. The Marathon built this.' },
 ];
 
@@ -5471,21 +5481,21 @@ const BASE_QUESTS = [
 ];
 
 const WEEKLY_QUEST_POOL = [
-  { id:'wk_longrun',  label:'Complete Your Long Run',      icon:'🏔️', xp:800,  type:'weekly', dynamic:true  },
-  { id:'wk_miles',    label:'Log X Miles This Week',       icon:'🛣️', xp:900,  type:'weekly', dynamic:true  },
-  { id:'wk_pace',     label:'Run a Mile Under X:XX',       icon:'⚡', xp:750,  type:'weekly', dynamic:true  },
-  { id:'wk_4runs',    label:'Run on 4 Different Days',     icon:'🏃', xp:700,  type:'weekly', dynamic:false },
-  { id:'wk_ppl',      label:'Complete Push + Pull + Legs', icon:'💪', xp:800,  type:'weekly', dynamic:false },
-  { id:'wk_4lifts',   label:'4 Lifting Sessions',          icon:'🏋', xp:700,  type:'weekly', dynamic:false },
-  { id:'wk_liftrun',  label:'Lift + Run Same Day x2',      icon:'🔥', xp:900,  type:'weekly', dynamic:false },
-  { id:'wk_3lifts5',  label:'All 3 Lifts in 5 Days',       icon:'⚔️', xp:750,  type:'weekly', dynamic:false },
-  { id:'wk_4cat3',    label:'All 4 Categories — 3 Days',   icon:'🌟', xp:850,  type:'weekly', dynamic:false },
-  { id:'wk_4cat4',    label:'All 4 Categories — 4 Days',   icon:'💎', xp:1100, type:'weekly', dynamic:false },
-  { id:'wk_fullweek', label:'Full Week No Miss — 7 Days',  icon:'👑', xp:1200, type:'weekly', dynamic:false },
-  { id:'wk_70ksteps', label:'70K Total Steps This Week',   icon:'🚶', xp:800,  type:'weekly', dynamic:false },
-  { id:'wk_hydrate7', label:'Hydrate Every Day This Week', icon:'💧', xp:600,  type:'weekly', dynamic:false },
-  { id:'wk_fasted3',  label:'Fasted Workout x3',           icon:'⚡', xp:750,  type:'weekly', dynamic:false },
-  { id:'wk_weigh7',   label:'Log Weight Every Day',        icon:'⚖️', xp:600,  type:'weekly', dynamic:false },
+  { id:'wk_longrun',  label:'Complete Your Long Run',      icon:'🏔️', xp:550,  type:'weekly', dynamic:true  },
+  { id:'wk_miles',    label:'Log X Miles This Week',       icon:'🛣️', xp:600,  type:'weekly', dynamic:true  },
+  { id:'wk_pace',     label:'Run a Mile Under X:XX',       icon:'⚡', xp:500,  type:'weekly', dynamic:true  },
+  { id:'wk_4runs',    label:'Run on 4 Different Days',     icon:'🏃', xp:500,  type:'weekly', dynamic:false },
+  { id:'wk_ppl',      label:'Complete Push + Pull + Legs', icon:'💪', xp:550,  type:'weekly', dynamic:false },
+  { id:'wk_4lifts',   label:'4 Lifting Sessions',          icon:'🏋', xp:500,  type:'weekly', dynamic:false },
+  { id:'wk_liftrun',  label:'Lift + Run Same Day x2',      icon:'🔥', xp:600,  type:'weekly', dynamic:false },
+  { id:'wk_3lifts5',  label:'All 3 Lifts in 5 Days',       icon:'⚔️', xp:500,  type:'weekly', dynamic:false },
+  { id:'wk_4cat3',    label:'All 4 Categories — 3 Days',   icon:'🌟', xp:550,  type:'weekly', dynamic:false },
+  { id:'wk_4cat4',    label:'All 4 Categories — 4 Days',   icon:'💎', xp:650, type:'weekly', dynamic:false },
+  { id:'wk_fullweek', label:'Full Week No Miss — 7 Days',  icon:'👑', xp:700, type:'weekly', dynamic:false },
+  { id:'wk_70ksteps', label:'70K Total Steps This Week',   icon:'🚶', xp:500,  type:'weekly', dynamic:false },
+  { id:'wk_hydrate7', label:'Hydrate Every Day This Week', icon:'💧', xp:400,  type:'weekly', dynamic:false },
+  { id:'wk_fasted3',  label:'Fasted Workout x3',           icon:'⚡', xp:500,  type:'weekly', dynamic:false },
+  { id:'wk_weigh7',   label:'Log Weight Every Day',        icon:'⚖️', xp:400,  type:'weekly', dynamic:false },
 ];
 // Keep WEEKLY_QUESTS alias for any legacy references
 const WEEKLY_QUESTS = WEEKLY_QUEST_POOL;
@@ -8006,11 +8016,11 @@ function initXPSystem() {
   }
 
   // Patch v15 — force XP to 5,050 (just inside D rank at 5,000 with new thresholds)
-  if (!localStorage.getItem('grind_xp_patch_v15b')) {
-    data.totalXP = 4050;
-    data.level   = getLevelFromXP(4050);
+  if (!localStorage.getItem('grind_xp_patch_v15c')) {
+    data.totalXP = 4000;
+    data.level   = getLevelFromXP(4000);
     saveXPData(data);
-    localStorage.setItem('grind_xp_patch_v15b','1');
+    localStorage.setItem('grind_xp_patch_v15c','1');
   }
   // Patch — 2 eating out redemptions (-240 coins)
   if (!localStorage.getItem('grind_eatout_patch_v2')) {
