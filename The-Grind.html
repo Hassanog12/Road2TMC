@@ -6,8 +6,19 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
-<title>Road to The Marathon Continues</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<title>R2TMC — The Grind</title>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -2115,6 +2126,7 @@ html, body {
           <button onclick="shiftWeek(1);" style="font-size:10px;color:var(--muted);background:none;border:1px solid var(--gray3);padding:2px 8px;cursor:pointer;">▶</button>
         </div>
         <div id="activityCal" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;padding:8px 0 4px;"></div>
+        <div id="weeklyCalBar" style="padding:6px 2px 8px;"></div>
       </div>
     </div>
 
@@ -5523,7 +5535,7 @@ function getWeeklyQuestPool() {
   // ── Override for specific weeks ──
   const thisWeek = getWeekStr();
   const WEEKLY_OVERRIDES = {
-    '2026-W14': ['wk_70ksteps','wk_fullweek','wk_hydrate7'],
+    '2026-W13': ['wk_70ksteps','wk_fullweek','wk_hydrate7'],
   };
   if (WEEKLY_OVERRIDES[thisWeek]) {
     return WEEKLY_OVERRIDES[thisWeek].map(id => allPool.find(q => q.id === id)).filter(Boolean);
@@ -6010,7 +6022,7 @@ function resetWeeklyQuests(e) {
         });
       }
       saveXPData(data);
-      buildQuestGrid(); updateHunterCard(); buildProfileStats(getXPData()); buildBadges(); buildCoinHistory(); buildSkillTree();
+      buildQuestGrid(); updateHunterCard(); buildProfileStats(getXPData()); buildBadges(); buildCoinHistory(); buildSkillTree(); buildActivityCalendar();
     }
   );
 }
@@ -6309,6 +6321,83 @@ function buildActivityCalendar() {
         : isToday ? '<div style="font-size:18px;line-height:1;margin-top:2px;opacity:0.8;">⏳</div>'
         : '<div style="font-size:16px;color:#e74c3c;line-height:1;margin-top:2px;opacity:0.7;">✕</div>');
     cal.appendChild(cell);
+  }
+
+  // ── Weekly challenge bar ──
+  const weeklyBar = document.getElementById('weeklyCalBar');
+  if (weeklyBar) {
+    // Compute week string for the displayed week (monday = first day shown)
+    function _weekStrFor(d) {
+      const start = new Date(d.getFullYear(), 0, 1);
+      return d.getFullYear() + '-W' + Math.ceil(((d - start) / 86400000 + start.getDay() + 1) / 7);
+    }
+    const shownWeekStr = _weekStrFor(monday);
+    const weeklyDone = (data.weeklyQuests && data.weeklyQuests[shownWeekStr]) || {};
+
+    // Get the quest pool for the shown week (mirrors getWeeklyQuestPool logic)
+    const CAL_WEEKLY_OVERRIDES = { '2026-W13': ['wk_70ksteps','wk_fullweek','wk_hydrate7'] };
+    let shownPool;
+    if (CAL_WEEKLY_OVERRIDES[shownWeekStr]) {
+      shownPool = CAL_WEEKLY_OVERRIDES[shownWeekStr].map(id => WEEKLY_QUEST_POOL.find(q => q.id === id)).filter(Boolean);
+    } else {
+      const weekSeed = parseInt(shownWeekStr.replace(/\D/g,'')) || 20260101;
+      let s = weekSeed;
+      shownPool = [];
+      const used = new Set();
+      for (let attempt = 0; shownPool.length < 3 && attempt < 100; attempt++) {
+        s = (s * 1664525 + 1013904223) | 0;
+        const idx = Math.abs(s) % WEEKLY_QUEST_POOL.length;
+        if (!used.has(idx)) { used.add(idx); shownPool.push(WEEKLY_QUEST_POOL[idx]); }
+      }
+    }
+
+    const completedCount = shownPool.filter(q => weeklyDone[q.id]).length;
+    const total = shownPool.length;
+    const allDone = completedCount === total && total > 0;
+
+    // Is the shown week in the future? Compare monday to start of current week
+    const currentWeekStr = _weekStrFor(new Date());
+    const isFutureWeek = shownWeekStr > currentWeekStr;
+
+    if (total === 0) {
+      weeklyBar.innerHTML = '';
+    } else if (isFutureWeek) {
+      // Locked — don't reveal upcoming challenges
+      const lockedPills = shownPool.map(() =>
+        '<span style="display:inline-flex;align-items:center;gap:4px;font-family:Space Mono,monospace;font-size:9px;'
+        + 'color:var(--gray4);background:rgba(255,255,255,0.02);border:1px solid var(--gray3);'
+        + 'padding:3px 7px;flex:1;min-width:0;opacity:0.5;">'
+        + '🔒 ????????'
+        + '</span>'
+      ).join('');
+      weeklyBar.innerHTML =
+        '<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">'
+        + '<span style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;">Weekly Challenges</span>'
+        + '<span style="font-family:Space Mono,monospace;font-size:9px;color:var(--gray4);margin-left:4px;">locked</span>'
+        + '</div>'
+        + '<div style="display:flex;gap:4px;">' + lockedPills + '</div>';
+    } else {
+      const checks = shownPool.map(q => {
+        const done = !!weeklyDone[q.id];
+        return '<span style="display:inline-flex;align-items:center;gap:4px;font-family:Space Mono,monospace;font-size:9px;'
+          + 'color:' + (done ? '#2ecc71' : 'var(--muted)') + ';'
+          + 'background:' + (done ? 'rgba(46,204,113,0.1)' : 'rgba(255,255,255,0.03)') + ';'
+          + 'border:1px solid ' + (done ? 'rgba(46,204,113,0.3)' : 'var(--gray3)') + ';'
+          + 'padding:3px 7px;flex:1;min-width:0;">'
+          + (done ? '✓' : '○') + ' ' + q.icon
+          + ' <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + q.label + '</span>'
+          + '</span>';
+      }).join('');
+
+      weeklyBar.innerHTML =
+        '<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">'
+        + '<span style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;">Weekly Challenges</span>'
+        + '<span style="font-family:Bebas Neue,sans-serif;font-size:14px;color:' + (allDone ? '#2ecc71' : 'var(--gold)') + ';">'
+        + completedCount + '/' + total + '</span>'
+        + (allDone ? '<span style="font-size:12px;">👑</span>' : '')
+        + '</div>'
+        + '<div style="display:flex;gap:4px;">' + checks + '</div>';
+    }
   }
 }
 
@@ -8996,6 +9085,89 @@ function buildStakesOverlay() {
 }
 </script>
 <!-- ── THE STAKES overlay trigger is now inline in the roadmap ── -->
+
+<script>
+// ── ONE-TIME PATCH: March 29 2026 ──
+(function applyMarch29Patch() {
+  const KEY = 'grind_xp_v33';
+  const PATCH_KEY = 'patch_mar29_v1';
+  if (localStorage.getItem(PATCH_KEY)) return; // already applied
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) { console.log('[PATCH] No existing data — skipping'); return; }
+    const data = JSON.parse(raw);
+
+    // ── 1. March 29 daily quests ──
+    if (!data.dailyQuests) data.dailyQuests = {};
+    if (!data.dailyQuests['2026-3-29']) data.dailyQuests['2026-3-29'] = {};
+    data.dailyQuests['2026-3-29']['hydrate'] = true;
+    data.dailyQuests['2026-3-29']['outdoor'] = true;
+    data.dailyQuests['2026-3-29']['steps']   = true;
+
+    // ── 2. W13 weekly completions ──
+    if (!data.weeklyQuests) data.weeklyQuests = {};
+    if (!data.weeklyQuests['2026-W13']) data.weeklyQuests['2026-W13'] = {};
+    data.weeklyQuests['2026-W13']['wk_70ksteps'] = true;
+    data.weeklyQuests['2026-W13']['wk_fullweek'] = true;
+    data.weeklyQuests['2026-W13']['wk_hydrate7'] = true;
+
+    // ── 3. XP ──
+    // Mar 29 daily (streak mult 1.05 at streak 12):
+    //   hydrate 60 * 1.05 = 63, outdoor 90 * 1.05 = 95, steps 175 * 1.05 = 184 → 342 XP
+    // W13 weeklies (no streak mult):
+    //   wk_70ksteps 500 + wk_fullweek 700 + wk_hydrate7 400 → 1600 XP
+    // Total: 1942 XP
+    data.totalXP = (data.totalXP || 0) + 1942;
+    // Recalc level using inline logic (getLevelFromXP not yet defined at parse time risk)
+    function _lvl(xp) {
+      let l = 1, r = xp;
+      while (r >= Math.floor(220 + 1.459 * Math.pow(l, 1.7))) {
+        r -= Math.floor(220 + 1.459 * Math.pow(l, 1.7)); l++;
+        if (l > 9999) break;
+      }
+      return l;
+    }
+    data.level = _lvl(data.totalXP);
+
+    // ── 4. Coins ──
+    // +41 daily (hydrate 8 + outdoor 11 + steps 22)
+    // +201 weekly (70ksteps 63 + fullweek 88 + hydrate7 50)
+    // -150 Treat Yourself  -100 Clean Eat Out
+    // Net: -8
+    data.coins = Math.max(0, (data.coins || 0) + 41 + 201 - 150 - 100);
+
+    // ── 5. Coin history ──
+    if (!data.coinHistory) data.coinHistory = [];
+    const d29 = '3/29/2026';
+    // Prepend in reverse order so most-recent ends up on top
+    const entries = [
+      { icon:'🥗', label:'Clean Eat Out',                    amount:-100, date:d29, redeemed:true },
+      { icon:'🧋', label:'Treat Yourself',                   amount:-150, date:d29, redeemed:true },
+      { icon:'💧', label:'Hydrate Every Day This Week',      amount:50,   date:d29 },
+      { icon:'👑', label:'Full Week No Miss — 7 Days',       amount:88,   date:d29 },
+      { icon:'🚶', label:'70K Total Steps This Week',        amount:63,   date:d29 },
+      { icon:'🚶', label:'10K Steps',                        amount:22,   date:d29 },
+      { icon:'🌳', label:'Outdoor Walk',                     amount:11,   date:d29 },
+      { icon:'💧', label:'2L Water',                         amount:8,    date:d29 },
+    ];
+    data.coinHistory = entries.concat(data.coinHistory).slice(0, 50);
+
+    // ── 6. Rewards redeemed (mark as used once each) ──
+    if (!data.redeemedRewards) data.redeemedRewards = {};
+    data.redeemedRewards['snack']     = (data.redeemedRewards['snack']     || 0) + 1;
+    data.redeemedRewards['clean_eat'] = (data.redeemedRewards['clean_eat'] || 0) + 1;
+
+    // ── 7. Streak: 13, lastActiveDate = Mar 29 (today = Mar 30 = day 14) ──
+    data.streak         = 13;
+    data.longestStreak  = Math.max(data.longestStreak || 0, 13);
+    data.lastActiveDate = '2026-3-29';
+
+    localStorage.setItem(KEY, JSON.stringify(data));
+    localStorage.setItem(PATCH_KEY, '1');
+    console.log('[PATCH] March 29 patch applied ✓ — streak set to 13, +1942 XP, coins adjusted');
+  } catch(e) { console.error('[PATCH] Failed:', e); }
+})();
+</script>
 
 </body>
 </html>
