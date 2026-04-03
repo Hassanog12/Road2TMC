@@ -6,8 +6,19 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
-<title>Road to The Marathon Continues</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<title>R2TMC — The Grind</title>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -6326,84 +6337,78 @@ function buildActivityCalendar() {
       + 'border:1px solid ' + (isToday ? 'var(--gold)' : hasActivity ? 'rgba(46,204,113,0.3)' : isFuture ? 'var(--gray3)' : 'rgba(231,76,60,0.25)') + ';'
       + 'padding:8px 6px;text-align:center;min-height:70px;cursor:pointer;position:relative;';
 
-    // Build tooltip lines
+    // Build tooltip lines — only for non-future cells
     const tipLines = [];
     if (hasActivity) {
       workoutLabels.forEach(l => tipLines.push({ text: l, color: '#c8c3b8' }));
-    } else if (isFuture) {
-      tipLines.push({ text: 'Upcoming', color: '#555' });
     } else if (isToday) {
       tipLines.push({ text: 'In progress', color: 'var(--gold)' });
     } else {
       tipLines.push({ text: 'No activity', color: '#e74c3c' });
     }
 
-    cell.addEventListener('mouseenter', function(e) {
-      let tip = document.getElementById('calTooltip');
-      if (!tip) {
-        tip = document.createElement('div');
-        tip.id = 'calTooltip';
-        tip.style.cssText = 'position:fixed;z-index:9000;background:#0a0a0a;border:1px solid #2a2a2a;padding:10px 12px;pointer-events:none;min-width:140px;max-width:220px;';
-        document.body.appendChild(tip);
-      }
-      const multColor = dayMult > 1.0 ? '#e8c96a' : '#555';
-      tip.innerHTML =
-        '<div style="font-family:Space Mono,monospace;font-size:9px;letter-spacing:2px;color:var(--gold,#c8a84b);text-transform:uppercase;margin-bottom:6px;border-bottom:1px solid #1a1a1a;padding-bottom:5px;">' + tipDateStr + '</div>'
-        + tipLines.map(l => '<div style="font-family:Space Mono,monospace;font-size:9px;color:' + l.color + ';line-height:1.8;">' + l.text + '</div>').join('')
-        + (hasActivity ? '<div style="margin-top:6px;padding-top:5px;border-top:1px solid #1a1a1a;display:flex;align-items:center;justify-content:space-between;">'
-          + '<span style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:1px;color:#555;text-transform:uppercase;">streak mult</span>'
-          + '<span style="font-family:Bebas Neue,sans-serif;font-size:15px;color:' + multColor + ';letter-spacing:1px;">' + multStr + '</span>'
-          + '</div>' : '');
+    if (!isFuture) {
+      cell.addEventListener('mouseenter', function(e) {
+        let tip = document.getElementById('calTooltip');
+        if (!tip) {
+          tip = document.createElement('div');
+          tip.id = 'calTooltip';
+          tip.style.cssText = 'position:fixed;z-index:9000;background:#0a0a0a;border:1px solid #2a2a2a;padding:10px 12px;pointer-events:none;min-width:140px;max-width:220px;';
+          document.body.appendChild(tip);
+        }
+        const multColor = dayMult > 1.0 ? '#e8c96a' : '#555';
+        tip.innerHTML =
+          '<div style="font-family:Space Mono,monospace;font-size:9px;letter-spacing:2px;color:var(--gold,#c8a84b);text-transform:uppercase;margin-bottom:6px;border-bottom:1px solid #1a1a1a;padding-bottom:5px;">' + tipDateStr + '</div>'
+          + tipLines.map(l => '<div style="font-family:Space Mono,monospace;font-size:9px;color:' + l.color + ';line-height:1.8;">' + l.text + '</div>').join('')
+          + (hasActivity ? '<div style="margin-top:6px;padding-top:5px;border-top:1px solid #1a1a1a;display:flex;align-items:center;justify-content:space-between;">'
+            + '<span style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:1px;color:#555;text-transform:uppercase;">streak mult</span>'
+            + '<span style="font-family:Bebas Neue,sans-serif;font-size:15px;color:' + multColor + ';letter-spacing:1px;">' + multStr + '</span>'
+            + '</div>' : '');
+        const rect = cell.getBoundingClientRect();
+        const tipW = 180;
+        let left = rect.left + rect.width / 2 - tipW / 2;
+        left = Math.max(8, Math.min(left, window.innerWidth - tipW - 8));
+        const above = rect.top > 180;
+        tip.style.left = left + 'px';
+        tip.style.width = tipW + 'px';
+        if (above) { tip.style.top = ''; tip.style.bottom = (window.innerHeight - rect.top + 6) + 'px'; }
+        else { tip.style.bottom = ''; tip.style.top = (rect.bottom + 6) + 'px'; }
+        tip.style.display = 'block';
+      });
+      cell.addEventListener('mouseleave', function() {
+        const tip = document.getElementById('calTooltip');
+        if (tip) tip.style.display = 'none';
+      });
+      cell.addEventListener('touchstart', function(e) {
+        e.stopPropagation();
+        cell.dispatchEvent(new MouseEvent('mouseenter'));
+      }, { passive: true });
+      document.addEventListener('touchstart', function() {
+        const tip = document.getElementById('calTooltip');
+        if (tip) tip.style.display = 'none';
+      }, { passive: true });
+    }
 
-      const rect = cell.getBoundingClientRect();
-      const tipW = 180;
-      let left = rect.left + rect.width / 2 - tipW / 2;
-      left = Math.max(8, Math.min(left, window.innerWidth - tipW - 8));
-      const above = rect.top > 180;
-      tip.style.left = left + 'px';
-      tip.style.width = tipW + 'px';
-      if (above) {
-        tip.style.top = '';
-        tip.style.bottom = (window.innerHeight - rect.top + 6) + 'px';
-      } else {
-        tip.style.bottom = '';
-        tip.style.top = (rect.bottom + 6) + 'px';
-      }
-      tip.style.display = 'block';
-    });
-    cell.addEventListener('mouseleave', function() {
-      const tip = document.getElementById('calTooltip');
-      if (tip) tip.style.display = 'none';
-    });
-    // Mobile tap support
-    cell.addEventListener('touchstart', function(e) {
-      e.stopPropagation();
-      cell.dispatchEvent(new MouseEvent('mouseenter'));
-    }, { passive: true });
-    document.addEventListener('touchstart', function hideTip() {
-      const tip = document.getElementById('calTooltip');
-      if (tip) tip.style.display = 'none';
-    }, { passive: true });
     cell.innerHTML = '<div style="font-family:Space Mono,monospace;font-size:10px;letter-spacing:1px;color:' + (isToday ? 'var(--gold)' : 'var(--muted)') + ';margin-bottom:2px;">' + dayNames[i] + '</div>'
       + '<div style="font-family:Bebas Neue,sans-serif;font-size:16px;color:' + (isToday ? 'var(--gold)' : 'var(--white)') + ';line-height:1;margin-bottom:4px;">' + d.getDate() + '</div>'
       + (hasActivity ? '<div style="font-size:11px;">' + icons + '</div>' + (function(){
-      const rawXP = questIds.reduce((s,id) => {
-        const entry = dayDone[id];
-        if (entry === 'locked') return s; // locked runs don't count
-        if (entry && typeof entry === 'object' && entry.xp) return s + entry.xp;
-        const q2 = allQuests.find(x => x.id === id);
-        return s + (q2 ? q2.xp : 0);
-      }, 0);
-      const rawCoins = questIds.reduce((s,id) => {
-        const entry = dayDone[id];
-        if (entry === 'locked') return s; // locked runs don't count
-        if (entry && typeof entry === 'object' && entry.coins) return s + entry.coins;
-        const q2 = allQuests.find(x => x.id === id);
-        return s + (q2 ? Math.round(q2.xp/10) : 0);
-      }, 0);
-      return '<div style="font-family:Space Mono,monospace;font-size:9px;color:#2ecc71;margin-top:2px;line-height:1.4;">+' + rawXP.toLocaleString('en-US') + ' xp</div>'
-           + '<div style="font-family:Space Mono,monospace;font-size:9px;color:#f0d878;">+' + rawCoins + ' 🪙</div>';
-    })()
+        const rawXP = questIds.reduce((s,id) => {
+          const entry = dayDone[id];
+          if (entry === 'locked') return s;
+          if (entry && typeof entry === 'object' && entry.xp) return s + entry.xp;
+          const q2 = allQuests.find(x => x.id === id);
+          return s + (q2 ? q2.xp : 0);
+        }, 0);
+        const rawCoins = questIds.reduce((s,id) => {
+          const entry = dayDone[id];
+          if (entry === 'locked') return s;
+          if (entry && typeof entry === 'object' && entry.coins) return s + entry.coins;
+          const q2 = allQuests.find(x => x.id === id);
+          return s + (q2 ? Math.round(q2.xp/10) : 0);
+        }, 0);
+        return '<div style="font-family:Space Mono,monospace;font-size:9px;color:#2ecc71;margin-top:2px;line-height:1.4;">+' + rawXP.toLocaleString('en-US') + ' xp</div>'
+             + '<div style="font-family:Space Mono,monospace;font-size:9px;color:#f0d878;">+' + rawCoins + ' 🪙</div>';
+      })()
         : isFuture ? '<div style="font-family:Space Mono,monospace;font-size:10px;color:var(--gray4);">—</div>'
         : isToday ? '<div style="font-size:18px;line-height:1;margin-top:2px;opacity:0.8;">⏳</div>'
         : '<div style="font-size:16px;color:#e74c3c;line-height:1;margin-top:2px;opacity:0.7;">✕</div>');
@@ -7628,40 +7633,40 @@ function buildSkillTree() {
       score: d => Math.min(100, Math.round((countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')+countQuestDone(d,'halfmarathon'))*2.5)),
       nodes:[
         {label:'First Run',    tip:'Log your first run of any distance.',                req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=1},
-        {label:'5 Sessions',   tip:'5 total runs. The legs are adapting.',               req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=5},
-        {label:'Road Warrior', tip:'15 sessions. You call yourself a runner now.',      req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=15},
-        {label:'35 Sessions',  tip:'35 sessions. The city knows your footsteps.',       req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=35},
-        {label:'Bankai',   tip:'80 sessions. Built for distance.',                  req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=80},
+        {label:'10 Sessions',   tip:'10 total runs. The legs are adapting.',               req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=10},
+        {label:'Road Warrior', tip:'25 sessions. You call yourself a runner now.',        req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=25},
+        {label:'50 Sessions',  tip:'50 sessions. The city knows your footsteps.',         req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=50},
+        {label:'Bankai',       tip:'80 sessions. Built for distance. Road is home.',      req:d=>countQuestDone(d,'run1')+countQuestDone(d,'run5k')+countQuestDone(d,'run10k')+countQuestDone(d,'longrun')>=80},
       ]
     },
     { id:'lifter',  name:'The Lifter',     icon:'💪', color:'#e67e22', desc:'Push · pull · legs — building the frame',
       score: d => Math.min(100, Math.round((countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs'))*2)),
       nodes:[
         {label:'First Lift',   tip:'Complete your first Push, Pull, or Leg day.',       req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=1},
-        {label:'10 Sessions',  tip:'10 gym sessions. The habit is forming.',             req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=10},
-        {label:'The Builder',  tip:'25 sessions. The V-taper is loading.',              req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=25},
-        {label:'V-Taper',      tip:'60 sessions. That silhouette speaks for itself.',   req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=60},
-        {label:'Architect',    tip:'120 sessions. You built this body from scratch.',   req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=120},
+        {label:'12 Sessions',  tip:'12 gym sessions. The habit is forming.',              req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=12},
+        {label:'The Builder',  tip:'30 sessions. The V-taper is loading.',               req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=30},
+        {label:'V-Taper',      tip:'65 sessions. That silhouette speaks for itself.',    req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=65},
+        {label:'Architect',    tip:'105 sessions. You built this body from scratch.',    req:d=>countQuestDone(d,'push')+countQuestDone(d,'pull')+countQuestDone(d,'legs')>=105},
       ]
     },
     { id:'hooper',  name:'The Hooper',     icon:'🏀', color:'#ff6b35', desc:'Court sessions — cardio disguised as fun',
       score: d => Math.min(100, Math.round((countQuestDone(d,'ball')+countQuestDone(d,'ballprac'))*5)),
       nodes:[
         {label:'First Bucket', tip:'Hit the court or practice for the first time.',     req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=1},
-        {label:'5 Sessions',   tip:'5 sessions. Got your game legs back.',              req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=5},
-        {label:'Court Regular',tip:'10 sessions. You belong on this court.',            req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=10},
-        {label:'Gym Rat',      tip:'25 sessions. First there, last to leave.',          req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=25},
-        {label:'The Hooper',   tip:'50 sessions. The court shaped the body.',           req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=50},
+        {label:'5 Sessions',   tip:'5 sessions. Got your game legs back.',               req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=5},
+        {label:'Court Regular',tip:'15 sessions. You belong on this court.',             req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=15},
+        {label:'Gym Rat',      tip:'35 sessions. First there, last to leave.',           req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=35},
+        {label:'The Hooper',   tip:'65 sessions. The court shaped the body.',            req:d=>countQuestDone(d,'ball')+countQuestDone(d,'ballprac')>=65},
       ]
     },
     { id:'mover',   name:'The Mover',      icon:'🚶', color:'#2ecc71', desc:'Steps · walks — active every single day',
       score: d => Math.min(100, Math.round((countQuestDone(d,'steps')+countQuestDone(d,'steps15')+countQuestDone(d,'outdoor'))*3)),
       nodes:[
-        {label:'First Steps',  tip:'First 10K step day or outdoor walk.',               req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=1},
-        {label:'One Week',     tip:'7 movement days. The baseline is locked in.',       req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=7},
-        {label:'The Walker',   tip:'14 days. You never just sit anymore.',              req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=14},
-        {label:'City Explorer',tip:'30 days. This city is your track.',                 req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=30},
-        {label:'Never Sits',   tip:'60 days. Moving is just who you are now.',          req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=60},
+        {label:'First Steps',  tip:'First 10K step day or outdoor walk.',                req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=1},
+        {label:'30 Days',      tip:'30 movement days. The baseline is locked in.',       req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=30},
+        {label:'The Walker',   tip:'75 days. You never just sit anymore.',               req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=75},
+        {label:'City Explorer',tip:'180 days. This city is your track.',                 req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=180},
+        {label:'Never Sits',   tip:'350 days. Moving is just who you are now.',          req:d=>countQuestDone(d,'steps')+countQuestDone(d,'outdoor')>=350},
       ]
     },
     { id:'monk',    name:'The Monk',       icon:'🧘', color:'#1abc9c', desc:'Mobility · sleep · hydration · cold',
@@ -7672,11 +7677,11 @@ function buildSkillTree() {
         countQuestDone(d,'cold')*3
       )),
       nodes:[
-        {label:'First Recovery',tip:'Log your first mobility, sleep, or hydration.',   req:d=>countQuestDone(d,'mobility')+countQuestDone(d,'sleep')+countQuestDone(d,'hydrate')>=1},
-        {label:'Routine Built', tip:'10 combined wellness actions. Habit forming.',     req:d=>countQuestDone(d,'mobility')+countQuestDone(d,'sleep')+countQuestDone(d,'hydrate')>=10},
-        {label:'Cold Protocol', tip:'5 cold showers. The mind is hardening.',          req:d=>countQuestDone(d,'cold')>=5},
-        {label:'Injury Proof',  tip:'15 mobility sessions. Moving like you are 20.',   req:d=>countQuestDone(d,'mobility')>=15},
-        {label:'The Monk',      tip:'60 combined wellness days. Untouchable.',          req:d=>countQuestDone(d,'mobility')+countQuestDone(d,'sleep')+countQuestDone(d,'hydrate')+countQuestDone(d,'cold')>=60},
+        {label:'First Recovery',tip:'Log your first mobility, sleep, or hydration.',    req:d=>countQuestDone(d,'mobility')+countQuestDone(d,'sleep')+countQuestDone(d,'hydrate')>=1},
+        {label:'Routine Built', tip:'20 combined wellness actions. Habit forming.',      req:d=>countQuestDone(d,'mobility')+countQuestDone(d,'sleep')+countQuestDone(d,'hydrate')>=20},
+        {label:'Cold Protocol', tip:'15 cold showers. The mind is hardening.',           req:d=>countQuestDone(d,'cold')>=15},
+        {label:'Injury Proof',  tip:'30 mobility sessions. Moving like you are 20.',    req:d=>countQuestDone(d,'mobility')>=30},
+        {label:'The Monk',      tip:'150 combined wellness days. Untouchable.',          req:d=>countQuestDone(d,'mobility')+countQuestDone(d,'sleep')+countQuestDone(d,'hydrate')+countQuestDone(d,'cold')>=150},
       ]
     },
     { id:'streak',  name:'Mr. Consistent', icon:'🔥', color:'#f0d878', desc:'Showing up every day — never breaking the chain',
