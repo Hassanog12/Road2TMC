@@ -6,8 +6,19 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
-<title>Road to The Marathon Continues</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<title>R2TMC — The Grind</title>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -2116,6 +2127,7 @@ html, body {
         </div>
         <div id="activityCal" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;padding:8px 0 4px;"></div>
         <div id="weeklyCalBar" style="padding:6px 2px 8px;"></div>
+        <div id="calStreakAvg" style="padding:2px 2px 8px;"></div>
       </div>
     </div>
 
@@ -5211,7 +5223,7 @@ function getNextRank(xp) {
 }
 // XP needed per level: starts ~351, grows to ~1550 at L100
 // Max 2 levels per day. ~6 levels/week early. Level 100 reachable by Dec 31 at 80% consistency.
-function xpForLevel(level) { return Math.floor(220 + 1.459 * Math.pow(level, 1.7)); }
+function xpForLevel(level) { return Math.floor(300 + 2.5 * Math.pow(level, 1.55)); }
 function getLevelFromXP(xp) {
   let level = 1, remaining = xp;
   while (remaining >= xpForLevel(level)) {
@@ -6224,7 +6236,16 @@ function buildCoinHistory() {
       + '<span style="font-family:Bebas Neue,sans-serif;font-size:13px;color:' + (isNeg ? '#ddd' : '#ccc') + ';letter-spacing:0.5px;line-height:1;">' + (h.label || '') + '</span>'
       + '<div style="display:flex;align-items:center;gap:6px;">'
       + tag
-      + '<span style="color:var(--muted);font-size:7px;letter-spacing:1px;">· ' + (h.date || '') + '</span>'
+      + '<span style="color:var(--muted);font-size:7px;letter-spacing:1px;">· ' + (function(raw) {
+        if (!raw) return '';
+        // Normalize any date string to MM/DD/YYYY
+        const parts = raw.split('/');
+        if (parts.length === 3) {
+          const m = parts[0].padStart(2,'0'), d = parts[1].padStart(2,'0'), y = parts[2];
+          return m + '/' + d + '/' + y;
+        }
+        return raw;
+      })(h.date) + '</span>'
       + '</div>'
       + '</div>'
       + '</div>'
@@ -6282,10 +6303,98 @@ function buildActivityCalendar() {
         return q ? q.icon : null;
       }).filter(Boolean).slice(0,4).join(' ');
     const hasActivity = questIds.length > 0;
+
+    // ── Build tooltip content ──
+    const allQuestsForTip = [...BASE_QUESTS, ...WEEKLY_QUESTS];
+    const workoutLabels = questIds
+      .filter(id => dayDone[id] && dayDone[id] !== 'locked')
+      .map(id => {
+        const entry = dayDone[id];
+        const q = allQuestsForTip.find(x => x.id === id);
+        const icon = (entry && typeof entry === 'object' && entry.icon) ? entry.icon : (q ? q.icon : '');
+        const label = q ? q.label : id;
+        return icon + ' ' + label;
+      });
+    const tipMonth = d.getMonth() + 1;
+    const tipDay = d.getDate();
+    const tipYear = d.getFullYear();
+    const tipDateStr = (tipMonth < 10 ? '0'+tipMonth : tipMonth) + '/' + (tipDay < 10 ? '0'+tipDay : tipDay) + '/' + tipYear;
+
+    // Streak mult for this date
+    const streak = data.streak || 0;
+    const lastParts2 = (data.lastActiveDate || '').split('-');
+    const lastD2 = lastParts2.length === 3 ? new Date(parseInt(lastParts2[0]), parseInt(lastParts2[1])-1, parseInt(lastParts2[2])) : null;
+    let dayStreakNum = 0;
+    if (lastD2 && hasActivity) {
+      const diffDays = Math.round((lastD2 - d) / 86400000);
+      dayStreakNum = Math.max(0, streak - diffDays);
+    }
+    const dayMult = dayStreakNum > 0 ? Math.min(1.5, 1 + Math.floor(dayStreakNum / 7) * 0.05) : 1.0;
+    const multStr = dayMult.toFixed(2) + '×';
+
     const cell = document.createElement('div');
     cell.style.cssText = 'background:' + (isFuture ? 'var(--gray1)' : hasActivity ? 'rgba(46,204,113,0.12)' : isToday ? 'rgba(200,168,75,0.08)' : 'rgba(231,76,60,0.06)') + ';'
       + 'border:1px solid ' + (isToday ? 'var(--gold)' : hasActivity ? 'rgba(46,204,113,0.3)' : isFuture ? 'var(--gray3)' : 'rgba(231,76,60,0.25)') + ';'
-      + 'padding:8px 6px;text-align:center;min-height:70px;';
+      + 'padding:8px 6px;text-align:center;min-height:70px;cursor:pointer;position:relative;';
+
+    // Build tooltip lines
+    const tipLines = [];
+    if (hasActivity) {
+      workoutLabels.forEach(l => tipLines.push({ text: l, color: '#c8c3b8' }));
+    } else if (isFuture) {
+      tipLines.push({ text: 'Upcoming', color: '#555' });
+    } else if (isToday) {
+      tipLines.push({ text: 'In progress', color: 'var(--gold)' });
+    } else {
+      tipLines.push({ text: 'No activity', color: '#e74c3c' });
+    }
+
+    cell.addEventListener('mouseenter', function(e) {
+      let tip = document.getElementById('calTooltip');
+      if (!tip) {
+        tip = document.createElement('div');
+        tip.id = 'calTooltip';
+        tip.style.cssText = 'position:fixed;z-index:9000;background:#0a0a0a;border:1px solid #2a2a2a;padding:10px 12px;pointer-events:none;min-width:140px;max-width:220px;';
+        document.body.appendChild(tip);
+      }
+      const multColor = dayMult > 1.0 ? '#e8c96a' : '#555';
+      tip.innerHTML =
+        '<div style="font-family:Space Mono,monospace;font-size:9px;letter-spacing:2px;color:var(--gold,#c8a84b);text-transform:uppercase;margin-bottom:6px;border-bottom:1px solid #1a1a1a;padding-bottom:5px;">' + tipDateStr + '</div>'
+        + tipLines.map(l => '<div style="font-family:Space Mono,monospace;font-size:9px;color:' + l.color + ';line-height:1.8;">' + l.text + '</div>').join('')
+        + (hasActivity ? '<div style="margin-top:6px;padding-top:5px;border-top:1px solid #1a1a1a;display:flex;align-items:center;justify-content:space-between;">'
+          + '<span style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:1px;color:#555;text-transform:uppercase;">streak mult</span>'
+          + '<span style="font-family:Bebas Neue,sans-serif;font-size:15px;color:' + multColor + ';letter-spacing:1px;">' + multStr + '</span>'
+          + '</div>' : '');
+
+      const rect = cell.getBoundingClientRect();
+      const tipW = 180;
+      let left = rect.left + rect.width / 2 - tipW / 2;
+      left = Math.max(8, Math.min(left, window.innerWidth - tipW - 8));
+      const above = rect.top > 180;
+      tip.style.left = left + 'px';
+      tip.style.width = tipW + 'px';
+      if (above) {
+        tip.style.top = '';
+        tip.style.bottom = (window.innerHeight - rect.top + 6) + 'px';
+      } else {
+        tip.style.bottom = '';
+        tip.style.top = (rect.bottom + 6) + 'px';
+      }
+      tip.style.display = 'block';
+    });
+    cell.addEventListener('mouseleave', function() {
+      const tip = document.getElementById('calTooltip');
+      if (tip) tip.style.display = 'none';
+    });
+    // Mobile tap support
+    cell.addEventListener('touchstart', function(e) {
+      e.stopPropagation();
+      cell.dispatchEvent(new MouseEvent('mouseenter'));
+    }, { passive: true });
+    document.addEventListener('touchstart', function hideTip() {
+      const tip = document.getElementById('calTooltip');
+      if (tip) tip.style.display = 'none';
+    }, { passive: true });
     cell.innerHTML = '<div style="font-family:Space Mono,monospace;font-size:10px;letter-spacing:1px;color:' + (isToday ? 'var(--gold)' : 'var(--muted)') + ';margin-bottom:2px;">' + dayNames[i] + '</div>'
       + '<div style="font-family:Bebas Neue,sans-serif;font-size:16px;color:' + (isToday ? 'var(--gold)' : 'var(--white)') + ';line-height:1;margin-bottom:4px;">' + d.getDate() + '</div>'
       + (hasActivity ? '<div style="font-size:11px;">' + icons + '</div>' + (function(){
@@ -6386,6 +6495,43 @@ function buildActivityCalendar() {
         + (allDone ? '<span style="font-size:12px;">👑</span>' : '')
         + '</div>'
         + '<div style="display:flex;gap:4px;">' + checks + '</div>';
+    }
+  }
+
+  // ── Avg XP per day for current streak ──
+  const avgEl = document.getElementById('calStreakAvg');
+  if (avgEl) {
+    const streak = data.streak || 0;
+    if (streak > 0 && data.lastActiveDate) {
+      // Walk back `streak` days from lastActiveDate and sum XP
+      const lastParts = data.lastActiveDate.split('-'); // 'YYYY-M-D'
+      const lastD = new Date(parseInt(lastParts[0]), parseInt(lastParts[1])-1, parseInt(lastParts[2]));
+      let totalStreakXP = 0;
+      let activeDays = 0;
+      for (let s = 0; s < streak; s++) {
+        const dd = new Date(lastD);
+        dd.setDate(lastD.getDate() - s);
+        const dk = dd.getFullYear() + '-' + (dd.getMonth()+1) + '-' + dd.getDate();
+        const dayQ = data.dailyQuests[dk] || {};
+        const dayIds = Object.keys(dayQ).filter(k => dayQ[k] && dayQ[k] !== 'locked');
+        if (dayIds.length > 0) {
+          activeDays++;
+          const allQ2 = [...BASE_QUESTS, ...WEEKLY_QUESTS];
+          totalStreakXP += dayIds.reduce((s2, id) => {
+            const entry = dayQ[id];
+            if (entry && typeof entry === 'object' && entry.xp) return s2 + entry.xp;
+            const q2 = allQ2.find(x => x.id === id);
+            return s2 + (q2 ? q2.xp : 0);
+          }, 0);
+        }
+      }
+      const avgXP = activeDays > 0 ? Math.round(totalStreakXP / activeDays) : 0;
+      avgEl.innerHTML = '<div style="text-align:center;padding:4px 2px 2px;">'
+        + '<span style="font-family:Bebas Neue,sans-serif;font-size:20px;color:#2ecc71;letter-spacing:1px;">+' + avgXP.toLocaleString('en-US') + ' XP</span>'
+        + '<span style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-left:8px;">· Avg / Day</span>'
+        + '</div>';
+    } else {
+      avgEl.innerHTML = '';
     }
   }
 }
@@ -9155,6 +9301,158 @@ function buildStakesOverlay() {
     localStorage.setItem(PATCH_KEY, '1');
     console.log('[PATCH] March 29 patch applied ✓ — streak set to 13, +1942 XP, coins adjusted');
   } catch(e) { console.error('[PATCH] Failed:', e); }
+})();
+</script>
+
+<script>
+// ── ONE-TIME PATCH: Week of Mar 30 – Apr 2, 2026 ──
+(function applyApr2Patch() {
+  const KEY      = 'grind_xp_v33';
+  const PATCH_KEY = 'patch_apr2_v2';
+  if (localStorage.getItem(PATCH_KEY)) return;
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) { console.log('[PATCH apr2] No data — skipping'); return; }
+    const data = JSON.parse(raw);
+    if (!data.dailyQuests)   data.dailyQuests   = {};
+    if (!data.weeklyQuests)  data.weeklyQuests  = {};
+    if (!data.coinHistory)   data.coinHistory   = [];
+    if (!data.redeemedRewards) data.redeemedRewards = {};
+
+    // ─────────────────────────────────────────
+    // 1. DAILY QUESTS
+    // ─────────────────────────────────────────
+    // Mar 30: 2mi run, push day, outdoor walk, 10k steps, hoop practice, hydrate
+    data.dailyQuests['2026-3-30'] = {
+      run2:     true,
+      push:     true,
+      outdoor:  true,
+      steps:    true,
+      ballprac: true,
+      hydrate:  true,
+    };
+    // Mar 31: outdoor walk, hydrate, push day
+    data.dailyQuests['2026-3-31'] = {
+      outdoor: true,
+      hydrate: true,
+      push:    true,
+    };
+    // Apr 1: legs, outdoor walk, 10k steps, cold shower, hoop practice
+    data.dailyQuests['2026-4-1'] = {
+      legs:     true,
+      outdoor:  true,
+      steps:    true,
+      cold:     true,
+      ballprac: true,
+    };
+    // Apr 2: pull day, outdoor walk, 10k steps
+    data.dailyQuests['2026-4-2'] = {
+      pull:    true,
+      outdoor: true,
+      steps:   true,
+    };
+
+    // ─────────────────────────────────────────
+    // 2. XP — force total to 7,000 (early D rank)
+    // ─────────────────────────────────────────
+    // Breakdown for transparency:
+    //   Mar 30 (streak 14, mult 1.10): run2 242 + push 330 + outdoor 99 + steps 193 + ballprac 138 + hydrate 66 = 1068 XP
+    //   Mar 31 (streak 15, mult 1.10): outdoor 99 + hydrate 66 + push 330 = 495 XP
+    //   Apr 1  (streak 16, mult 1.10): legs 330 + outdoor 99 + steps 193 + cold 77 + ballprac 138 = 837 XP
+    //   Apr 2  (streak 17, mult 1.10): pull 330 + outdoor 99 + steps 193 = 622 XP
+    //   Total earned: 3,022 XP — but we force totalXP to 7,000
+    data.totalXP = 7000;
+
+    // Recalc level with NEW formula: floor(300 + 2.5 * level^1.55)
+    function _lvl(xp) {
+      let l = 1, r = xp;
+      while (r >= Math.floor(300 + 2.5 * Math.pow(l, 1.55))) {
+        r -= Math.floor(300 + 2.5 * Math.pow(l, 1.55));
+        l++;
+        if (l > 9999) break;
+      }
+      return l;
+    }
+    data.level = _lvl(data.totalXP);
+
+    // ─────────────────────────────────────────
+    // 3. COINS — forced to 600
+    // ─────────────────────────────────────────
+    data.coins = 600;
+
+    // ─────────────────────────────────────────
+    // 4. COIN HISTORY — prepend newest first
+    // ─────────────────────────────────────────
+    const newEntries = [
+      // Apr 2
+      { icon:'🥗', label:'Clean Eat Out',  amount:-100, date:'04/02/2026', redeemed:true },
+      { icon:'🏋', label:'Pull Day',        amount:38,   date:'04/02/2026' },
+      { icon:'🌳', label:'Outdoor Walk',    amount:11,   date:'04/02/2026' },
+      { icon:'🚶', label:'10K Steps',       amount:22,   date:'04/02/2026' },
+      // Apr 1
+      { icon:'🥗', label:'Clean Eat Out',   amount:-100, date:'04/01/2026', redeemed:true },
+      { icon:'🦵', label:'Leg Day',          amount:38,   date:'04/01/2026' },
+      { icon:'🌳', label:'Outdoor Walk',    amount:11,   date:'04/01/2026' },
+      { icon:'🚶', label:'10K Steps',       amount:22,   date:'04/01/2026' },
+      { icon:'🧊', label:'Cold Shower',     amount:9,    date:'04/01/2026' },
+      { icon:'🏀', label:'Sports Practice', amount:16,   date:'04/01/2026' },
+      // Mar 31
+      { icon:'🥗', label:'Clean Eat Out',   amount:-100, date:'03/31/2026', redeemed:true },
+      { icon:'🥗', label:'Clean Eat Out',   amount:-100, date:'03/31/2026', redeemed:true },
+      { icon:'💪', label:'Push Day',        amount:38,   date:'03/31/2026' },
+      { icon:'🌳', label:'Outdoor Walk',    amount:11,   date:'03/31/2026' },
+      { icon:'💧', label:'2L Water',        amount:8,    date:'03/31/2026' },
+      // Mar 30
+      { icon:'🏃', label:'Run 2 Miles',     amount:28,   date:'03/30/2026' },
+      { icon:'💪', label:'Push Day',        amount:38,   date:'03/30/2026' },
+      { icon:'🌳', label:'Outdoor Walk',    amount:11,   date:'03/30/2026' },
+      { icon:'🚶', label:'10K Steps',       amount:22,   date:'03/30/2026' },
+      { icon:'🏀', label:'Sports Practice', amount:16,   date:'03/30/2026' },
+      { icon:'💧', label:'2L Water',        amount:8,    date:'03/30/2026' },
+    ];
+    data.coinHistory = newEntries.concat(data.coinHistory).slice(0, 50);
+
+    // ─────────────────────────────────────────
+    // 5. WEIGHT LOG
+    // ─────────────────────────────────────────
+    // Weight patches go into the weight storage key
+    const WEIGHT_KEY = 'grind_weight_v10';
+    let wRaw = localStorage.getItem(WEIGHT_KEY);
+    let wData = wRaw ? JSON.parse(wRaw) : { log: [] };
+    if (!wData.log) wData.log = [];
+    // Remove any existing entries for these dates to avoid duplication
+    wData.log = wData.log.filter(e => e.date !== '04/01/2026' && e.date !== '04/02/2026');
+    // Prepend newest first
+    wData.log.unshift({ weight: 256.8, date: '04/02/2026', _ts: Date.now() });
+    wData.log.unshift({ weight: 256.3, date: '04/01/2026', _ts: Date.now() - 86400000 });
+    // Re-sort newest first
+    wData.log.sort((a, b) => (b._ts || 0) - (a._ts || 0));
+    localStorage.setItem(WEIGHT_KEY, JSON.stringify(wData));
+
+    // Also mark weigh quest for Apr 1 and Apr 2 in dailyQuests
+    data.dailyQuests['2026-4-1']['weigh'] = { done: true, xp: 50, coins: 6, icon: '⚖️' };
+    data.dailyQuests['2026-4-2']['weigh'] = { done: true, xp: 50, coins: 6, icon: '⚖️' };
+    data.coinHistory.unshift({ icon:'⚖️', label:'Weigh In — 256.8 lbs', amount:6, date:'04/02/2026' });
+    data.coinHistory.unshift({ icon:'⚖️', label:'Weigh In — 256.3 lbs', amount:6, date:'04/01/2026' });
+    data.coinHistory = data.coinHistory.slice(0, 50);
+
+    // ─────────────────────────────────────────
+    // 6. REWARDS REDEEMED
+    // ─────────────────────────────────────────
+    // 03/31: clean_eat x2, 04/01: clean_eat x1, 04/02: clean_eat x1 → +4 total
+    data.redeemedRewards['clean_eat'] = (data.redeemedRewards['clean_eat'] || 0) + 4;
+
+    // ─────────────────────────────────────────
+    // 7. STREAK — 17 for Apr 2 (today)
+    // ─────────────────────────────────────────
+    data.streak         = 17;
+    data.longestStreak  = Math.max(data.longestStreak || 0, 17);
+    data.lastActiveDate = '2026-4-2';
+
+    localStorage.setItem(KEY, JSON.stringify(data));
+    localStorage.setItem(PATCH_KEY, '1');
+    console.log('[PATCH apr2] Applied ✓ — streak 17, XP forced to 7000, level ' + data.level + ', coins adjusted');
+  } catch(e) { console.error('[PATCH apr2] Failed:', e); }
 })();
 </script>
 
