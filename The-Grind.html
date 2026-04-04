@@ -6,8 +6,19 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
-<title>Road to The Marathon Continues</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<title>R2TMC — The Grind</title>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -5196,9 +5207,14 @@ function getTodayStr() {
   return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
 }
 function getWeekStr() {
+  // ISO 8601 — week starts Monday, rolls over Monday morning (not Sunday)
   const d = new Date();
-  const start = new Date(d.getFullYear(), 0, 1);
-  return d.getFullYear() + '-W' + Math.ceil(((d - start) / 86400000 + start.getDay() + 1) / 7);
+  const tmp = new Date(d);
+  tmp.setHours(0, 0, 0, 0);
+  tmp.setDate(tmp.getDate() + 4 - (tmp.getDay() || 7)); // shift to nearest Thursday
+  const yearStart = new Date(tmp.getFullYear(), 0, 1);
+  const weekNo = Math.ceil((((tmp - yearStart) / 86400000) + 1) / 7);
+  return tmp.getFullYear() + '-W' + weekNo;
 }
 
 function getRankForXP(xp) {
@@ -6381,19 +6397,26 @@ function buildActivityCalendar() {
     cell.innerHTML = '<div style="font-family:Space Mono,monospace;font-size:10px;letter-spacing:1px;color:' + (isToday ? 'var(--gold)' : 'var(--muted)') + ';margin-bottom:2px;">' + dayNames[i] + '</div>'
       + '<div style="font-family:Bebas Neue,sans-serif;font-size:16px;color:' + (isToday ? 'var(--gold)' : 'var(--white)') + ';line-height:1;margin-bottom:4px;">' + d.getDate() + '</div>'
       + (hasActivity ? '<div style="font-size:11px;">' + icons + '</div>' + (function(){
+        // Estimate streak on that day from historical data (count active days before it)
+        const dStr_cal = dStr; // already in scope
+        const activeDaysBefore = Object.keys(data.dailyQuests || {})
+          .filter(k => k < dStr_cal && Object.values(data.dailyQuests[k]).some(v => v && v !== 'locked'))
+          .length;
+        const calStreak = Math.max(0, activeDaysBefore);
+        const calMult = Math.min(1.5, 1 + Math.floor(calStreak / 7) * 0.05);
         const rawXP = questIds.reduce((s,id) => {
           const entry = dayDone[id];
           if (entry === 'locked') return s;
           if (entry && typeof entry === 'object' && entry.xp) return s + entry.xp;
           const q2 = allQuests.find(x => x.id === id);
-          return s + (q2 ? q2.xp : 0);
+          return s + (q2 ? Math.round(q2.xp * calMult) : 0);
         }, 0);
         const rawCoins = questIds.reduce((s,id) => {
           const entry = dayDone[id];
           if (entry === 'locked') return s;
           if (entry && typeof entry === 'object' && entry.coins) return s + entry.coins;
           const q2 = allQuests.find(x => x.id === id);
-          return s + (q2 ? Math.round(q2.xp/10) : 0);
+          return s + (q2 ? Math.round(q2.xp / 8) : 0);
         }, 0);
         return '<div style="font-family:Space Mono,monospace;font-size:9px;color:#2ecc71;margin-top:2px;line-height:1.4;">+' + rawXP.toLocaleString('en-US') + ' xp</div>'
              + '<div style="font-family:Space Mono,monospace;font-size:9px;color:#f0d878;">+' + rawCoins + ' 🪙</div>';
@@ -6407,10 +6430,14 @@ function buildActivityCalendar() {
   // ── Weekly challenge bar ──
   const weeklyBar = document.getElementById('weeklyCalBar');
   if (weeklyBar) {
-    // Compute week string for the displayed week (monday = first day shown)
+    // Compute week string for the displayed week — ISO (Mon-based)
     function _weekStrFor(d) {
-      const start = new Date(d.getFullYear(), 0, 1);
-      return d.getFullYear() + '-W' + Math.ceil(((d - start) / 86400000 + start.getDay() + 1) / 7);
+      const tmp = new Date(d);
+      tmp.setHours(0, 0, 0, 0);
+      tmp.setDate(tmp.getDate() + 4 - (tmp.getDay() || 7));
+      const yearStart = new Date(tmp.getFullYear(), 0, 1);
+      const weekNo = Math.ceil((((tmp - yearStart) / 86400000) + 1) / 7);
+      return tmp.getFullYear() + '-W' + weekNo;
     }
     const shownWeekStr = _weekStrFor(monday);
     const weeklyDone = (data.weeklyQuests && data.weeklyQuests[shownWeekStr]) || {};
@@ -7258,7 +7285,7 @@ const SKILL_LEVELS = {
   hooper: [1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,4,4,4,4,4,5,5],
   mover:  [2,2,2,2,3,3,3,3,3,4,4,4,4,5,5,5,6,6,7,7,8,8,9,9,10,11,11,12,13,14],
   monk:   [2,2,2,2,3,3,3,3,3,3,4,4,4,4,5,5,5,6,6,6,7,7,8,8,9,9,10,11,11,12],
-  streak: [2,2,3,3,4,4,5,5,6,6,7,7,8,9,10,10,11,12,14,15,16,18,19,21,23,20,20,20,20,20],
+  streak: [2,2,3,3,4,5,5,6,7,7,8,9,10,11,12,13,14,15,16,17],
 };
 const SKILL_TOTALS = {
   runner: 141,
@@ -7266,7 +7293,7 @@ const SKILL_TOTALS = {
   hooper: 74,
   mover: 185,
   monk: 167,
-  streak: 340,
+  streak: 169,
 };
 
 
@@ -7286,7 +7313,7 @@ function getSkillLevel(skillId, data) {
   const MONK_IDS = ['hydrate','mobility','sleep','cold','fasted','weigh'];
 
   if (skillId === 'streak') {
-    const banked = Math.min(29, data.streakSkillLevel || 0);
+    const banked = Math.min(19, data.streakSkillLevel || 0);
     const target = reqs[banked];
     const progress = Math.min(data.streakSkillProgress || 0, target);
     const longest = data.longestStreak || data.streak || 0;
@@ -7330,7 +7357,7 @@ function getSkillLevel(skillId, data) {
       const progress = count - cumulative;
       const target = reqs[i];
       // level = number of requirements banked + 1 (LVL 1 = nothing banked)
-      return { level: Math.max(1, Math.min(level, 30)), progress, target, count };
+      return { level: Math.max(1, Math.min(level, 20)), progress, target, count };
     }
   }
   return { level: 30, progress: reqs[29], target: reqs[29], count };
@@ -7341,7 +7368,7 @@ function getSkillLevel(skillId, data) {
 function checkStreakSkillLevel(data) {
   const reqs = SKILL_LEVELS.streak;
   const banked = data.streakSkillLevel || 0;
-  if (banked >= 30) return false;
+  if (banked >= 20) return false;
 
   // Only increment if today was an active day (2+ categories done)
   const today = getTodayStr();
@@ -7674,13 +7701,12 @@ function buildSkillTree() {
       ]
     },
     { id:'streak',  name:'Mr. Consistent', icon:'🔥', color:'#f0d878', desc:'Showing up every day — never breaking the chain',
-      score: d => Math.min(100, Math.round((d.streak||0)*3.3)),
+      score: d => Math.min(100, Math.round(((d.streakSkillLevel||0)/20)*100)),
       nodes:[
-        {label:'3-Day Chain',  tip:'3 days straight. The chain is starting.',           req:d=>(d.streak||0)>=3},
-        {label:'One Week',     tip:'7 days. You said you would and you did.',           req:d=>(d.streak||0)>=7},
-        {label:'Two Weeks',    tip:'14 days. The streak is your identity now.',         req:d=>(d.streak||0)>=14},
-        {label:'Month Strong', tip:'30 days. They were asleep. You were working.',      req:d=>(d.streak||0)>=30},
-        {label:'Untouchable',  tip:'60 days. At this point it is just who you are.',   req:d=>(d.streak||0)>=60},
+        {label:'LVL 5',        tip:'10 active days banked. The habit is forming.',                    req:d=>(d.streakSkillLevel||0)>=5},
+        {label:'LVL 10',       tip:'37 active days. Consistency is who you are.',                     req:d=>(d.streakSkillLevel||0)>=10},
+        {label:'LVL 15',       tip:'82 active days. No days off — it is just law now.',               req:d=>(d.streakSkillLevel||0)>=15},
+        {label:'LVL 20',       tip:'152 active days. Mr. Consistent. The chain never broke.',         req:d=>(d.streakSkillLevel||0)>=20},
       ]
     },
   ];
@@ -7765,7 +7791,7 @@ function buildSkillTree() {
         var sl=getSkillLevel(sid,d), isS=sid==='streak';
         var lc=sl.level>=20?c:sl.level>=10?c+'bb':c+'88';
         var accentColor='var(--gold)';
-        var hintStr=sl.level>=30?'MAX':isS?(sl.target-sl.progress)+' Days to LVL '+(sl.level+1):(sl.target-sl.progress)+' More to LVL '+(sl.level+1);
+        var hintStr=sl.level>=20?'MAX':isS?(sl.target-sl.progress)+' Days to LVL '+(sl.level+1):(sl.target-sl.progress)+' More to LVL '+(sl.level+1);
         var statMap={runner:'Run',lifter:'Lift',hooper:'Session',mover:'Active Day',monk:'Action'};
         var statUnit=isS?'':statMap[sid]||'Session';
         var statStr=isS?'Highest Streak: '+(d.longestStreak||d.streak||0)+' Days':sl.count+' '+(sl.count===1?statUnit:statUnit+'s');
@@ -9436,6 +9462,59 @@ function buildStakesOverlay() {
     localStorage.setItem(PATCH_KEY, '1');
     console.log('[PATCH apr2] Applied ✓ — streak 17, XP forced to 7000, level ' + data.level + ', coins adjusted');
   } catch(e) { console.error('[PATCH apr2] Failed:', e); }
+})();
+</script>
+
+<script>
+// ── ONE-TIME PATCH: April 3, 2026 ──
+(function applyApr3Patch() {
+  const KEY       = 'grind_xp_v33';
+  const PATCH_KEY = 'patch_apr3_v1';
+  if (localStorage.getItem(PATCH_KEY)) return;
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) { console.log('[PATCH apr3] No data — skipping'); return; }
+    const data = JSON.parse(raw);
+    if (!data.dailyQuests)    data.dailyQuests   = {};
+    if (!data.weeklyQuests)   data.weeklyQuests  = {};
+    if (!data.coinHistory)    data.coinHistory   = [];
+    if (!data.redeemedRewards) data.redeemedRewards = {};
+
+    // ── 1. Apr 3 daily quests ──
+    if (!data.dailyQuests['2026-4-3']) data.dailyQuests['2026-4-3'] = {};
+    data.dailyQuests['2026-4-3']['outdoor'] = true;
+    data.dailyQuests['2026-4-3']['ball']    = true;
+    data.dailyQuests['2026-4-3']['steps']   = true;
+    data.dailyQuests['2026-4-3']['hydrate'] = true;
+    data.dailyQuests['2026-4-3']['weigh']   = { done: true, xp: 55, coins: 6, icon: '⚖️' };
+
+    // ── 2. Force XP to 7,688 ──
+    data.totalXP = 7688;
+    function _lvl(xp) {
+      let l = 1, r = xp;
+      while (r >= Math.floor(220 + 1.459 * Math.pow(l, 1.7))) {
+        r -= Math.floor(220 + 1.459 * Math.pow(l, 1.7)); l++;
+        if (l > 9999) break;
+      }
+      return l;
+    }
+    data.level = _lvl(data.totalXP);
+
+    // ── 3. Streak: 18 after Apr 3 ──
+    data.streak        = 18;
+    data.longestStreak = Math.max(data.longestStreak || 0, 18);
+    data.lastActiveDate = '2026-4-3';
+
+    // ── 4. Streak skill — increment for Apr 3 ──
+    if (data.lastStreakSkillDate !== '2026-4-3') {
+      data.streakSkillProgress = (data.streakSkillProgress || 0) + 1;
+      data.lastStreakSkillDate = '2026-4-3';
+    }
+
+    localStorage.setItem(KEY, JSON.stringify(data));
+    localStorage.setItem(PATCH_KEY, '1');
+    console.log('[PATCH apr3] Applied ✓ — streak 18, totalXP 7688, level ' + data.level);
+  } catch(e) { console.error('[PATCH apr3] Failed:', e); }
 })();
 </script>
 
