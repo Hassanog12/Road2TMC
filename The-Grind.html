@@ -6,8 +6,19 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Grind">
-<title>Road to The Marathon Continues</title>
-<link rel="apple-touch-icon" href="TheGrind.jpg">
+<title>R2TMC — The Grind</title>
+<!-- ═══════════════════════════════════════════════════════════
+     APP ICON — To add your custom icon:
+     1. Upload your PNG icon (180×180px recommended) to GitHub
+        in the same folder as this HTML file
+     2. Replace "icon.png" below with your actual filename
+     3. Save and push — Safari will use it for Add to Home Screen
+═══════════════════════════════════════════════════════════ -->
+<link rel="apple-touch-icon" href="icon.png">
+<!-- If you want a different icon at different sizes:
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+-->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -3210,7 +3221,7 @@ function logBook() {
   const xp = count === 1 ? 400 : 300;
   const coins = Math.round(xp / 8);
   const today = new Date();
-  log.unshift({ title, date: today.toLocaleDateString(), xp, coins, num: count });
+  log.unshift({ title, date: fmtDate(today), xp, coins, num: count });
   saveBookLog(log);
 
   const data = getXPData();
@@ -3222,7 +3233,7 @@ function logBook() {
   if (!data.dailyQuests[_bDStr]) data.dailyQuests[_bDStr] = {};
   data.dailyQuests[_bDStr]['book'] = { done: true, xp, coins, icon: '📖' };
   if (!data.coinHistory) data.coinHistory = [];
-  data.coinHistory.unshift({ icon:'📖', label:'"' + title + '"', amount:coins, date:today.toLocaleDateString() });
+  data.coinHistory.unshift({ icon:'📖', label:'"' + title + '"', amount:coins, date:fmtDate(today) });
   if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
   saveXPData(data);
 
@@ -3301,7 +3312,7 @@ function logBookFromPage() {
   const xp = count === 1 ? 200 : 150;
   const coins = Math.round(xp / 8);
   const today = new Date();
-  log.unshift({ title, date: today.toLocaleDateString(), xp, coins, num: count });
+  log.unshift({ title, date: fmtDate(today), xp, coins, num: count });
   saveBookLog(log);
   const data = getXPData();
   data.totalXP = (data.totalXP||0) + xp;
@@ -3312,7 +3323,7 @@ function logBookFromPage() {
   if (!data.dailyQuests[_bpDStr]) data.dailyQuests[_bpDStr] = {};
   data.dailyQuests[_bpDStr]['book'] = true;
   if (!data.coinHistory) data.coinHistory = [];
-  data.coinHistory.unshift({ icon:'📖', label:'"' + title + '"', amount:coins, date:today.toLocaleDateString() });
+  data.coinHistory.unshift({ icon:'📖', label:'"' + title + '"', amount:coins, date:fmtDate(today) });
   if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
   saveXPData(data);
   if (input) input.value = '';
@@ -3461,7 +3472,7 @@ function logRace(type) {
         type,
         label: rt.label,
         icon: rt.icon,
-        date: today.toLocaleDateString(),
+        date: fmtDate(today),
         dateStr: today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate(),
         miles: rt.miles,
         xp: rt.xp,
@@ -3482,7 +3493,7 @@ function logRace(type) {
       if (runQuestMap[type]) data.dailyQuests[dStr][runQuestMap[type]] = true;
       // Coin history
       if (!data.coinHistory) data.coinHistory = [];
-      data.coinHistory.unshift({ icon: rt.icon, label: rt.label + ' Race', amount: rt.coins, date: today.toLocaleDateString() });
+      data.coinHistory.unshift({ icon: rt.icon, label: rt.label + ' Race', amount: rt.coins, date: fmtDate(today) });
       saveXPData(data);
 
       // Refresh UI
@@ -3876,7 +3887,7 @@ function logWeight() {
   const data = getWeightData();
   data.current = w;
   if (!data.log) data.log = [];
-  data.log.unshift({ weight: w, date: new Date().toLocaleDateString('en-US'), _ts: Date.now() });
+  data.log.unshift({ weight: w, date: fmtDate(new Date()), _ts: Date.now() });
   // Compress older entries into weekly averages — keeps log forever
   data.log = compressWeightLog(data.log);
   saveWeightData(data);
@@ -3898,7 +3909,7 @@ function logWeight() {
     if (!xpData.dailyQuests[_wdStr]) xpData.dailyQuests[_wdStr] = {};
     xpData.dailyQuests[_wdStr]['weigh'] = { done: true, xp: xpEarned, coins: coinsEarned, icon: '⚖️' };
     if (!xpData.coinHistory) xpData.coinHistory = [];
-    xpData.coinHistory.unshift({ icon:'⚖️', label:'Weight Logged', amount: coinsEarned, date: new Date().toLocaleDateString('en-US') });
+    xpData.coinHistory.unshift({ icon:'⚖️', label:'Weight Logged', amount: coinsEarned, date: fmtDate(new Date()) });
     if (xpData.coinHistory.length > 50) xpData.coinHistory = xpData.coinHistory.slice(0, 50);
     saveXPData(xpData);
     // Float animations on the log button
@@ -5190,6 +5201,12 @@ function getXPData() {
   } catch { return { totalXP:0, level:1, coins:0, dailyQuests:{}, weeklyQuests:{}, streak:0, lastActiveDate:null, redeemedRewards:{}, coinHistory:[] }; }
 }
 function saveXPData(data) { localStorage.setItem(XP_STORAGE_KEY, JSON.stringify(data)); }
+function fmtDate(d) {
+  // Always returns MM/DD/YYYY
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return m + '/' + day + '/' + d.getFullYear();
+}
 
 function getTodayStr() {
   const d = new Date();
@@ -5839,7 +5856,7 @@ function earnQuestXP(questId, type, e) {
   }
 
   if (!data.coinHistory) data.coinHistory = [];
-  data.coinHistory.unshift({ icon: quest.icon, label: quest.label, amount: coinsEarned, date: new Date().toLocaleDateString() });
+  data.coinHistory.unshift({ icon: quest.icon, label: quest.label, amount: coinsEarned, date: fmtDate(new Date()) });
   if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
   checkStreakSkillLevel(data);
   resetStreakSkillProgress(data);
@@ -5963,7 +5980,7 @@ function resetDailyQuests(e) {
       const prevDayActive = Object.values(prevDayDone).some(Boolean);
       data.streak = Math.max(0, (data.streak || 1) - 1);
       data.lastActiveDate = prevDayActive ? yd : null;
-      const todayDateStr = new Date().toLocaleDateString();
+      const todayDateStr = fmtDate(new Date());
       if (data.coinHistory) data.coinHistory = data.coinHistory.filter(e => e.date !== todayDateStr);
       saveXPData(data);
       buildQuestGrid(); updateHunterCard(); buildProfileStats(getXPData()); buildBadges(); buildActivityCalendar(); buildCoinHistory(); buildSkillTree(); buildSkillTree();
@@ -6089,8 +6106,8 @@ const REWARDS = [
   { id:'console',   icon:'🎮', name:'Game Drop',          req:'One-time',   cost:700,  renewable:false, desc:'New game or DLC. Grind IRL, unwind in game.' },
   { id:'jersey',    icon:'👕', name:'Gym Fit',            req:'One-time',   cost:1000, renewable:false, desc:'New gym fit. Fresh drip for the new body.' },
   { id:'shoes',     icon:'👟', name:'Running Shoes',      req:'One-time',   cost:1000, renewable:false, desc:'Performance kicks for the miles. Earned on the road.' },
-  { id:'bball',     icon:'🏀', name:'Basketball Shoes',   req:'One-time',   cost:1500, renewable:false, desc:'Court shoes. Fresh pair for the sessions you put in.' },
   { id:'sunnies',   icon:'😎', name:'Sunglasses',         req:'One-time',   cost:1250, renewable:false, desc:'Fresh pair. You earned the drip.' },
+  { id:'bball',     icon:'🏀', name:'Basketball Shoes',   req:'One-time',   cost:1500, renewable:false, desc:'Court shoes. Fresh pair for the sessions you put in.' },
   { id:'glasses',   icon:'🕶️', name:'Meta Glasses',       req:'One-time',   cost:2500, renewable:false, desc:'Stay plugged in. Solo Carry approved.' },
   { id:'monitor',   icon:'🖥️', name:'OLED Monitor',       req:'One-time',   cost:5000, renewable:false, desc:'The desk upgrade. Built for someone who truly grinds.' },
 ];
@@ -6185,7 +6202,7 @@ function cashReward(rewardId, btn) {
       if (!data.redeemedRewards) data.redeemedRewards = {};
       data.redeemedRewards[rewardId] = timesRedeemed + 1;
       if (!data.coinHistory) data.coinHistory = [];
-      data.coinHistory.unshift({ icon: reward.icon || '🎁', label: reward.name, amount: -reward.cost, date: new Date().toLocaleDateString(), redeemed: true });
+      data.coinHistory.unshift({ icon: reward.icon || '🎁', label: reward.name, amount: -reward.cost, date: fmtDate(new Date()), redeemed: true });
       if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
       saveXPData(data);
       buildRewardShop();
@@ -6197,7 +6214,7 @@ function cashReward(rewardId, btn) {
     if (!data.redeemedRewards) data.redeemedRewards = {};
     data.redeemedRewards[rewardId] = timesRedeemed + 1;
     if (!data.coinHistory) data.coinHistory = [];
-    data.coinHistory.unshift({ icon: reward.icon || '🎁', label: reward.name, amount: -reward.cost, date: new Date().toLocaleDateString(), redeemed: true });
+    data.coinHistory.unshift({ icon: reward.icon || '🎁', label: reward.name, amount: -reward.cost, date: fmtDate(new Date()), redeemed: true });
     if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
     saveXPData(data);
     buildRewardShop();
@@ -7221,7 +7238,7 @@ function checkPunishment() {
         if (!data.punishedDates) data.punishedDates = {};
         data.punishedDates[yd] = true;
         if (!data.coinHistory) data.coinHistory = [];
-        data.coinHistory.unshift({ icon:'⚠️', label:'Missed Day Penalty (' + yd + ')', amount: -penalty, date: new Date().toLocaleDateString() });
+        data.coinHistory.unshift({ icon:'⚠️', label:'Missed Day Penalty (' + yd + ')', amount: -penalty, date: fmtDate(new Date()) });
         saveXPData(data);
         // Show a non-intrusive toast warning
         showPunishmentToast(penalty);
@@ -7439,7 +7456,7 @@ function checkHiddenMilestones(data) {
       data.claimedMilestones[m.id] = true;
       data.coins = (data.coins || 0) + m.coins;
       if (!data.coinHistory) data.coinHistory = [];
-      data.coinHistory.unshift({ icon: m.icon, label: m.title, amount: m.coins, date: new Date().toLocaleDateString() });
+      data.coinHistory.unshift({ icon: m.icon, label: m.title, amount: m.coins, date: fmtDate(new Date()) });
       if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
       triggered.push(m);
     }
@@ -7557,7 +7574,7 @@ function awardLevelCoins(level, data) {
   if (!reward) return 0;
   data.coins = (data.coins || 0) + reward;
   if (!data.coinHistory) data.coinHistory = [];
-  data.coinHistory.unshift({ icon:'⬆️', label:'Level ' + level + ' Reward', amount: reward, date: new Date().toLocaleDateString() });
+  data.coinHistory.unshift({ icon:'⬆️', label:'Level ' + level + ' Reward', amount: reward, date: fmtDate(new Date()) });
   if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
   return reward;
 }
@@ -7570,7 +7587,7 @@ function awardRankCoins(rankStr, data) {
   if (!reward) return 0;
   data.coins = (data.coins || 0) + reward;
   if (!data.coinHistory) data.coinHistory = [];
-  data.coinHistory.unshift({ icon:'🏆', label:rankStr + ' Rank Achieved', amount: reward, date: new Date().toLocaleDateString() });
+  data.coinHistory.unshift({ icon:'🏆', label:rankStr + ' Rank Achieved', amount: reward, date: fmtDate(new Date()) });
   if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
   return reward;
 }
@@ -8774,11 +8791,21 @@ document.addEventListener('mouseout', function(e) {
   _hideBadgeTip();
 });
 document.addEventListener('touchstart', function(e) {
-  _hideBadgeTip();
   const wrap = e.target.closest('[data-badge-name]');
-  if (!wrap) return;
+  // If tapping the same badge while tip is visible — hide it (toggle off)
+  if (!wrap) {
+    // Tapped outside — hide tip
+    _hideBadgeTip();
+    return;
+  }
+  // If tip already showing for this badge, hide it
+  if (_badgeTip._currentWrap === wrap && _badgeTip.style.opacity !== '0') {
+    _hideBadgeTip();
+    _badgeTip._currentWrap = null;
+    return;
+  }
   _showBadgeTip(wrap, wrap.getBoundingClientRect());
-  setTimeout(_hideBadgeTip, 3000);
+  _badgeTip._currentWrap = wrap;
 }, { passive:true });
 
 // ── SKILL TREE TOOLTIP — global element, same pattern as badge tooltip ──
@@ -9504,6 +9531,78 @@ function buildStakesOverlay() {
     localStorage.setItem(PATCH_KEY, '1');
     console.log('[PATCH apr3] Applied ✓ — streak 18, totalXP 7688, level ' + data.level);
   } catch(e) { console.error('[PATCH apr3] Failed:', e); }
+})();
+</script>
+
+<script>
+// ── ONE-TIME PATCH: April 4, 2026 ──
+(function applyApr4Patch() {
+  const KEY       = 'grind_xp_v33';
+  const PATCH_KEY = 'patch_apr4_v1';
+  if (localStorage.getItem(PATCH_KEY)) return;
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) { console.log('[PATCH apr4] No data — skipping'); return; }
+    const data = JSON.parse(raw);
+    if (!data.dailyQuests)     data.dailyQuests   = {};
+    if (!data.coinHistory)     data.coinHistory   = [];
+    if (!data.redeemedRewards) data.redeemedRewards = {};
+
+    // ── 1. Apr 4 daily quests ──
+    // streak 18 in → mult 1.10
+    // outdoor 99 + ballprac 138 + steps 193 + sleep 110 + hydrate 66 = 606 XP
+    // coins: 11 + 16 + 22 + 13 + 8 = 70 earned, -100 clean_eat = net -30
+    if (!data.dailyQuests['2026-4-4']) data.dailyQuests['2026-4-4'] = {};
+    data.dailyQuests['2026-4-4']['outdoor']  = true;
+    data.dailyQuests['2026-4-4']['ballprac'] = true;
+    data.dailyQuests['2026-4-4']['steps']    = true;
+    data.dailyQuests['2026-4-4']['sleep']    = true;
+    data.dailyQuests['2026-4-4']['hydrate']  = true;
+
+    // ── 2. XP: force to 8,294 ──
+    data.totalXP = 8294;
+    function _lvl(xp) {
+      let l = 1, r = xp;
+      while (r >= Math.floor(220 + 1.459 * Math.pow(l, 1.7))) {
+        r -= Math.floor(220 + 1.459 * Math.pow(l, 1.7)); l++;
+        if (l > 9999) break;
+      }
+      return l;
+    }
+    data.level = _lvl(data.totalXP);
+
+    // ── 3. Coins: +70 earned, -100 clean_eat = -30 net ──
+    data.coins = Math.max(0, (data.coins || 0) + 70 - 100);
+
+    // ── 4. Coin history ──
+    const d4 = '04/04/2026';
+    data.coinHistory = [
+      { icon:'🥗', label:'Clean Eat Out',    amount:-100, date:d4, redeemed:true },
+      { icon:'😴', label:'8hrs Sleep',        amount:13,   date:d4 },
+      { icon:'🚶', label:'10K Steps',         amount:22,   date:d4 },
+      { icon:'💧', label:'2L Water',          amount:8,    date:d4 },
+      { icon:'🏀', label:'Sports Practice',   amount:16,   date:d4 },
+      { icon:'🌳', label:'Outdoor Walk',      amount:11,   date:d4 },
+    ].concat(data.coinHistory).slice(0, 50);
+
+    // ── 5. Rewards redeemed ──
+    data.redeemedRewards['clean_eat'] = (data.redeemedRewards['clean_eat'] || 0) + 1;
+
+    // ── 6. Streak: 19 ──
+    data.streak         = 19;
+    data.longestStreak  = Math.max(data.longestStreak || 0, 19);
+    data.lastActiveDate = '2026-4-4';
+
+    // ── 7. Streak skill increment ──
+    if (data.lastStreakSkillDate !== '2026-4-4') {
+      data.streakSkillProgress = (data.streakSkillProgress || 0) + 1;
+      data.lastStreakSkillDate = '2026-4-4';
+    }
+
+    localStorage.setItem(KEY, JSON.stringify(data));
+    localStorage.setItem(PATCH_KEY, '1');
+    console.log('[PATCH apr4] Applied ✓ — streak 19, totalXP 8294, level ' + data.level + ', coins ' + data.coins);
+  } catch(e) { console.error('[PATCH apr4] Failed:', e); }
 })();
 </script>
 
