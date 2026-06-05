@@ -2017,6 +2017,51 @@ html, body {
     onmouseout="this.style.background='var(--gold-dim)';this.style.letterSpacing='3px'"
     >↗ The Stakes</button>
 
+    <!-- BOSS QUEST -->
+    <div id="bossQuestWrap" style="margin-bottom:8px;display:none;">
+      <div id="bossQuestCard" style="
+        width:100%;
+        border:2px solid #ff2200;
+        background:linear-gradient(135deg,#0a0000 0%,#1a0000 50%,#0a0000 100%);
+        background-size:200% 200%;
+        padding:16px 20px;
+        position:relative;
+        overflow:hidden;
+        box-sizing:border-box;
+        animation:bossQuestPulse 2s ease-in-out infinite;
+        cursor:default;
+      ">
+        <!-- Sweep overlay -->
+        <div style="position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,34,0,0.06),transparent);background-size:200% 100%;animation:bossQuestSweep 3s linear infinite;pointer-events:none;"></div>
+        <!-- Header -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:4px;color:#ff2200;text-transform:uppercase;">⚔ Boss Quest</div>
+          <div id="bossQuestTimer" style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;color:#ff220088;text-transform:uppercase;"></div>
+        </div>
+        <!-- Title -->
+        <div id="bossQuestTitle" style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:#fff;letter-spacing:2px;line-height:1;margin-bottom:6px;"></div>
+        <!-- Desc -->
+        <div id="bossQuestDesc" style="font-family:'Space Mono',monospace;font-size:8px;color:#888;letter-spacing:1px;margin-bottom:14px;line-height:1.6;"></div>
+        <!-- XP reward -->
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div id="bossQuestXP" style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#ff2200;letter-spacing:1px;"></div>
+          <button id="bossQuestBtn" onclick="completeBossQuest()" style="
+              font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;
+              background:#ff2200;color:#fff;border:none;padding:8px 16px;cursor:pointer;
+              transition:all 0.2s;
+            ">Complete ⚔</button>
+        </div>
+        <!-- Completed state overlay -->
+        <div id="bossQuestDone" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;">
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#ff2200;letter-spacing:4px;text-align:center;">SLAIN</div>
+            <div style="font-family:'Space Mono',monospace;font-size:9px;color:#888;letter-spacing:3px;margin-top:4px;text-align:center;">BOSS DEFEATED</div>
+          </div>
+          <button onclick="resetBossQuest()" style="font-family:'Space Mono',monospace;font-size:7px;letter-spacing:1px;text-transform:uppercase;background:none;color:#ff220066;border:1px solid #ff220033;padding:6px 12px;cursor:pointer;">↩ Reset</button>
+        </div>
+      </div>
+    </div>
+
     <!-- COLLAPSIBLE: TRIP COUNTDOWN (open by default) -->
     <div class="rm-section open" id="rms-countdown">
       <div class="rm-section-header" onclick="toggleRmSection('rms-countdown')">
@@ -2074,16 +2119,34 @@ html, body {
         <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;padding:4px 0 6px;border-bottom:1px solid var(--gray3);margin-bottom:6px;" id="hdr-misc">💧 Wellness</div>
         <div id="questRow-misc" style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:12px;"></div>
 
-        <!-- ROW: Sunnah Fast (Mon & Thu only) -->
-        <div id="fastedQuestRow-wrap" style="display:none;">
-          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:rgba(200,168,75,0.7);text-transform:uppercase;padding:4px 0 6px;border-bottom:1px solid rgba(200,168,75,0.2);margin-bottom:6px;">🌙 Sunnah Fast — Mon &amp; Thu</div>
-          <div id="questRow-fasted" style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:12px;"></div>
-        </div>
+
 
       </div>
     </div>
 
     <!-- COLLAPSIBLE: WEEKLY CHALLENGES -->
+    <!-- MASJID TRACKER -->
+    <div style="margin-bottom:12px;">
+      <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;padding:4px 0 6px;border-bottom:1px solid rgba(200,168,75,0.2);margin-bottom:8px;">🕌 Masjid</div>
+      <div id="masjidTracker" style="background:#0a0a0a;border:1px solid #1a1a1a;padding:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold);line-height:1;" id="masjidCount">0</div>
+            <div style="font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;">Today's Visits</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#888;" id="masjidStreakAvg">—</div>
+            <div style="font-family:'Space Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;">Avg / Day</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;margin-bottom:8px;">
+          <button onclick="logMasjid()" style="flex:1;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;background:var(--gold-dim);border:1px solid var(--gold);color:var(--gold);padding:8px;cursor:pointer;">+ Log Visit</button>
+          <button onclick="undoMasjid()" style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;background:#111;border:1px solid #333;color:#555;padding:8px 12px;cursor:pointer;">↩</button>
+        </div>
+        <div id="masjidPrayerDots" style="display:flex;gap:6px;justify-content:center;"></div>
+      </div>
+    </div>
+
     <div class="rm-section open" id="rms-weekly">
       <div class="rm-section-header" onclick="toggleRmSection('rms-weekly')">
         <span>🔥 WEEKLY CHALLENGES</span>
@@ -2094,6 +2157,7 @@ html, body {
       </div>
       <div class="rm-section-body">
         <div id="weeklyQuestGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding-bottom:4px;"></div>
+
       </div>
     </div>
 
@@ -2133,6 +2197,7 @@ html, body {
         </div>
         <div id="activityCal" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;padding:8px 0 4px;"></div>
         <div id="weeklyCalBar" style="padding:6px 2px 8px;"></div>
+        <div id="bossTrailWeekly"></div>
         <div id="calStreakAvg" style="padding:2px 2px 8px;"></div>
       </div>
     </div>
@@ -3657,7 +3722,7 @@ function showPage(id) {
   if (id === 'books')   { buildBookPageLog(); buildBookSkillTree(); }
   if (id === 'rewards') { buildRewardShop(); buildCoinHistory(); }
   if (id === 'profile') { buildBadges(); buildProfileStats(getXPData()); buildSkillTree(); buildBookLog(); renderWeightProfile(); }
-  if (id === 'roadmap') { buildQuestGrid(); buildRewardShop(); buildBadges(); buildActivityCalendar(); }
+  if (id === 'roadmap') { buildQuestGrid(); buildRewardShop(); buildBadges(); buildActivityCalendar(); buildMasjidTracker(); buildBossQuest(); }
   closeSidebar();
 }
 
@@ -4525,6 +4590,46 @@ const BADGE_GROUPS = [
     { tier:'bronze', name:'Day One', req: d => d.totalXP > 0, desc:'You started. Most never do.' },
   ]},
 
+  // ══ BOSS QUEST ══
+  { id:'hunter', icon:'⚔️', name:"Boss Trail", levels:[
+    { tier:'bronze', name:"Boss Trail", req: d => parseInt(localStorage.getItem('boss_quest_count')||'0') >= 1,  desc:'First boss slain. The trial has begun.' },
+    { tier:'silver', name:"Boss Trail", req: d => parseInt(localStorage.getItem('boss_quest_count')||'0') >= 5,  desc:'5 bosses. You are the threat now.' },
+    { tier:'gold',   name:"Boss Trail", req: d => parseInt(localStorage.getItem('boss_quest_count')||'0') >= 15, desc:'15 bosses. Elite hunter status.' },
+    { tier:'hof',    name:"Boss Trail", req: d => parseInt(localStorage.getItem('boss_quest_count')||'0') >= 30, desc:'30 bosses slain. Untouchable.' },
+  ]},
+
+  // ══ MASJID ══
+  { id:'masjidBadge', icon:'🕌', name:'Musalli', levels:[
+    { tier:'bronze', name:'Musalli',   req: d => { try { var m=JSON.parse(localStorage.getItem('masjid_log_v1')||'{}'); return Object.values(m).reduce(function(s,v){return s+v;},0) >= 5;  } catch(e){return false;} }, desc:'5 masjid visits. The habit is forming.' },
+    { tier:'silver', name:'Musalli',   req: d => { try { var m=JSON.parse(localStorage.getItem('masjid_log_v1')||'{}'); return Object.values(m).reduce(function(s,v){return s+v;},0) >= 20; } catch(e){return false;} }, desc:'20 visits. The masjid knows your face.' },
+    { tier:'gold',   name:'Musalli',   req: d => { try { var m=JSON.parse(localStorage.getItem('masjid_log_v1')||'{}'); return Object.values(m).reduce(function(s,v){return s+v;},0) >= 50; } catch(e){return false;} }, desc:'50 visits. This is who you are.' },
+    { tier:'hof',    name:'Musalli',   req: d => { try { var m=JSON.parse(localStorage.getItem('masjid_log_v1')||'{}'); return Object.values(m).reduce(function(s,v){return s+v;},0) >= 100; } catch(e){return false;} }, desc:'100 visits. Consistent in deen and dunya.' },
+  ]},
+
+  // ══ SUNNAH FAST ══
+  { id:'sunnah', icon:'🌙', name:'Salafi', levels:[
+    { tier:'bronze', name:'Salafi', req: d => countQuestDone(d,'fasted') >= 4,  desc:'4 Sunnah fasts. Monday and Thursday locked in.' },
+    { tier:'silver', name:'Salafi', req: d => countQuestDone(d,'fasted') >= 12, desc:'12 fasts. 3 months of discipline.' },
+    { tier:'gold',   name:'Salafi', req: d => countQuestDone(d,'fasted') >= 24, desc:'24 fasts. The Sunnah is your schedule.' },
+    { tier:'hof',    name:'Salafi', req: d => countQuestDone(d,'fasted') >= 52, desc:'A full year of Mondays and Thursdays. Unmatched.' },
+  ]},
+
+  // ══ CLEAN EATING ══
+  { id:'noEatOut', icon:'🥗', name:'Mr. Clean', levels:[
+    { tier:'bronze', name:'Mr. Clean', req: d => countQuestDone(d,'noeatout') >= 5,  desc:'5 clean days. Discipline at the table.' },
+    { tier:'silver', name:'Mr. Clean', req: d => countQuestDone(d,'noeatout') >= 20, desc:'20 clean days. The body notices.' },
+    { tier:'gold',   name:'Mr. Clean', req: d => countQuestDone(d,'noeatout') >= 50, desc:'50 clean days. This is a lifestyle.' },
+  ]},
+
+
+  // ══ WEIGHT TREND ══
+  { id:'weightLoss', icon:'📉', name:'Cut Season', levels:[
+    { tier:'bronze', name:'Cut Season', req: d => { try { var w=JSON.parse(localStorage.getItem('grind_weight_v10')||'{"log":[]}').log; return w.length>=2 && w[0].weight < w[w.length-1].weight - 5;  } catch(e){return false;} }, desc:'Down 5 lbs. The scale is moving.' },
+    { tier:'silver', name:'Cut Season', req: d => { try { var w=JSON.parse(localStorage.getItem('grind_weight_v10')||'{"log":[]}').log; return w.length>=2 && w[0].weight < w[w.length-1].weight - 15; } catch(e){return false;} }, desc:'Down 15 lbs. Undeniable progress.' },
+    { tier:'gold',   name:'Cut Season', req: d => { try { var w=JSON.parse(localStorage.getItem('grind_weight_v10')||'{"log":[]}').log; return w.length>=2 && w[0].weight < w[w.length-1].weight - 25; } catch(e){return false;} }, desc:'Down 25 lbs. The body is transforming.' },
+    { tier:'hof',    name:'Cut Season', req: d => { try { var w=JSON.parse(localStorage.getItem('grind_weight_v10')||'{"log":[]}').log; return w.length>=2 && w[0].weight < w[w.length-1].weight - 40; } catch(e){return false;} }, desc:'Down 40 lbs. You did what most only talk about.' },
+  ]},
+
 ];
 function hasFullCategoryDay(d, minDays) {
   let count = 0;
@@ -4621,11 +4726,13 @@ function buildBadges() {
   const tierOrder2 = { bronze:0, silver:1, gold:2, hof:3, legend:4 };
   const newBadges = earnedList.filter(b => b._isNew)
     .sort((a,b) => (tierOrder2[a.tier]||0) - (tierOrder2[b.tier]||0));
-  if (newBadges.length > 1) {
-    // Multiple — show all at once in a stacked celebration
-    setTimeout(() => showBadgesEarned(newBadges), 400);
-  } else if (newBadges.length === 1) {
-    setTimeout(() => showBadgeEarned(newBadges[0]), 400);
+  var _sessionKey = 'badge_notif_session_' + new Date().toDateString().replace(/ /g,'_');
+  var _seenToday = JSON.parse(localStorage.getItem(_sessionKey) || '[]');
+  var _trulyNew = newBadges.filter(function(b){ return _seenToday.indexOf(b.id+'_'+b.tier) === -1; });
+  if (_trulyNew.length > 0) {
+    localStorage.setItem(_sessionKey, JSON.stringify(_seenToday.concat(_trulyNew.map(function(b){ return b.id+'_'+b.tier; }))));
+    if (_trulyNew.length > 1) { setTimeout(function(){ showBadgesEarned(_trulyNew); }, 400); }
+    else { setTimeout(function(){ showBadgeEarned(_trulyNew[0]); }, 400); }
   }
 
   function makeBadgeTile(badge, isEarned, idx) {
@@ -5506,6 +5613,7 @@ const BASE_QUESTS = [
   // ── Hidden ──
   { id:'weigh',        label:'Weigh In',        icon:'⚖️', xp:50,   type:'wellness', row:'hidden' },
   { id:'noeatout',     label:'No Eat Out',      icon:'🥦', xp:60,   type:'wellness', row:'hidden' },
+  { id:'masjid',       label:'Masjid Visit',    icon:'🕌', xp:100,  type:'wellness', row:'hidden' },
   { id:'book',         label:'Book Logged',     icon:'📖', xp:0,    type:'wellness', row:'hidden' },
   { id:'fasted',       label:'Sunnah Fast',     icon:'🌙', xp:180,  type:'lifting',  row:'hidden' },
   { id:'steps15',      label:'15K Steps',       icon:'👟', xp:150,  type:'movement', row:'hidden' },
@@ -5608,6 +5716,7 @@ function buildQuestGrid() {
   // Wellness: hydrate + mobility always show, rotate sleep/cold/noeatout as 3rd slot daily
   var _dow = new Date().getDay();
   var _ds = parseInt(getTodayStr().replace(/-/g,'')) || 1;
+  // Mon/Thu: fasted replaces the rotating 3rd slot
   var _wt = (_dow === 1 || _dow === 4) ? 'fasted' : (_ds % 4 === 0) ? 'noeatout' : (_ds % 2 === 0) ? 'sleep' : 'cold';
   const wellnessQuests = ['hydrate','mobility', _wt].map(id => BASE_QUESTS.find(q => q.id === id)).filter(Boolean);
 
@@ -5676,23 +5785,6 @@ function buildQuestGrid() {
     }
   });
 
-  // ── Sunnah Fast row — show only Mon (1) and Thu (4) ──
-  (function() {
-    const fastedWrap = document.getElementById('fastedQuestRow-wrap');
-    const fastedRow  = document.getElementById('questRow-fasted');
-    if (!fastedWrap || !fastedRow) return;
-    const dayOfWeek = new Date().getDay();
-    const isFastedDay = dayOfWeek === 1 || dayOfWeek === 4;
-    fastedWrap.style.display = isFastedDay ? 'block' : 'none';
-    if (!isFastedDay) return;
-    fastedRow.innerHTML = '';
-    const fastedQ = BASE_QUESTS.find(q => q.id === 'fasted');
-    if (!fastedQ) return;
-    const fastedVal = data.dailyQuests[today] && data.dailyQuests[today]['fasted'];
-    const isDone = !!fastedVal && fastedVal !== 'locked';
-    if (isDone) totalEarned += fastedQ.xp;
-    fastedRow.appendChild(makeQuestTile(fastedQ, isDone, 'daily', false));
-  })();
 
   // ── Neglect detection — 4-day window ──
   (function(){
@@ -5910,6 +6002,7 @@ function earnQuestXP(questId, type, e) {
 
   updateHunterCard();
   buildQuestGrid();
+  checkBossQuestLinked();
   buildRewardShop();
   buildActivityCalendar();
   buildCoinHistory();
@@ -6286,11 +6379,102 @@ function buildCoinHistory() {
 
 // ── Activity calendar (XP dates) ──
 let calWeekOffset = 0;
+// ── Masjid Tracker ──
+var MASJID_KEY = 'masjid_log_v1';
+function getMasjidData() { try { return JSON.parse(localStorage.getItem(MASJID_KEY) || '{}'); } catch(e) { return {}; } }
+function saveMasjidData(d) { localStorage.setItem(MASJID_KEY, JSON.stringify(d)); }
+function logMasjid() {
+  var today = getTodayStr();
+  var d = getMasjidData();
+  var current = d[today] || 0;
+  if (current >= 5) return;
+  d[today] = current + 1;
+  saveMasjidData(d);
+  // Each visit = 100 XP + 12 coins
+  var xpData = getXPData();
+  if (!xpData.dailyQuests[today]) xpData.dailyQuests[today] = {};
+  xpData.dailyQuests[today].masjid = (xpData.dailyQuests[today].masjid || 0) + 1;
+  xpData.totalXP = (xpData.totalXP||0) + 100;
+  xpData.coins   = (xpData.coins||0) + 12;
+  xpData.level   = getLevelFromXP(xpData.totalXP);
+  if (!xpData.coinHistory) xpData.coinHistory = [];
+  xpData.coinHistory.unshift({ icon:'🕌', label:'Masjid Visit', amount:12, date:new Date().toLocaleDateString('en-US') });
+  if (xpData.coinHistory.length > 50) xpData.coinHistory = xpData.coinHistory.slice(0,50);
+  saveXPData(xpData);
+  updateHunterCard();
+  spawnXPFloat && spawnXPFloat(100, null);
+  buildMasjidTracker();
+  buildBossQuest();
+}
+function undoMasjid() {
+  var today = getTodayStr();
+  var d = getMasjidData();
+  if ((d[today]||0) <= 0) return;
+  d[today]--;
+  saveMasjidData(d);
+  // Reverse XP and coins
+  var xpData = getXPData();
+  xpData.totalXP = Math.max(0, (xpData.totalXP||0) - 100);
+  xpData.coins   = Math.max(0, (xpData.coins||0) - 12);
+  xpData.level   = getLevelFromXP(xpData.totalXP);
+  if (xpData.dailyQuests[today] && xpData.dailyQuests[today].masjid > 0) {
+    xpData.dailyQuests[today].masjid--;
+  }
+  // Remove last masjid entry from coin history
+  if (xpData.coinHistory) {
+    var idx = xpData.coinHistory.findIndex(function(e){ return e.icon === '🕌'; });
+    if (idx !== -1) xpData.coinHistory.splice(idx, 1);
+  }
+  saveXPData(xpData);
+  updateHunterCard();
+  buildMasjidTracker();
+  buildBossQuest();
+}
+function buildMasjidTracker() {
+  var countEl = document.getElementById('masjidCount');
+  var dotsEl  = document.getElementById('masjidPrayerDots');
+  var avgEl   = document.getElementById('masjidStreakAvg');
+  if (!countEl) return;
+  var today = getTodayStr();
+  var d = getMasjidData();
+  var todayCount = d[today] || 0;
+  countEl.textContent = todayCount;
+  if (dotsEl) {
+    dotsEl.innerHTML = '';
+    for (var i = 0; i < 5; i++) {
+      var dot = document.createElement('div');
+      dot.style.cssText = 'width:14px;height:14px;border-radius:50%;border:1px solid ' + (i < todayCount ? 'var(--gold)' : '#333') + ';background:' + (i < todayCount ? 'var(--gold-dim)' : 'transparent') + ';transition:all 0.2s;';
+      dotsEl.appendChild(dot);
+    }
+  }
+  if (avgEl) {
+    var xpData = getXPData();
+    var streak = xpData.streak || 0;
+    var lastActive = xpData.lastActiveDate;
+    if (streak > 0 && lastActive) {
+      var lastParts = lastActive.split('-');
+      var lastD = new Date(parseInt(lastParts[0]), parseInt(lastParts[1])-1, parseInt(lastParts[2]));
+      var totalPrayers = 0, activeDays = 0;
+      for (var s = 0; s < Math.min(streak, 30); s++) {
+        var dd = new Date(lastD); dd.setDate(lastD.getDate() - s);
+        var dk = dd.getFullYear() + '-' + (dd.getMonth()+1) + '-' + dd.getDate();
+        var dayCount = d[dk] || 0;
+        if (dayCount > 0) { totalPrayers += dayCount; activeDays++; }
+      }
+      avgEl.textContent = activeDays > 0 ? (totalPrayers / activeDays).toFixed(1) : '0.0';
+    } else {
+      avgEl.textContent = todayCount > 0 ? todayCount.toFixed(1) : '—';
+    }
+  }
+}
+
+
 function buildActivityCalendar() {
   const cal = document.getElementById('activityCal');
   const label = document.getElementById('calWeekLabel');
   if (!cal) return;
   const data = getXPData();
+  const masjidD2 = getMasjidData();
   const today = new Date();
   const monday = new Date(today);
   const day = monday.getDay();
@@ -6309,7 +6493,7 @@ function buildActivityCalendar() {
     const isToday = dStr === todayStr;
     const isFuture = d > today && !isToday;
     const dayDone = data.dailyQuests[dStr] || {};
-    const questIds = Object.keys(dayDone).filter(k => dayDone[k]);
+    const questIds = Object.keys(dayDone).filter(k => k !== 'masjid' && dayDone[k]);
     const allQuests = [...BASE_QUESTS, ...WEEKLY_QUESTS];
     // Support both boolean (true) and object ({done,xp,coins,icon}) formats
     // For run quests, only show the highest completed one
@@ -6332,7 +6516,7 @@ function buildActivityCalendar() {
         const q = allQuests.find(q => q.id === id);
         return q ? q.icon : null;
       }).filter(Boolean).slice(0,4).join(' ');
-    const hasActivity = questIds.length > 0;
+    const hasActivity = questIds.length > 0 || (masjidD2[dStr] || 0) > 0;
 
     // ── Build tooltip content ──
     const allQuestsForTip = [...BASE_QUESTS, ...WEEKLY_QUESTS];
@@ -6371,8 +6555,12 @@ function buildActivityCalendar() {
     const tipLines = [];
     if (hasActivity) {
       workoutLabels.forEach(l => tipLines.push({ text: l, color: '#c8c3b8' }));
+      const masjidV = masjidD2[dStr] || 0;
+      if (masjidV > 0) tipLines.push({ text: masjidV + ' Masjid visit' + (masjidV > 1 ? 's' : ''), color: '#c8c3b8' });
     } else if (isToday) {
       tipLines.push({ text: 'In progress', color: 'var(--gold)' });
+      const masjidV = masjidD2[dStr] || 0;
+      if (masjidV > 0) tipLines.push({ text: masjidV + ' Masjid visit' + (masjidV > 1 ? 's' : ''), color: '#c8c3b8' });
     } else {
       tipLines.push({ text: 'No activity', color: '#e74c3c' });
     }
@@ -6421,7 +6609,7 @@ function buildActivityCalendar() {
 
     cell.innerHTML = '<div style="font-family:Space Mono,monospace;font-size:10px;letter-spacing:1px;color:' + (isToday ? 'var(--gold)' : 'var(--muted)') + ';margin-bottom:2px;">' + dayNames[i] + '</div>'
       + '<div style="font-family:Bebas Neue,sans-serif;font-size:16px;color:' + (isToday ? 'var(--gold)' : 'var(--white)') + ';line-height:1;margin-bottom:4px;">' + d.getDate() + '</div>'
-      + (hasActivity ? '<div style="font-size:11px;">' + icons + '</div>' + (function(){
+      + (hasActivity ? '<div style="font-size:11px;">' + icons + (masjidD2[dStr] ? '<span style="font-size:10px;color:var(--gold);"> 🕌×' + masjidD2[dStr] + '</span>' : '') + '</div>' + (function(){
         const rawXP = questIds.reduce((s,id) => {
           const entry = dayDone[id];
           if (entry === 'locked') return s;
@@ -6436,8 +6624,11 @@ function buildActivityCalendar() {
           const q2 = allQuests.find(x => x.id === id);
           return s + (q2 ? Math.round(q2.xp/10) : 0);
         }, 0);
-        return '<div style="font-family:Space Mono,monospace;font-size:9px;color:#2ecc71;margin-top:2px;line-height:1.4;">+' + rawXP.toLocaleString('en-US') + ' xp</div>'
-             + '<div style="font-family:Space Mono,monospace;font-size:9px;color:#f0d878;">+' + rawCoins + ' 🪙</div>';
+        const masjidVisits = masjidD2[dStr] || 0;
+        const totalXP    = rawXP + (masjidVisits * 100);
+        const totalCoins = rawCoins + (masjidVisits * 12);
+        return '<div style="font-family:Space Mono,monospace;font-size:9px;color:#2ecc71;margin-top:2px;line-height:1.4;">+' + totalXP.toLocaleString('en-US') + ' xp</div>'
+             + '<div style="font-family:Space Mono,monospace;font-size:9px;color:#f0d878;">+' + totalCoins + ' 🪙</div>';
       })()
         : isFuture ? '<div style="font-family:Space Mono,monospace;font-size:10px;color:var(--gray4);">—</div>'
         : isToday ? '<div style="font-size:18px;line-height:1;margin-top:2px;opacity:0.8;">⏳</div>'
@@ -6550,14 +6741,279 @@ function buildActivityCalendar() {
         }
       }
       const avgXP = activeDays > 0 ? Math.round(totalStreakXP / activeDays) : 0;
-      avgEl.innerHTML = '<div style="text-align:center;padding:4px 2px 2px;">'
-        + '<span style="font-family:Bebas Neue,sans-serif;font-size:20px;color:#2ecc71;letter-spacing:1px;">+' + avgXP.toLocaleString('en-US') + ' XP</span>'
-        + '<span style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-left:8px;">· Avg / Day</span>'
+      // Masjid avg over streak
+      const masjidD = getMasjidData();
+      let totalVisits = 0, visitDays = 0;
+      for (let ms = 0; ms < streak; ms++) {
+        const mdd = new Date(lastD); mdd.setDate(lastD.getDate() - ms);
+        const mdk = mdd.getFullYear() + '-' + (mdd.getMonth()+1) + '-' + mdd.getDate();
+        const dayVisits = masjidD[mdk] || 0;
+        if (dayVisits > 0) { totalVisits += dayVisits; visitDays++; }
+      }
+      const masjidAvg = visitDays > 0 ? (totalVisits / visitDays).toFixed(1) : '0.0';
+      avgEl.innerHTML = '<div style="text-align:center;padding:4px 2px 4px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">'
+        + '<span><span style="font-family:Bebas Neue,sans-serif;font-size:20px;color:#2ecc71;letter-spacing:1px;">+' + avgXP.toLocaleString('en-US') + ' XP</span><span style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-left:6px;">Avg/Day</span></span>'
+        + '<span style="color:#333;">·</span>'
+        + '<span><span style="font-family:Bebas Neue,sans-serif;font-size:20px;color:var(--gold);letter-spacing:1px;">' + masjidAvg + '</span><span style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-left:6px;">🕌 Masjid/Day</span></span>'
         + '</div>';
     } else {
       avgEl.innerHTML = '';
     }
   }
+}
+
+
+
+// ── Boss Quest System ──
+const BOSS_QUESTS = [
+  { id:'bq_sprint',    title:'RUN A 5K',              desc:'Log a 5K run today. No shortcuts.',                                xp:950,  badge:true, linkedQuest:'run5k'    },
+  { id:'bq_longrun',   title:'LONG RUN',               desc:'Complete your long run. Full distance.',                           xp:950,  badge:true, linkedQuest:'longrun'  },
+  { id:'bq_ppl',       title:'PUSH & PULL',             desc:'Log both Push Day and Pull Day today.',                            xp:900,  badge:true, linkedQuests:['push','pull'] },
+  { id:'bq_fastlift',  title:'FAST & LIFT',             desc:'Sunnah fast + complete a lifting session today.',                  xp:900,  badge:true, linkedQuests:['fasted','push'] },
+  { id:'bq_steps20k',  title:'20K STEPS',               desc:'Hit 20,000 steps today. Keep moving.',                            xp:900,  badge:true, linkedQuest:'steps15'  },
+  { id:'bq_masjid4',   title:'4 MASJID VISITS',         desc:'Log 4 masjid visits today. Be present.',                          xp:850,  badge:true, linkedMasjid:4         },
+  { id:'bq_sportstun', title:'SPORTS + RUN',             desc:'Log a sports session AND a run today.',                           xp:950,  badge:true, linkedQuests:['ball','run5k'] },
+  { id:'bq_wellness',  title:'COMPLETE WELLNESS',        desc:'Hydrate + Mobility + Weigh In + Sunnah Fast. Full stack.',        xp:850,  badge:true, linkedQuests:['hydrate','mobility','weigh','fasted'] },
+  { id:'bq_iron',      title:'IRON DAY',                 desc:'Push Day + Pull Day + Leg Day. All three. Today.',               xp:1000, badge:true, linkedQuests:['push','pull','legs'] },
+  { id:'bq_10krun',    title:'RUN A 10K',               desc:'Log a 10K run. This is the one.',                                 xp:1000, badge:true, linkedQuest:'run10k'   },
+];
+
+function getBossQuest() {
+  // Seed to current week so it's stable all week, but random per week
+  const weekStr = getWeekStr();
+  var seed = 0;
+  for (var i = 0; i < weekStr.length; i++) seed = (seed * 31 + weekStr.charCodeAt(i)) & 0xffffffff;
+  // Pick day of week (0-6) for boss quest this week
+  var bossDay = Math.abs(seed) % 7; // 0=Mon...6=Sun
+  var today = new Date().getDay(); // 0=Sun,1=Mon...6=Sat
+  // Convert to Mon=0...Sun=6
+  var todayMon = today === 0 ? 6 : today - 1;
+  // if (todayMon !== bossDay) return null; // DEV: always show today
+  // Pick quest
+  var questIdx = (Math.abs(seed >> 3)) % BOSS_QUESTS.length;
+  return BOSS_QUESTS[questIdx];
+}
+
+function isBossQuestDone() {
+  var key = 'boss_quest_' + getWeekStr();
+  return !!localStorage.getItem(key);
+}
+
+function checkBossQuestLinked() {
+  // Auto-complete boss quest if linked quests are done
+  var bq = getBossQuest();
+  if (!bq || isBossQuestDone()) return;
+  var data = getXPData();
+  var today = getTodayStr();
+  var todayQ = data.dailyQuests[today] || {};
+  var linked = bq.linkedQuests || (bq.linkedQuest ? [bq.linkedQuest] : []);
+  var masjidOk = bq.linkedMasjid ? (getMasjidData()[today] || 0) >= bq.linkedMasjid : true;
+  var questsOk = linked.length === 0 || linked.every(function(id){ return todayQ[id] && todayQ[id] !== 'locked'; });
+  if (questsOk && masjidOk) completeBossQuest();
+}
+
+function showBossSlainAnimation(bq) {
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:10001;pointer-events:none;overflow:hidden;';
+
+  // Red flash bg
+  var bg = document.createElement('div');
+  bg.style.cssText = 'position:absolute;inset:0;animation:bossRedFlash 0.8s ease forwards;';
+  overlay.appendChild(bg);
+
+  // Particle burst
+  var colors = ['#ff2200','#ff4400','#ff6600','#ffaa00','#ffffff'];
+  for (var p = 0; p < 24; p++) {
+    var part = document.createElement('div');
+    var angle = (p / 24) * 360;
+    var dist = 80 + Math.random() * 120;
+    var size = 4 + Math.random() * 8;
+    var color = colors[Math.floor(Math.random() * colors.length)];
+    var delay = Math.random() * 0.2;
+    var rad = angle * Math.PI / 180;
+    var tx = Math.cos(rad) * dist;
+    var ty = Math.sin(rad) * dist;
+    part.style.cssText = 'position:absolute;left:50%;top:50%;width:' + size + 'px;height:' + size + 'px;'
+      + 'background:' + color + ';border-radius:50%;margin:-' + (size/2) + 'px;'
+      + 'animation:bossParticle 1s ease ' + delay + 's forwards;'
+      + 'transform:translate(' + tx + 'px,' + ty + 'px);';
+    overlay.appendChild(part);
+  }
+
+  // SLAIN text
+  var titleWrap = document.createElement('div');
+  titleWrap.style.cssText = 'position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;';
+
+  var title = document.createElement('div');
+  title.style.cssText = 'font-family:Bebas Neue,sans-serif;font-size:clamp(64px,20vw,100px);color:#ff2200;'
+    + 'letter-spacing:6px;line-height:1;animation:bossSlainTitle 2s cubic-bezier(0.16,1,0.3,1) forwards;'
+    + 'text-shadow:0 0 40px #ff2200,0 0 80px #ff220099,0 0 160px #ff220044;';
+  title.textContent = 'SLAIN';
+  titleWrap.appendChild(title);
+
+  var sub = document.createElement('div');
+  sub.style.cssText = 'font-family:Space Mono,monospace;font-size:clamp(9px,2.5vw,12px);letter-spacing:6px;'
+    + 'color:#ff220099;text-transform:uppercase;animation:bossSlainXP 2s ease forwards;';
+  sub.textContent = 'Boss Defeated';
+  titleWrap.appendChild(sub);
+
+  var xpLine = document.createElement('div');
+  xpLine.style.cssText = 'font-family:Bebas Neue,sans-serif;font-size:clamp(28px,8vw,42px);color:#fff;'
+    + 'letter-spacing:3px;animation:bossSlainXP 2s ease 0.2s forwards;opacity:0;'
+    + 'text-shadow:0 0 20px #ff2200;';
+  xpLine.textContent = '+' + bq.xp.toLocaleString('en-US') + ' XP';
+  titleWrap.appendChild(xpLine);
+
+  overlay.appendChild(titleWrap);
+  document.body.appendChild(overlay);
+
+  // Shake the card
+  var card = document.getElementById('bossQuestCard');
+  if (card) {
+    card.style.animation = 'bossSlainShake 0.5s ease, bossQuestPulse 2s ease-in-out 0.5s infinite';
+  }
+
+  // XP float
+  setTimeout(function() { spawnXPFloat && spawnXPFloat(bq.xp, null); }, 300);
+
+  // Remove overlay
+  setTimeout(function() { overlay.style.opacity = '0'; overlay.style.transition = 'opacity 0.5s'; }, 2200);
+  setTimeout(function() { if (overlay.parentNode) overlay.remove(); }, 2800);
+}
+
+function resetBossQuest() {
+  var bq = getBossQuest();
+  if (!bq) return;
+  var key = 'boss_quest_' + getWeekStr();
+  localStorage.removeItem(key);
+  // Reverse XP and coins
+  var data = getXPData();
+  data.totalXP = Math.max(0, (data.totalXP||0) - bq.xp);
+  data.coins   = Math.max(0, (data.coins||0) - Math.round(bq.xp/6));
+  data.level   = getLevelFromXP(data.totalXP);
+  // Remove boss quest coin history entry
+  if (data.coinHistory) {
+    var idx = data.coinHistory.findIndex(function(e){ return e.icon === '⚔️'; });
+    if (idx !== -1) data.coinHistory.splice(idx, 1);
+  }
+  // Decrement boss count
+  var bossCount = Math.max(0, parseInt(localStorage.getItem('boss_quest_count')||'0') - 1);
+  localStorage.setItem('boss_quest_count', bossCount);
+  saveXPData(data);
+  updateHunterCard();
+  buildCoinHistory && buildCoinHistory();
+  buildBossQuest();
+}
+
+function completeBossQuest() {
+  var bq = getBossQuest();
+  if (!bq || isBossQuestDone()) return;
+  var key = 'boss_quest_' + getWeekStr();
+  localStorage.setItem(key, '1');
+  // Award XP + coins
+  var data = getXPData();
+  data.totalXP = (data.totalXP||0) + bq.xp;
+  data.coins   = (data.coins||0) + Math.round(bq.xp/6);
+  data.level   = getLevelFromXP(data.totalXP);
+  // Track completions for badge
+  var bossCount = parseInt(localStorage.getItem('boss_quest_count')||'0') + 1;
+  localStorage.setItem('boss_quest_count', bossCount);
+  if (!data.coinHistory) data.coinHistory = [];
+  data.coinHistory.unshift({ icon:'⚔️', label:'Boss Quest: '+bq.title, amount:Math.round(bq.xp/6), date:new Date().toLocaleDateString('en-US') });
+  if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0,50);
+  saveXPData(data);
+  updateHunterCard();
+  buildCoinHistory && buildCoinHistory();
+  // Show SLAIN overlay
+  var doneEl = document.getElementById('bossQuestDone');
+  if (doneEl) { doneEl.style.display='flex'; }
+  var btn = document.getElementById('bossQuestBtn');
+  if (btn) btn.style.display='none';
+  var card = document.getElementById('bossQuestCard');
+  if (card) card.style.animation='bossQuestComplete 0.6s ease, bossQuestPulse 2s ease-in-out 0.6s infinite';
+  // Epic SLAIN celebration
+  showBossSlainAnimation(bq);
+  buildBossQuest();
+}
+
+function buildBossQuest() {
+  var wrap = document.getElementById('bossQuestWrap');
+  if (!wrap) return;
+  var bq = getBossQuest();
+  if (!bq) { wrap.style.display='none'; return; }
+  wrap.style.display='block';
+  var titleEl = document.getElementById('bossQuestTitle');
+  var descEl  = document.getElementById('bossQuestDesc');
+  var xpEl    = document.getElementById('bossQuestXP');
+  var timerEl = document.getElementById('bossQuestTimer');
+  var btn     = document.getElementById('bossQuestBtn');
+  var doneEl  = document.getElementById('bossQuestDone');
+  if (titleEl) titleEl.textContent = bq.title;
+  if (descEl)  descEl.textContent  = bq.desc;
+  if (xpEl)    xpEl.textContent    = '+' + bq.xp.toLocaleString('en-US') + ' XP · +' + Math.round(bq.xp/6) + ' 🪙';
+  // Timer
+  if (timerEl) {
+    var now = new Date();
+    var midnight = new Date(now); midnight.setHours(24,0,0,0);
+    var ms = midnight - now;
+    var h = Math.floor(ms/3600000);
+    var m = Math.floor((ms%3600000)/60000);
+    timerEl.textContent = h + 'h ' + m + 'm left';
+  }
+  var done = isBossQuestDone();
+  if (doneEl) doneEl.style.display = done ? 'flex' : 'none';
+  if (btn)    btn.style.display    = done ? 'none' : 'block';
+
+  // Update Boss Trail status tile
+  var bossTrailEl = document.getElementById('bossTrailWeekly');
+  if (bossTrailEl) {
+    var weekSlain = isBossQuestDone();
+    var bossActive = !!getBossQuest();
+    if (!bossActive) { bossTrailEl.innerHTML = ''; }
+    else if (weekSlain) {
+      bossTrailEl.innerHTML =
+        '<div style="padding:5px 10px;background:#0d0000;border:1px solid #ff220044;display:flex;align-items:center;justify-content:space-between;">'
+        + '<span style="font-family:Space Mono,monospace;font-size:7px;letter-spacing:2px;color:#ff220088;text-transform:uppercase;">⚔ Boss Quest</span>'
+        + '<span style="font-family:Space Mono,monospace;font-size:7px;letter-spacing:1px;color:#ff2200aa;">SLAIN · 1/1</span>'
+        + '</div>';
+    } else {
+      bossTrailEl.innerHTML =
+        '<div style="padding:5px 10px;background:rgba(255,255,255,0.03);border:1px solid var(--gray3);display:flex;align-items:center;justify-content:space-between;">'
+        + '<span style="font-family:Space Mono,monospace;font-size:7px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;">⚔ Boss Quest</span>'
+        + '<span style="font-family:Space Mono,monospace;font-size:7px;letter-spacing:1px;color:var(--muted);">0/1</span>'
+        + '</div>';
+    }
+  }
+
+  // First-open intro animation — fires once per boss quest day
+  var introKey = 'boss_intro_' + getWeekStr();
+  if (!localStorage.getItem(introKey) && !done) {
+    localStorage.setItem(introKey, '1');
+    setTimeout(function() { showBossQuestIntro(bq); }, 800);
+  }
+}
+
+function showBossQuestIntro(bq) {
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:10000;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;';
+
+  // Flash strobe effect
+  var flash = document.createElement('div');
+  flash.style.cssText = 'position:absolute;inset:0;background:#ff2200;opacity:0;animation:bossIntroFlash 0.6s ease forwards;pointer-events:none;';
+  overlay.appendChild(flash);
+
+  // Content
+  var content = document.createElement('div');
+  content.style.cssText = 'position:relative;z-index:2;text-align:center;padding:32px;opacity:0;animation:bossQuestIntro 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.3s forwards;';
+  content.innerHTML =
+    '<div style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:6px;color:#ff220088;text-transform:uppercase;margin-bottom:16px;">⚔ BOSS QUEST ACTIVE ⚔</div>'
+    + '<div style="font-family:Bebas Neue,sans-serif;font-size:clamp(48px,14vw,80px);color:#fff;letter-spacing:2px;line-height:0.9;text-shadow:0 0 40px #ff2200,0 0 80px #ff220066;margin-bottom:16px;">' + bq.title + '</div>'
+    + '<div style="font-family:Space Mono,monospace;font-size:9px;color:#888;letter-spacing:2px;margin-bottom:24px;max-width:280px;line-height:1.6;">' + bq.desc + '</div>'
+    + '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;color:#ff2200;letter-spacing:2px;">+' + bq.xp.toLocaleString('en-US') + ' XP</div>'
+    + '<div style="font-family:Space Mono,monospace;font-size:8px;letter-spacing:3px;color:#333;text-transform:uppercase;margin-top:32px;">Tap to close</div>';
+  overlay.appendChild(content);
+  document.body.appendChild(overlay);
+  overlay.onclick = function() { overlay.remove(); };
 }
 
 function shiftWeek(dir) {
@@ -8419,6 +8875,92 @@ function initXPSystem() {
     localStorage.setItem('grind_eatout_patch_v2','1');
   }
 
+  // Patch — June 3rd: Push, Outdoor, 2L Water, Sports Game, 10K Steps, Weigh 256.6
+  if (!localStorage.getItem('grind_activity_patch_jun3_v1')) {
+    var d3 = getXPData();
+    if (!d3.dailyQuests['2026-6-3']) d3.dailyQuests['2026-6-3'] = {};
+    d3.dailyQuests['2026-6-3'].push    = true;
+    d3.dailyQuests['2026-6-3'].outdoor = true;
+    d3.dailyQuests['2026-6-3'].hydrate = true;
+    d3.dailyQuests['2026-6-3'].ball    = true;
+    d3.dailyQuests['2026-6-3'].steps   = true;
+    d3.dailyQuests['2026-6-3'].weigh   = true;
+    d3.totalXP = (d3.totalXP||0) + 825;
+    d3.coins   = (d3.coins||0)   + 103;
+    d3.level   = getLevelFromXP(d3.totalXP);
+    d3.streak  = 6; d3.lastActiveDate = '2026-6-3';
+    if (!d3.longestStreak || d3.streak > d3.longestStreak) d3.longestStreak = d3.streak;
+    d3.streakSkillProgress = (d3.streakSkillProgress||0) + 1;
+    if (!d3.coinHistory) d3.coinHistory = [];
+    d3.coinHistory.unshift({ icon:'⚖️', label:'Weight Logged',  amount:6,  date:'6/3/2026' });
+    d3.coinHistory.unshift({ icon:'🚶', label:'10K Steps',      amount:22, date:'6/3/2026' });
+    d3.coinHistory.unshift({ icon:'🏀', label:'Sports Game',    amount:31, date:'6/3/2026' });
+    d3.coinHistory.unshift({ icon:'💧', label:'2L Water',       amount:8,  date:'6/3/2026' });
+    d3.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',   amount:11, date:'6/3/2026' });
+    d3.coinHistory.unshift({ icon:'💪', label:'Push Day',       amount:25, date:'6/3/2026' });
+    if (d3.coinHistory.length > 50) d3.coinHistory = d3.coinHistory.slice(0,50);
+    var wd3 = getWeightData();
+    if (!wd3.log) wd3.log = [];
+    wd3.current = 256.6;
+    wd3.log.unshift({ weight:256.6, date:'6/3/2026', _ts:new Date('2026-06-03').getTime() });
+    saveWeightData(wd3); saveXPData(d3);
+    localStorage.setItem('grind_activity_patch_jun3_v1','1');
+  }
+
+  // Patch — June 4th: Outdoor, Sports Game, 2L Water, 10K Steps, Weigh 257.0
+  if (!localStorage.getItem('grind_activity_patch_jun4_v1')) {
+    var d4 = getXPData();
+    if (!d4.dailyQuests['2026-6-4']) d4.dailyQuests['2026-6-4'] = {};
+    d4.dailyQuests['2026-6-4'].outdoor = true;
+    d4.dailyQuests['2026-6-4'].ball    = true;
+    d4.dailyQuests['2026-6-4'].hydrate = true;
+    d4.dailyQuests['2026-6-4'].steps   = true;
+    d4.dailyQuests['2026-6-4'].weigh   = true;
+    d4.totalXP = (d4.totalXP||0) + 625;
+    d4.coins   = (d4.coins||0)   + 78;
+    d4.level   = getLevelFromXP(d4.totalXP);
+    d4.streak  = 7; d4.lastActiveDate = '2026-6-4';
+    if (!d4.longestStreak || d4.streak > d4.longestStreak) d4.longestStreak = d4.streak;
+    d4.streakSkillProgress = (d4.streakSkillProgress||0) + 1;
+    if (!d4.coinHistory) d4.coinHistory = [];
+    d4.coinHistory.unshift({ icon:'⚖️', label:'Weight Logged',  amount:6,  date:'6/4/2026' });
+    d4.coinHistory.unshift({ icon:'🚶', label:'10K Steps',      amount:22, date:'6/4/2026' });
+    d4.coinHistory.unshift({ icon:'💧', label:'2L Water',       amount:8,  date:'6/4/2026' });
+    d4.coinHistory.unshift({ icon:'🏀', label:'Sports Game',    amount:31, date:'6/4/2026' });
+    d4.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',   amount:11, date:'6/4/2026' });
+    if (d4.coinHistory.length > 50) d4.coinHistory = d4.coinHistory.slice(0,50);
+    var wd4 = getWeightData();
+    if (!wd4.log) wd4.log = [];
+    wd4.current = 257.0;
+    wd4.log.unshift({ weight:257.0, date:'6/4/2026', _ts:new Date('2026-06-04').getTime() });
+    saveWeightData(wd4); saveXPData(d4);
+    localStorage.setItem('grind_activity_patch_jun4_v1','1');
+  }
+
+  // Patch — Masjid visits for streak period
+  if (!localStorage.getItem('grind_masjid_patch_v1')) {
+    var md = getMasjidData();
+    md['2026-5-29'] = 2;
+    md['2026-5-30'] = 1;
+    md['2026-6-4']  = 1;
+    md['2026-6-5']  = 2;
+    saveMasjidData(md);
+    // XP: May 29 (2×100=200) + May 30 (1×100=100) + Jun 4 (1×100=100) + Jun 5 (2×100=200) = 600 XP
+    // Coins: 200/8*2 + 100/8 + 100/8 + 200/8*2 = 75 coins total
+    var xpD = getXPData();
+    xpD.totalXP = (xpD.totalXP||0) + 600;
+    xpD.coins   = (xpD.coins||0)   + 72;
+    xpD.level   = getLevelFromXP(xpD.totalXP);
+    if (!xpD.coinHistory) xpD.coinHistory = [];
+    xpD.coinHistory.unshift({ icon:'🕌', label:'Masjid Visit ×2', amount:24, date:'6/5/2026' });
+    xpD.coinHistory.unshift({ icon:'🕌', label:'Masjid Visit',    amount:12, date:'6/4/2026' });
+    xpD.coinHistory.unshift({ icon:'🕌', label:'Masjid Visit',    amount:12, date:'5/30/2026' });
+    xpD.coinHistory.unshift({ icon:'🕌', label:'Masjid Visit ×2', amount:24, date:'5/29/2026' });
+    if (xpD.coinHistory.length > 50) xpD.coinHistory = xpD.coinHistory.slice(0,50);
+    saveXPData(xpD);
+    localStorage.setItem('grind_masjid_patch_v1','1');
+  }
+
   checkPunishment();
   updateHunterCard();
   setTimeout(checkWeeklyRecap, 1200); // slight delay so app loads first
@@ -8429,6 +8971,8 @@ function initXPSystem() {
   buildActivityCalendar();
   buildBadges();
     buildSkillTree();
+  buildMasjidTracker();
+  buildBossQuest();
   buildRaceHistory();
   buildBookLog();
   buildBookSkillTree();
