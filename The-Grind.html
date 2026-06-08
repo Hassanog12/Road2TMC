@@ -6845,8 +6845,8 @@ function isBossQuestDone() {
   return !!localStorage.getItem(key);
 }
 
-function checkBossQuestLinked() {
-  // Auto-complete boss quest if linked quests are done
+function checkBossQuestLinked() { /* Boss quests are manual only — no auto-complete */ }
+function checkBossQuestLinked_unused() {
   var bq = getBossQuest();
   if (!bq || isBossQuestDone()) return;
   var data = getXPData();
@@ -9118,7 +9118,7 @@ function initXPSystem() {
   }
 
   // ── MEGA DATA PATCH — build_20260607 ──
-  if (localStorage.getItem('grind_mega_v3') !== 'build_20260613') {
+  if (localStorage.getItem('grind_mega_v3') !== 'build_20260614') {
     data.totalXP        = 48750;
     data.coins          = 1000;
     data.level          = getLevelFromXP(47518);
@@ -9239,7 +9239,7 @@ function initXPSystem() {
     ];
 
     saveXPData(data);
-    localStorage.setItem('grind_mega_v3', 'build_20260613');
+    localStorage.setItem('grind_mega_v3', 'build_20260614');
   }
 
     checkPunishment();
