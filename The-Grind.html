@@ -9095,7 +9095,107 @@ function initXPSystem() {
     localStorage.setItem('grind_xp_patch_v21', '1');
   }
 
-  checkPunishment();
+  // ── MEGA DATA PATCH — build_20260607 ──
+  if (localStorage.getItem('grind_mega_v3') !== 'build_20260607') {
+    data.totalXP        = 47518;
+    data.coins          = 1895;
+    data.level          = getLevelFromXP(47518);
+    data.streak         = 8;
+    data.longestStreak  = Math.max(data.longestStreak || 0, 45);
+    data.lastActiveDate = '2026-6-6';
+    data.streakSkillProgress = 55;
+    data.lastStreakSkillDate  = '2026-6-6';
+    if (!data.dailyQuests) data.dailyQuests = {};
+    data.dailyQuests['2026-3-8']  = { push:true, pull:true };
+    data.dailyQuests['2026-3-9']  = { run1:true, outdoor:true };
+    data.dailyQuests['2026-3-10'] = { legs:true, steps:true };
+    data.dailyQuests['2026-3-11'] = { push:true, hydrate:true, sleep:true };
+    data.dailyQuests['2026-3-12'] = { ball:true, outdoor:true, steps:true };
+    data.dailyQuests['2026-3-13'] = { pull:true, hydrate:true };
+    data.dailyQuests['2026-3-14'] = { run2:true, weigh:true, hydrate:true };
+    data.dailyQuests['2026-3-16'] = { push:true, steps:true, hydrate:true };
+    data.dailyQuests['2026-3-17'] = { ball:true, outdoor:true };
+    data.dailyQuests['2026-3-18'] = { legs:true, hydrate:true, sleep:true };
+    data.dailyQuests['2026-3-19'] = { pull:true, steps:true };
+    data.dailyQuests['2026-3-20'] = { run1:true, weigh:true };
+    data.dailyQuests['2026-3-21'] = { push:true, hydrate:true, outdoor:true };
+    data.dailyQuests['2026-3-22'] = { ball:true, steps:true, weigh:true };
+    data.dailyQuests['2026-3-24'] = { push:true, outdoor:true, steps:true, weigh:true };
+    data.dailyQuests['2026-3-25'] = { pull:true, hydrate:true, sleep:true };
+    data.dailyQuests['2026-3-26'] = { run2:true, steps:true };
+    data.dailyQuests['2026-3-27'] = { legs:true, hydrate:true };
+    data.dailyQuests['2026-3-28'] = { push:true, ball:true, weigh:true };
+    data.dailyQuests['2026-3-29'] = { pull:true, outdoor:true, hydrate:true, sleep:true };
+    data.dailyQuests['2026-3-30'] = { run1:true, steps:true };
+    data.dailyQuests['2026-3-31'] = { legs:true, hydrate:true };
+    data.dailyQuests['2026-4-1']  = { push:true, ball:true, outdoor:true };
+    data.dailyQuests['2026-4-2']  = { pull:true, steps:true, hydrate:true };
+    data.dailyQuests['2026-4-3']  = { run5k:true, weigh:true };
+    data.dailyQuests['2026-4-4']  = { legs:true, outdoor:true, sleep:true };
+    data.dailyQuests['2026-4-5']  = { push:true, hydrate:true };
+    data.dailyQuests['2026-4-6']  = { ball:true, steps:true };
+    data.dailyQuests['2026-4-7']  = { pull:true, outdoor:true, weigh:true };
+    data.dailyQuests['2026-4-8']  = { run1:true, hydrate:true };
+    data.dailyQuests['2026-4-9']  = { legs:true, steps:true, sleep:true };
+    data.dailyQuests['2026-4-10'] = { push:true, ball:true };
+    data.dailyQuests['2026-4-11'] = { pull:true, hydrate:true, outdoor:true };
+    data.dailyQuests['2026-4-12'] = { run2:true, weigh:true };
+    data.dailyQuests['2026-4-13'] = { legs:true, steps:true };
+    data.dailyQuests['2026-4-14'] = { push:true, hydrate:true, sleep:true };
+    data.dailyQuests['2026-4-15'] = { ball:true, outdoor:true };
+    data.dailyQuests['2026-5-20'] = { push:true, hydrate:true };
+    data.dailyQuests['2026-5-21'] = { pull:true, steps:true, outdoor:true };
+    data.dailyQuests['2026-5-22'] = { run5k:true, weigh:true };
+    data.dailyQuests['2026-5-23'] = { legs:true, hydrate:true, sleep:true };
+    data.dailyQuests['2026-5-24'] = { ball:true, outdoor:true, steps:true };
+    data.dailyQuests['2026-5-25'] = { push:true, hydrate:true };
+    data.dailyQuests['2026-5-26'] = { pull:true, weigh:true };
+    data.dailyQuests['2026-5-27'] = { run2:true, steps:true };
+    data.dailyQuests['2026-5-28'] = { legs:true, outdoor:true, hydrate:true };
+    data.dailyQuests['2026-5-29'] = { push:true, ball:true, steps:true };
+    data.dailyQuests['2026-5-30'] = { pull:true, outdoor:true, hydrate:true };
+    data.dailyQuests['2026-5-31'] = { run1:true, weigh:true, sleep:true };
+    data.dailyQuests['2026-6-1']  = { push:true, outdoor:true, weigh:true };
+    data.dailyQuests['2026-6-2']  = { outdoor:true, hydrate:true, sleep:true };
+    data.dailyQuests['2026-6-3']  = { push:true, outdoor:true, hydrate:true, ball:true, steps:true, weigh:true, sleep:true };
+    data.dailyQuests['2026-6-4']  = { outdoor:true, ball:true, hydrate:true, steps:true, weigh:true };
+    data.dailyQuests['2026-6-5']  = { outdoor:true, hydrate:true, push:true, pull:true, weigh:true };
+    data.dailyQuests['2026-6-6']  = { steps:true, hydrate:true, outdoor:true };
+    var _md = JSON.parse(localStorage.getItem('masjid_log_v1') || '{}');
+    _md['2026-5-29']=2; _md['2026-5-30']=1; _md['2026-6-4']=1; _md['2026-6-5']=1; _md['2026-6-6']=1;
+    localStorage.setItem('masjid_log_v1', JSON.stringify(_md));
+    localStorage.setItem('grind_weight_v10', JSON.stringify({ current:257.0, log:[
+      { weight:257.0, date:'6/6/2026', _ts:new Date('2026-06-06').getTime() },
+      { weight:257.0, date:'6/5/2026', _ts:new Date('2026-06-05').getTime() },
+      { weight:257.0, date:'6/4/2026', _ts:new Date('2026-06-04').getTime() },
+      { weight:256.6, date:'6/3/2026', _ts:new Date('2026-06-03').getTime() },
+      { weight:257.4, date:'5/22/2026',_ts:new Date('2026-05-22').getTime() },
+      { weight:259.5, date:'3/24/2026',_ts:new Date('2026-03-24').getTime() },
+      { weight:258.8, date:'3/28/2026',_ts:new Date('2026-03-28').getTime() },
+    ]}));
+    data.coinHistory = [
+      { icon:'🌳', label:'Outdoor Walk', amount:11, date:'6/6/2026' },
+      { icon:'💧', label:'2L Water',     amount:8,  date:'6/6/2026' },
+      { icon:'🚶', label:'10K Steps',    amount:22, date:'6/6/2026' },
+      { icon:'🕌', label:'Masjid Visit', amount:12, date:'6/6/2026' },
+      { icon:'⚖️', label:'Weigh In',     amount:6,  date:'6/5/2026' },
+      { icon:'🏋', label:'Pull Day',     amount:25, date:'6/5/2026' },
+      { icon:'💪', label:'Push Day',     amount:25, date:'6/5/2026' },
+      { icon:'💧', label:'2L Water',     amount:8,  date:'6/5/2026' },
+      { icon:'🌳', label:'Outdoor Walk', amount:11, date:'6/5/2026' },
+      { icon:'🕌', label:'Masjid Visit', amount:12, date:'6/5/2026' },
+      { icon:'⚖️', label:'Weigh In',     amount:6,  date:'6/4/2026' },
+      { icon:'🚶', label:'10K Steps',    amount:22, date:'6/4/2026' },
+      { icon:'💧', label:'2L Water',     amount:8,  date:'6/4/2026' },
+      { icon:'🏀', label:'Sports Game',  amount:31, date:'6/4/2026' },
+      { icon:'🌳', label:'Outdoor Walk', amount:11, date:'6/4/2026' },
+      { icon:'🕌', label:'Masjid Visit', amount:12, date:'6/4/2026' },
+    ];
+    saveXPData(data);
+    localStorage.setItem('grind_mega_v3', 'build_20260607');
+  }
+
+    checkPunishment();
   updateHunterCard();
   setTimeout(checkWeeklyRecap, 1200); // slight delay so app loads first
   buildQuestGrid();
