@@ -5283,10 +5283,10 @@ const RANKS = [
   { rank:'D',   title:'Recruit',                       minXP:5000,    color:'#e67e22', glow:'rgba(230,126,34,0.6)',   barColor:'linear-gradient(90deg,#d35400,#e67e22)' },
   { rank:'C',   title:'Low Level Threat',              minXP:15000,   color:'#f1c40f', glow:'rgba(241,196,15,0.6)',   barColor:'linear-gradient(90deg,#d4ac0d,#f1c40f)' },
   { rank:'B',   title:'Seasoned Veteran',              minXP:30000,   color:'#2ecc71', glow:'rgba(46,204,113,0.6)',   barColor:'linear-gradient(90deg,#27ae60,#2ecc71)' },
-  { rank:'A',   title:'Monarch in Training',           minXP:50000,   color:'#1abc9c', glow:'rgba(26,188,156,0.6)',   barColor:'linear-gradient(90deg,#16a085,#1abc9c)' },
-  { rank:'S',   title:'Solo Carry',                    minXP:85000,   color:'#3498db', glow:'rgba(52,152,219,0.6)',   barColor:'linear-gradient(90deg,#2980b9,#3498db)' },
-  { rank:'S+',  title:'Marathon Monarch',              minXP:130000,  color:'#a855f7', glow:'rgba(168,85,247,0.7)',  barColor:'linear-gradient(90deg,#7c3aed,#a855f7)' },
-  { rank:'NL',  title:'National Level Hunter',         minXP:200000,  color:'#ffffff', glow:'rgba(255,255,255,0.9)', barColor:'linear-gradient(90deg,#ccc,#fff,#ccc)',
+  { rank:'A',   title:'Monarch in Training',           minXP:60000,   color:'#1abc9c', glow:'rgba(26,188,156,0.6)',   barColor:'linear-gradient(90deg,#16a085,#1abc9c)' },
+  { rank:'S',   title:'Solo Carry',                    minXP:90000,   color:'#3498db', glow:'rgba(52,152,219,0.6)',   barColor:'linear-gradient(90deg,#2980b9,#3498db)' },
+  { rank:'S+',  title:'Marathon Monarch',              minXP:125000,  color:'#a855f7', glow:'rgba(168,85,247,0.7)',  barColor:'linear-gradient(90deg,#7c3aed,#a855f7)' },
+  { rank:'NL',  title:'National Level Hunter',         minXP:175000,  color:'#ffffff', glow:'rgba(255,255,255,0.9)', barColor:'linear-gradient(90deg,#ccc,#fff,#ccc)',
     lore:'National Level. The highest tier. There is no rank above this — only the ones who earned it. You are no longer training toward something. You became it. The Marathon built this.' },
 ];
 
@@ -5614,6 +5614,7 @@ const BASE_QUESTS = [
   // ── Hidden ──
   { id:'weigh',        label:'Weigh In',        icon:'⚖️', xp:50,   type:'wellness', row:'hidden' },
   { id:'noeatout',     label:'No Eat Out',      icon:'🥦', xp:60,   type:'wellness', row:'hidden' },
+  { id:'protein',      label:'220g Protein',    icon:'🥩', xp:80,   type:'wellness', row:'hidden' },
   { id:'masjid',       label:'Masjid Visit',    icon:'🕌', xp:100,  type:'wellness', row:'hidden' },
   { id:'book',         label:'Book Logged',     icon:'📖', xp:0,    type:'wellness', row:'hidden' },
   { id:'fasted',       label:'Sunnah Fast',     icon:'🌙', xp:180,  type:'lifting',  row:'hidden' },
@@ -5732,7 +5733,7 @@ function buildQuestGrid() {
   var _dow = new Date().getDay();
   var _ds = parseInt(getTodayStr().replace(/-/g,'')) || 1;
   // Mon/Thu: fasted replaces the rotating 3rd slot
-  var _wt = (_dow === 1 || _dow === 4) ? 'fasted' : (_ds % 4 === 0) ? 'noeatout' : (_ds % 2 === 0) ? 'sleep' : 'cold';
+  var _wt = (_dow === 1 || _dow === 4) ? 'fasted' : (_ds % 5 === 0) ? 'noeatout' : (_ds % 3 === 0) ? 'protein' : (_ds % 2 === 0) ? 'sleep' : 'cold';
   const wellnessQuests = ['hydrate','mobility', _wt].map(id => BASE_QUESTS.find(q => q.id === id)).filter(Boolean);
 
   const rows = [
@@ -9118,15 +9119,15 @@ function initXPSystem() {
   }
 
   // ── MEGA DATA PATCH — build_20260607 ──
-  if (localStorage.getItem('grind_mega_v3') !== 'build_20260614') {
-    data.totalXP        = 48750;
-    data.coins          = 1000;
+  if (localStorage.getItem('grind_mega_v3') !== 'build_20260616') {
+    data.totalXP        = 52518;
+    data.coins          = 1700;
     data.level          = getLevelFromXP(47518);
-    data.streak         = 9;
+    data.streak         = 14;
     data.longestStreak  = Math.max(data.longestStreak || 0, 45);
-    data.lastActiveDate = '2026-6-7';
+    data.lastActiveDate = '2026-6-13';
     data.streakSkillProgress = 55;
-    data.lastStreakSkillDate  = '2026-6-7';
+    data.lastStreakSkillDate  = '2026-6-13';
     if (!data.dailyQuests) data.dailyQuests = {};
 
     // ── Apr 4–19 (streak 17–32) ──
@@ -9195,10 +9196,16 @@ function initXPSystem() {
     data.dailyQuests['2026-6-5']  = { outdoor:true, hydrate:true, push:true, pull:true, weigh:true };
     data.dailyQuests['2026-6-6']  = { steps:true, hydrate:true, outdoor:true };
     data.dailyQuests['2026-6-7']  = { hydrate:true, outdoor:true, steps:true, sleep:true };
+    data.dailyQuests['2026-6-8']  = { outdoor:true, push:true, steps:true, fasted:true, weigh:true, hydrate:true };
+    data.dailyQuests['2026-6-9']  = { outdoor:true, ball:true, hydrate:true, steps:true, weigh:true };
+    data.dailyQuests['2026-6-10'] = { outdoor:true, sleep:true, run2:true, steps:true, pull:true, hydrate:true };
+    data.dailyQuests['2026-6-11'] = { outdoor:true, push:true, legs:true, steps:true, ball:true, hydrate:true };
+    data.dailyQuests['2026-6-12'] = { outdoor:true, hydrate:true, mobility:true };
+    data.dailyQuests['2026-6-13'] = { outdoor:true, hydrate:true, mobility:true, ball:true, steps:true };
 
     // ── Masjid visits ──
     var _md = JSON.parse(localStorage.getItem('masjid_log_v1') || '{}');
-    _md['2026-5-29']=2; _md['2026-5-30']=1; _md['2026-6-4']=1; _md['2026-6-5']=1; _md['2026-6-6']=1;
+    _md['2026-5-29']=2; _md['2026-5-30']=1; _md['2026-6-4']=1; _md['2026-6-5']=1; _md['2026-6-6']=1; _md['2026-6-8']=1; _md['2026-6-9']=1; _md['2026-6-10']=1; _md['2026-6-12']=1; _md['2026-6-13']=1;
     localStorage.setItem('masjid_log_v1', JSON.stringify(_md));
 
     // ── Weight log ──
@@ -9239,7 +9246,7 @@ function initXPSystem() {
     ];
 
     saveXPData(data);
-    localStorage.setItem('grind_mega_v3', 'build_20260614');
+    localStorage.setItem('grind_mega_v3', 'build_20260616');
   }
 
     checkPunishment();
