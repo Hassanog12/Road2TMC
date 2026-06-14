@@ -9119,11 +9119,11 @@ function initXPSystem() {
   }
 
   // ── MEGA DATA PATCH — build_20260607 ──
-  if (localStorage.getItem('grind_mega_v3') !== 'build_20260616') {
+  if (localStorage.getItem('grind_mega_v3') !== 'build_20260617') {
     data.totalXP        = 52518;
     data.coins          = 1700;
     data.level          = getLevelFromXP(47518);
-    data.streak         = 14;
+    data.streak         = 16;
     data.longestStreak  = Math.max(data.longestStreak || 0, 45);
     data.lastActiveDate = '2026-6-13';
     data.streakSkillProgress = 55;
@@ -9246,7 +9246,7 @@ function initXPSystem() {
     ];
 
     saveXPData(data);
-    localStorage.setItem('grind_mega_v3', 'build_20260616');
+    localStorage.setItem('grind_mega_v3', 'build_20260617');
   }
 
     checkPunishment();
