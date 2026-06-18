@@ -4570,11 +4570,11 @@ const BADGE_GROUPS = [
   ]},
 
   { id:'theHunter', icon:'⚔️', name:'Hunter', levels:[
-    { tier:'bronze', name:'Hunter', req: d => { try { return BADGE_GROUPS.filter(g=>g.id!=='theHunter'&&g.levels.some(l=>{try{return l.req(d)}catch(e){return false}})).length>=5;  }catch(e){return false;} }, desc:'5 badges. The hunt begins.' },
-    { tier:'silver', name:'Hunter', req: d => { try { return BADGE_GROUPS.filter(g=>g.id!=='theHunter'&&g.levels.some(l=>{try{return l.req(d)}catch(e){return false}})).length>=10; }catch(e){return false;} }, desc:'10 badges. You are dangerous.' },
-    { tier:'gold',   name:'Hunter', req: d => { try { return BADGE_GROUPS.filter(g=>g.id!=='theHunter'&&g.levels.some(l=>{try{return l.req(d)}catch(e){return false}})).length>=15; }catch(e){return false;} }, desc:'15 badges. Most never get here.' },
-    { tier:'hof',    name:'Hunter', req: d => { try { return BADGE_GROUPS.filter(g=>g.id!=='theHunter'&&g.levels.some(l=>{try{return l.req(d)}catch(e){return false}})).length>=19; }catch(e){return false;} }, desc:'19 badges. The collection is serious.' },
-    { tier:'legend', name:'Hunter', req: d => { try { return BADGE_GROUPS.filter(g=>g.id!=='theHunter'&&g.levels.some(l=>{try{return l.req(d)}catch(e){return false}})).length>=22; }catch(e){return false;} }, desc:'22 badges. Nothing left untouched.' },
+    { tier:'bronze', name:'Hunter', req: d => { try { return BADGE_GROUPS.filter(g=>g.id!=='theHunter'&&g.levels.some(l=>{try{return l.req(d)}catch(e){return false}})).length>=6;  }catch(e){return false;} }, desc:'6 badges. The hunt begins.' },
+    { tier:'silver', name:'Hunter', req: d => { try { return BADGE_GROUPS.filter(g=>g.id!=='theHunter'&&g.levels.some(l=>{try{return l.req(d)}catch(e){return false}})).length>=13; }catch(e){return false;} }, desc:'13 badges. You are dangerous.' },
+    { tier:'gold',   name:'Hunter', req: d => { try { return BADGE_GROUPS.filter(g=>g.id!=='theHunter'&&g.levels.some(l=>{try{return l.req(d)}catch(e){return false}})).length>=19; }catch(e){return false;} }, desc:'19 badges. Most never get here.' },
+    { tier:'hof',    name:'Hunter', req: d => { try { return BADGE_GROUPS.filter(g=>g.id!=='theHunter'&&g.levels.some(l=>{try{return l.req(d)}catch(e){return false}})).length>=24; }catch(e){return false;} }, desc:'24 badges. The collection is serious.' },
+    { tier:'legend', name:'Hunter', req: d => { try { return BADGE_GROUPS.filter(g=>g.id!=='theHunter'&&g.levels.some(l=>{try{return l.req(d)}catch(e){return false}})).length>=28; }catch(e){return false;} }, desc:'28 badges. Nothing left untouched.' },
   ]},
 
 
@@ -5283,7 +5283,7 @@ const RANKS = [
   { rank:'D',   title:'Recruit',                       minXP:5000,    color:'#e67e22', glow:'rgba(230,126,34,0.6)',   barColor:'linear-gradient(90deg,#d35400,#e67e22)' },
   { rank:'C',   title:'Low Level Threat',              minXP:15000,   color:'#f1c40f', glow:'rgba(241,196,15,0.6)',   barColor:'linear-gradient(90deg,#d4ac0d,#f1c40f)' },
   { rank:'B',   title:'Seasoned Veteran',              minXP:30000,   color:'#2ecc71', glow:'rgba(46,204,113,0.6)',   barColor:'linear-gradient(90deg,#27ae60,#2ecc71)' },
-  { rank:'A',   title:'Monarch in Training',           minXP:60000,   color:'#1abc9c', glow:'rgba(26,188,156,0.6)',   barColor:'linear-gradient(90deg,#16a085,#1abc9c)' },
+  { rank:'A',   title:'Monarch in Training',           minXP:65000,   color:'#1abc9c', glow:'rgba(26,188,156,0.6)',   barColor:'linear-gradient(90deg,#16a085,#1abc9c)' },
   { rank:'S',   title:'Solo Carry',                    minXP:90000,   color:'#3498db', glow:'rgba(52,152,219,0.6)',   barColor:'linear-gradient(90deg,#2980b9,#3498db)' },
   { rank:'S+',  title:'Marathon Monarch',              minXP:125000,  color:'#a855f7', glow:'rgba(168,85,247,0.7)',  barColor:'linear-gradient(90deg,#7c3aed,#a855f7)' },
   { rank:'NL',  title:'National Level Hunter',         minXP:175000,  color:'#ffffff', glow:'rgba(255,255,255,0.9)', barColor:'linear-gradient(90deg,#ccc,#fff,#ccc)',
@@ -5341,7 +5341,15 @@ function getNextRank(xp) {
 }
 // XP needed per level: starts ~351, grows to ~1550 at L100
 // Max 2 levels per day. ~6 levels/week early. Level 100 reachable by Dec 31 at 80% consistency.
-function xpForLevel(level) { return Math.floor(300 + 2.5 * Math.pow(level, 1.55)); }
+function xpForLevel(level) {
+  // Two-segment curve: fast early levels (1-40), gentle plateau after (40-100+)
+  // Calibrated: ~Level 42 at 56,500 XP (mid-June), ~Level 100 at ~200,500 XP (late November)
+  if (level <= 40) {
+    return Math.floor(58.11 * level + 100);
+  } else {
+    return Math.floor(2424.42 + 0.1413 * Math.pow(level - 40, 1.7));
+  }
+}
 function getLevelFromXP(xp) {
   let level = 1, remaining = xp;
   while (remaining >= xpForLevel(level)) {
@@ -8493,644 +8501,16 @@ function checkWeeklyRecap() {
 function initXPSystem() {
   let data = getXPData();
 
-  // ── One-time streak patch — ensure streak is at least 2 ──
-  if (!localStorage.getItem('grind_streak_patch_v2')) {
-    data.streak = 4;
-    data.lastActiveDate = '2026-3-21';
-    saveXPData(data);
-    localStorage.setItem('grind_streak_patch_v2', '1');
-  }
-
-  // Patch v3 — inject missing quest history if dates are missing
-  if (!localStorage.getItem('grind_activity_patch_v4')) {
-    if (!data.dailyQuests['2026-3-8'])  data.dailyQuests['2026-3-8']  = { weigh: true };
-    if (!data.dailyQuests['2026-3-9'])  data.dailyQuests['2026-3-9']  = { steps: true, mobility: true, run1: true };
-    if (!data.dailyQuests['2026-3-10']) data.dailyQuests['2026-3-10'] = { steps: true, mobility: true, run1: true };
-    if (!data.dailyQuests['2026-3-11']) data.dailyQuests['2026-3-11'] = { steps: true };
-    if (!data.dailyQuests['2026-3-12']) data.dailyQuests['2026-3-12'] = { steps: true };
-    if (!data.dailyQuests['2026-3-17']) data.dailyQuests['2026-3-17'] = { weigh: true };
-    if (!data.dailyQuests['2026-3-18']) data.dailyQuests['2026-3-18'] = { weigh: true, hydrate: true, outdoor: true };
-    if (!data.dailyQuests['2026-3-19']) data.dailyQuests['2026-3-19'] = { steps: true, hydrate: true, weigh: true, outdoor: true };
-    if (!data.dailyQuests['2026-3-20']) data.dailyQuests['2026-3-20'] = { outdoor: true, ballprac: true, hydrate: true };
-    if (!data.dailyQuests['2026-3-21']) data.dailyQuests['2026-3-21'] = { steps: true, hydrate: true, outdoor: true, cold: true, weigh: { done: true, xp: 50, coins: 5, icon: '⚖️' } };
-    saveXPData(data);
-    localStorage.setItem('grind_activity_patch_v4', '1');
-  }
-
-  // Patch v5 — force correct XP/coins for existing users with wrong values
-  // Patch v6 — clear old seeded coin history
-  if (!localStorage.getItem('grind_data_patch_v9')) {
-    data.coinHistory = [];
-    saveXPData(data);
-    localStorage.setItem('grind_data_patch_v6', '1');
-  }
-
-  if (!localStorage.getItem('grind_data_patch_v9')) {
-    data.dailyQuests['2026-3-8']  = { weigh: true };
-    data.dailyQuests['2026-3-9']  = { steps: true, mobility: true, run1: true };
-    data.dailyQuests['2026-3-10'] = { steps: true, mobility: true, run1: true };
-    data.dailyQuests['2026-3-11'] = { steps: true };
-    data.dailyQuests['2026-3-12'] = { steps: true };
-    data.dailyQuests['2026-3-17'] = { weigh: true };
-    data.dailyQuests['2026-3-18'] = { weigh: true, hydrate: true, outdoor: true };
-    data.dailyQuests['2026-3-19'] = { steps: true, hydrate: true, weigh: true, outdoor: true };
-    data.dailyQuests['2026-3-20'] = { outdoor: true, ballprac: true, hydrate: true };
-    data.dailyQuests['2026-3-21'] = { steps: true, hydrate: true, outdoor: true, cold: true, weigh: { done: true, xp: 50, coins: 5, icon: '⚖️' } };
-    if ((data.totalXP || 0) < 2785) { data.totalXP = 2785; data.level = getLevelFromXP(2785); }
-    if ((data.coins || 0) < 249) data.coins = 249;
-    if ((data.streak || 0) < 5) { data.streak = 5; data.lastActiveDate = '2026-3-21'; }
-    if (!data.streakSkillLevel) { data.streakSkillLevel = 2; data.streakSkillProgress = 1; data.lastStreakSkillDate = '2026-3-21'; }
-    if (!data.coinHistory || data.coinHistory.length < 5) {
-      data.coinHistory = [
-        { icon:'🍽️', label:'Eating Out',      amount:-120, date:'3/21/2026' },
-        { icon:'⚖️', label:'Weight Logged',   amount:5,   date:'3/21/2026' },
-        { icon:'🧊', label:'Cold Shower',     amount:7,   date:'3/21/2026' },
-        { icon:'💧', label:'2L Water',        amount:6,   date:'3/21/2026' },
-        { icon:'🌳', label:'Outdoor Walk',    amount:9,   date:'3/21/2026' },
-        { icon:'🚶', label:'10K Steps',       amount:18,  date:'3/21/2026' },
-        { icon:'🏀', label:'Hoop Practice',   amount:12,  date:'3/20/2026' },
-        { icon:'💧', label:'2L Water',        amount:6,   date:'3/20/2026' },
-        { icon:'🌳', label:'Outdoor Walk',    amount:9,   date:'3/20/2026' },
-        { icon:'🌳', label:'Outdoor Walk',    amount:9,   date:'3/19/2026' },
-        { icon:'⚖️', label:'Weigh In — 257.8 lbs', amount:5, date:'3/19/2026' },
-        { icon:'💧', label:'2L Water',        amount:6,   date:'3/19/2026' },
-        { icon:'🚶', label:'10K Steps',       amount:12,  date:'3/19/2026' },
-        { icon:'⚖️', label:'Weigh In — 259 lbs', amount:5, date:'3/18/2026' },
-        { icon:'🌳', label:'Outdoor Walk',    amount:9,   date:'3/18/2026' },
-        { icon:'💧', label:'2L Water',        amount:6,   date:'3/18/2026' },
-        { icon:'⚖️', label:'Weigh In — 261 lbs', amount:5, date:'3/17/2026' },
-        { icon:'🎯', label:'Starting balance — R2TMC', amount:100, date:'3/8/2026' },
-      ];
-    }
-    saveXPData(data);
-    localStorage.setItem('grind_data_patch_v9', '1');
-    localStorage.setItem('grind_data_patch_v8', '1');
-    localStorage.setItem('grind_data_patch_v6', '1');
-    localStorage.setItem('grind_data_patch_v5', '1');
-    localStorage.setItem('grind_data_patch_v6', '1');
-  }
-
-  // ── Patch v10: force-set all critical fields ──
-  if (!localStorage.getItem('grind_data_patch_v10')) {
-    data.totalXP  = Math.max(data.totalXP || 0, 2785);
-    data.level    = getLevelFromXP(data.totalXP);
-    data.coins    = Math.max(data.coins || 0, 249);
-    data.streak   = Math.max(data.streak || 0, 5);
-    data.lastActiveDate = data.lastActiveDate || '2026-3-21';
-    // Streak skill tree — challenge-based, 2 banked, 1/3 into L3
-    data.streakSkillLevel = 2;
-    data.streakSkillProgress = 1;
-    data.lastStreakSkillDate = '2026-3-21';
-    if (!data.longestStreak) data.longestStreak = Math.max(data.streak || 0, 5);
-    // March 21st quests
-    if (!data.dailyQuests['2026-3-21'] || Object.keys(data.dailyQuests['2026-3-21']).length === 0) {
-      data.dailyQuests['2026-3-21'] = { steps: true, hydrate: true, outdoor: true, cold: true, weigh: { done: true, xp: 50, coins: 5, icon: '⚖️' } };
-    }
-    saveXPData(data);
-    localStorage.setItem('grind_data_patch_v10', '1');
-  }
-
-  // ── Patch v11: fix streakSkillLevel for all users ──
-  if (!localStorage.getItem('grind_data_patch_v11')) {
-    data = getXPData();
-    data.streakSkillLevel    = 2;
-    data.streakSkillProgress = 1;
-    data.lastStreakSkillDate  = '2026-3-21';
-    data.longestStreak        = Math.max(data.longestStreak || 0, data.streak || 0, 5);
-    saveXPData(data);
-    localStorage.setItem('grind_data_patch_v11', '1');
-  }
-
-  // Always seed fresh on v11 — if no quests logged yet, set up historical data
-  if (data.totalXP === 0 && Object.keys(data.dailyQuests).length === 0) {
-    // Mar 8: weigh-in
-    data.dailyQuests['2026-3-8']  = { weigh: true };
-    // Mar 9: 10K steps + mobility
-    data.dailyQuests['2026-3-9']  = { steps: true, mobility: true, run1: true };
-    // Mar 10: 10K steps + mobility + 2 mile run
-    data.dailyQuests['2026-3-10'] = { steps: true, mobility: true, run1: true };
-    // Mar 11: 10K steps + 2 mile run
-    data.dailyQuests['2026-3-11'] = { steps: true };
-    // Mar 12: 10K steps
-    data.dailyQuests['2026-3-12'] = { steps: true };
-    // Mar 18: 2L water + outdoor walk (yesterday)
-    data.dailyQuests['2026-3-17'] = { weigh: true };
-    // Mar 18: weigh in 259 + water + outdoor walk
-    data.dailyQuests['2026-3-18'] = { weigh: true, hydrate: true, outdoor: true };
-    // Mar 19: 10K steps + 2L water + mobility
-    // Mar 19: weigh in 257.8 + steps + water + mobility + outdoor walk
-    data.dailyQuests['2026-3-19'] = { steps: true, hydrate: true, weigh: true, outdoor: true };
-    // Mar 20 (Friday): outdoor walk + hoop practice + hydrate
-    data.dailyQuests['2026-3-20'] = { outdoor: true, ballprac: true, hydrate: true };
-    // Mar 21 (Saturday): steps + hydrate + outdoor + cold + weigh (259.2)
-    data.dailyQuests['2026-3-21'] = { steps: true, hydrate: true, outdoor: true, cold: true, weigh: { done: true, xp: 50, coins: 5, icon: '⚖️' } };
-    data.totalXP  = 2785;
-    data.level    = getLevelFromXP(2785);
-    data.coins    = 249;
-    data.redeemedRewards = {};
-    data.coinHistory = [
-      { icon:'🍽️', label:'Eating Out',      amount:-120, date:'3/21/2026' },
-      { icon:'⚖️', label:'Weight Logged',   amount:5,   date:'3/21/2026' },
-      { icon:'🧊', label:'Cold Shower',     amount:7,   date:'3/21/2026' },
-      { icon:'💧', label:'2L Water',        amount:6,   date:'3/21/2026' },
-      { icon:'🌳', label:'Outdoor Walk',    amount:9,   date:'3/21/2026' },
-      { icon:'🚶', label:'10K Steps',       amount:18,  date:'3/21/2026' },
-      { icon:'🏀', label:'Hoop Practice',   amount:12,  date:'3/20/2026' },
-      { icon:'💧', label:'2L Water',        amount:6,   date:'3/20/2026' },
-      { icon:'🌳', label:'Outdoor Walk',    amount:9,   date:'3/20/2026' },
-      { icon:'🌳', label:'Outdoor Walk',    amount:9,   date:'3/19/2026' },
-      { icon:'⚖️', label:'Weigh In — 257.8 lbs', amount:5, date:'3/19/2026' },
-      { icon:'💧', label:'2L Water',        amount:6,   date:'3/19/2026' },
-      { icon:'🚶', label:'10K Steps',       amount:12,  date:'3/19/2026' },
-      { icon:'⚖️', label:'Weigh In — 259 lbs',   amount:5,   date:'3/18/2026' },
-      { icon:'🌳', label:'Outdoor Walk',    amount:9,   date:'3/18/2026' },
-      { icon:'💧', label:'2L Water',        amount:6,   date:'3/18/2026' },
-      { icon:'⚖️', label:'Weigh In — 261 lbs',   amount:5,   date:'3/17/2026' },
-      { icon:'🎯', label:'Starting balance — R2TMC', amount:100, date:'3/8/2026' },
-    ];
-    data.streak               = 5;
-    data.longestStreak        = 5;
-    data.lastActiveDate       = '2026-3-21';
-    data.streakSkillLevel     = 2;
-    data.streakSkillProgress  = 1;
-    data.lastStreakSkillDate   = '2026-3-21';
-    data.claimedMilestones    = {};
-    saveXPData(data);
-  }
-
-  // Weight log patch v3 — ensures base entries always exist
-  const wdata = getWeightData();
-  if (!localStorage.getItem('grind_weight_patch_v4')) {
-    // v4 — deduplicate by weight+date, keep only one entry per unique timestamp
-    const baseEntries = [
-      { weight:259.2, date:'3/21/2026', _ts:new Date('2026-03-21').getTime() },
-      { weight:257.8, date:'3/19/2026', _ts:new Date('2026-03-19').getTime() },
-      { weight:259,   date:'3/18/2026', _ts:new Date('2026-03-18').getTime() },
-      { weight:261,   date:'3/17/2026', _ts:new Date('2026-03-17').getTime() },
-      { weight:268.8, date:'3/8/2026',  _ts:new Date('2026-03-08').getTime() },
-    ];
-    // Take all raw (non-avg) entries, deduplicate by _ts then by weight+date
-    const raw = (wdata.log || []).filter(e => !e._avg);
-    const seen = new Set();
-    const deduped = [];
-    raw.forEach(e => {
-      const key = (e._ts || 0) + '_' + e.weight + '_' + e.date;
-      if (!seen.has(key)) { seen.add(key); deduped.push(e); }
-    });
-    // Ensure base entries exist
-    baseEntries.forEach(b => {
-      const key = b._ts + '_' + b.weight + '_' + b.date;
-      if (!seen.has(key)) { seen.add(key); deduped.push(b); }
-    });
-    deduped.sort((a, b) => (b._ts || 0) - (a._ts || 0));
-    wdata.log = deduped;
-    wdata.current = deduped[0] ? deduped[0].weight : 257.8;
-    saveWeightData(wdata);
-    localStorage.setItem('grind_weight_patch_v4', '1');
-  }
-
-  // Patch v5 — re-stamp any entries with _ts=0 using date string parse
-  if (!localStorage.getItem('grind_weight_patch_v5')) {
-    const wfix = getWeightData();
-    if (wfix.log) {
-      const DAY = 86400000;
-      wfix.log = wfix.log.map((e, i) => {
-        if (!e._ts || e._ts === 0) {
-          const d = new Date(e.date);
-          const ts = isNaN(d.getTime()) ? (Date.now() - (wfix.log.length - i) * DAY) : d.getTime();
-          return { ...e, _ts: ts };
-        }
-        return e;
-      });
-      wfix.log.sort((a, b) => b._ts - a._ts);
-      wfix.current = wfix.log.filter(e => !e._avg)[0]?.weight || wfix.current;
-      saveWeightData(wfix);
-    }
-    localStorage.setItem('grind_weight_patch_v5', '1');
-    localStorage.setItem('grind_weight_patch_v3', '1');
-    localStorage.setItem('grind_weight_patch_v2', '1');
-  } else if (!wdata.log || wdata.log.length === 0) {
-    wdata.current = 257.8;
-    wdata.log = [
-      { weight:259.2, date:'3/21/2026', _ts:new Date('2026-03-21').getTime() },
-      { weight:257.8, date:'3/19/2026', _ts:new Date('2026-03-19').getTime() },
-      { weight:259,   date:'3/18/2026', _ts:new Date('2026-03-18').getTime() },
-      { weight:261,   date:'3/17/2026', _ts:new Date('2026-03-17').getTime() },
-      { weight:268.8, date:'3/8/2026',  _ts:new Date('2026-03-08').getTime() },
-    ];
-    saveWeightData(wdata);
-  }
-  // Patch v6 — Sunday March 22 activity + weight
-  if (!localStorage.getItem('grind_activity_patch_v6')) {
-    if (!data.dailyQuests['2026-3-22']) data.dailyQuests['2026-3-22'] = {};
-    data.dailyQuests['2026-3-22'].run1    = true;
-    data.dailyQuests['2026-3-22'].outdoor = true;
-    data.dailyQuests['2026-3-22'].steps   = true;
-    data.dailyQuests['2026-3-22'].hydrate = true;
-    data.dailyQuests['2026-3-22'].weigh   = true;
-    data.totalXP = (data.totalXP || 0) + 525;
-    data.coins   = (data.coins   || 0) + 66;
-    data.level   = getLevelFromXP(data.totalXP);
-    data.streak  = (data.streak  || 0) + 1;
-    data.lastActiveDate = '2026-3-22';
-    if (!data.longestStreak || data.streak > data.longestStreak) data.longestStreak = data.streak;
-    data.streakSkillProgress = (data.streakSkillProgress || 0) + 1;
-    data.lastStreakSkillDate = '2026-3-22';
-    if (!data.coinHistory) data.coinHistory = [];
-    data.coinHistory.unshift({ icon:'⚖️', label:'Weight Logged',   amount:6,  date:'3/22/2026' });
-    data.coinHistory.unshift({ icon:'💧', label:'Hydration',       amount:8,  date:'3/22/2026' });
-    data.coinHistory.unshift({ icon:'👟', label:'10K Steps',       amount:22, date:'3/22/2026' });
-    data.coinHistory.unshift({ icon:'🌿', label:'Outdoor Walk',    amount:11, date:'3/22/2026' });
-    data.coinHistory.unshift({ icon:'🏃', label:'Run Logged',      amount:19, date:'3/22/2026' });
-    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
-    const wdata6 = getWeightData();
-    if (!wdata6.log) wdata6.log = [];
-    wdata6.current = 257.4;
-    wdata6.log.unshift({ weight: 257.4, date: '3/22/2026', _ts: new Date('2026-03-22').getTime() });
-    saveWeightData(wdata6);
-    saveXPData(data);
-    localStorage.setItem('grind_activity_patch_v6', '1');
-  }
-  // Patch v7 — Monday March 23 activity
-  if (!localStorage.getItem('grind_activity_patch_v7')) {
-    if (!data.dailyQuests['2026-3-23']) data.dailyQuests['2026-3-23'] = {};
-    data.dailyQuests['2026-3-23'].hydrate  = true;
-    data.dailyQuests['2026-3-23'].mobility = true;
-    data.dailyQuests['2026-3-23'].cold     = true;
-    data.dailyQuests['2026-3-23'].outdoor  = true;
-    data.totalXP = (data.totalXP || 0) + 300;
-    data.coins   = (data.coins   || 0) + 38;
-    data.level   = getLevelFromXP(data.totalXP);
-    data.streak  = 7;
-    data.lastActiveDate = '2026-3-23';
-    if (!data.longestStreak || data.streak > data.longestStreak) data.longestStreak = data.streak;
-    data.streakSkillProgress = (data.streakSkillProgress || 0) + 1;
-    data.lastStreakSkillDate = '2026-3-23';
-    if (!data.coinHistory) data.coinHistory = [];
-    data.coinHistory.unshift({ icon:'🌿', label:'Outdoor Walk',  amount:11, date:'3/23/2026' });
-    data.coinHistory.unshift({ icon:'🧊', label:'Cold Shower',   amount:9,  date:'3/23/2026' });
-    data.coinHistory.unshift({ icon:'🧘', label:'Mobility',      amount:10, date:'3/23/2026' });
-    data.coinHistory.unshift({ icon:'💧', label:'2L Water',      amount:8,  date:'3/23/2026' });
-    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0, 50);
-    saveXPData(data);
-    localStorage.setItem('grind_activity_patch_v7', '1');
-  }
-  // Patch v8 — set XP to LVL 8, halfway E rank (1929 XP)
-  if (!localStorage.getItem('grind_xp_patch_v8')) {
-    data.totalXP = 1929;
-    data.level   = getLevelFromXP(1929);
-    saveXPData(data);
-    localStorage.setItem('grind_xp_patch_v8', '1');
-  }
-
-
-
-
-  // Patch — March 24 activity + weight (was missing from uploaded file)
-  if (!localStorage.getItem('grind_activity_patch_v24b')) {
-    if (!data.dailyQuests['2026-3-24']) data.dailyQuests['2026-3-24'] = {};
-    data.dailyQuests['2026-3-24'].steps   = true;
-    data.dailyQuests['2026-3-24'].run2    = true;
-    data.dailyQuests['2026-3-24'].outdoor = true;
-    data.dailyQuests['2026-3-24'].hydrate = true;
-    data.dailyQuests['2026-3-24'].sleep   = true;
-    data.dailyQuests['2026-3-24'].weigh   = true;
-    data.coins = (data.coins||0) + 87;
-    if (!data.coinHistory) data.coinHistory = [];
-    data.coinHistory.unshift({ icon:'⚖️', label:'Weight Logged',  amount:6,  date:'3/24/2026' });
-    data.coinHistory.unshift({ icon:'💤', label:'8hrs Sleep',     amount:12, date:'3/24/2026' });
-    data.coinHistory.unshift({ icon:'💧', label:'2L Water',       amount:8,  date:'3/24/2026' });
-    data.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',   amount:11, date:'3/24/2026' });
-    data.coinHistory.unshift({ icon:'🏃', label:'Run 2 Miles',    amount:28, date:'3/24/2026' });
-    data.coinHistory.unshift({ icon:'🚶', label:'10K Steps',      amount:22, date:'3/24/2026' });
-    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0,50);
-    const wdata24 = getWeightData();
-    if (!wdata24.log) wdata24.log = [];
-    if (!wdata24.log.some(function(e){ return e.date==='3/24/2026'; })) {
-      wdata24.log.unshift({ weight:259.5, date:'3/24/2026', _ts: new Date('2026-03-24').getTime() });
-      saveWeightData(wdata24);
-    }
-    saveXPData(data);
-    localStorage.setItem('grind_activity_patch_v24b','1');
-  }
-
-  // Patch v11 — March 25 activity
-  if (!localStorage.getItem('grind_activity_patch_v11b')) {
-    if (!data.dailyQuests['2026-3-25']) data.dailyQuests['2026-3-25'] = {};
-    data.dailyQuests['2026-3-25'].cold    = true;
-    data.dailyQuests['2026-3-25'].hydrate = true;
-    data.dailyQuests['2026-3-25'].ball    = true;
-    data.dailyQuests['2026-3-25'].outdoor = true;
-    data.dailyQuests['2026-3-25'].steps   = true;
-    data.totalXP = (data.totalXP||0) + 645;
-    data.coins   = (data.coins||0)   + 81;
-    data.level   = getLevelFromXP(data.totalXP);
-    data.streak  = 9; data.lastActiveDate = '2026-3-25';
-    if (!data.longestStreak || data.streak > data.longestStreak) data.longestStreak = data.streak;
-    data.streakSkillProgress = (data.streakSkillProgress||0) + 1;
-    if (!data.coinHistory) data.coinHistory = [];
-    data.coinHistory.unshift({ icon:'🚶', label:'10K Steps',      amount:22, date:'3/25/2026' });
-    data.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',   amount:11, date:'3/25/2026' });
-    data.coinHistory.unshift({ icon:'🏀', label:'Sports Game',    amount:31, date:'3/25/2026' });
-    data.coinHistory.unshift({ icon:'💧', label:'2L Water',       amount:8,  date:'3/25/2026' });
-    data.coinHistory.unshift({ icon:'🧊', label:'Cold Shower',    amount:9,  date:'3/25/2026' });
-    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0,50);
-    saveXPData(data); localStorage.setItem('grind_activity_patch_v11b','1');
-  }
-
-  // Patch v12 — March 26 activity
-  if (!localStorage.getItem('grind_activity_patch_v12b')) {
-    if (!data.dailyQuests['2026-3-26']) data.dailyQuests['2026-3-26'] = {};
-    data.dailyQuests['2026-3-26'].push     = true;
-    data.dailyQuests['2026-3-26'].outdoor  = true;
-    data.dailyQuests['2026-3-26'].steps    = true;
-    data.dailyQuests['2026-3-26'].ballprac = true;
-    data.dailyQuests['2026-3-26'].mobility = true;
-    data.totalXP = (data.totalXP||0) + 770;
-    data.coins   = (data.coins||0)   + 97;
-    data.level   = getLevelFromXP(data.totalXP);
-    data.streak  = 10; data.lastActiveDate = '2026-3-26';
-    if (!data.longestStreak || data.streak > data.longestStreak) data.longestStreak = data.streak;
-    data.streakSkillProgress = (data.streakSkillProgress||0) + 1;
-    if (!data.coinHistory) data.coinHistory = [];
-    data.coinHistory.unshift({ icon:'🧘', label:'Mobility',       amount:10, date:'3/26/2026' });
-    data.coinHistory.unshift({ icon:'🏀', label:'Sports Practice', amount:16, date:'3/26/2026' });
-    data.coinHistory.unshift({ icon:'🚶', label:'10K Steps',      amount:22, date:'3/26/2026' });
-    data.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',   amount:11, date:'3/26/2026' });
-    data.coinHistory.unshift({ icon:'💪', label:'Push Day',       amount:38, date:'3/26/2026' });
-    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0,50);
-    saveXPData(data); localStorage.setItem('grind_activity_patch_v12b','1');
-  }
-
-  // Patch v13 — March 27 activity
-  if (!localStorage.getItem('grind_activity_patch_v13b')) {
-    if (!data.dailyQuests['2026-3-27']) data.dailyQuests['2026-3-27'] = {};
-    data.dailyQuests['2026-3-27'].cold     = true;
-    data.dailyQuests['2026-3-27'].ballprac = true;
-    data.dailyQuests['2026-3-27'].outdoor  = true;
-    data.dailyQuests['2026-3-27'].steps    = true;
-    data.totalXP = (data.totalXP||0) + 460;
-    data.coins   = (data.coins||0)   + 58;
-    data.level   = getLevelFromXP(data.totalXP);
-    data.streak  = 11; data.lastActiveDate = '2026-3-27';
-    if (!data.longestStreak || data.streak > data.longestStreak) data.longestStreak = data.streak;
-    data.streakSkillProgress = (data.streakSkillProgress||0) + 1;
-    if (!data.coinHistory) data.coinHistory = [];
-    data.coinHistory.unshift({ icon:'🚶', label:'10K Steps',      amount:22, date:'3/27/2026' });
-    data.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',   amount:11, date:'3/27/2026' });
-    data.coinHistory.unshift({ icon:'🏀', label:'Sports Practice', amount:16, date:'3/27/2026' });
-    data.coinHistory.unshift({ icon:'🧊', label:'Cold Shower',    amount:9,  date:'3/27/2026' });
-    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0,50);
-    saveXPData(data); localStorage.setItem('grind_activity_patch_v13b','1');
-  }
-
-  // Patch v14 — March 28 activity + weight
-  if (!localStorage.getItem('grind_activity_patch_v14b')) {
-    if (!data.dailyQuests['2026-3-28']) data.dailyQuests['2026-3-28'] = {};
-    data.dailyQuests['2026-3-28'].weigh   = true;
-    data.dailyQuests['2026-3-28'].pull    = true;
-    data.dailyQuests['2026-3-28'].hydrate = true;
-    data.dailyQuests['2026-3-28'].outdoor = true;
-    data.dailyQuests['2026-3-28'].steps   = true;
-    data.totalXP = (data.totalXP||0) + 675;
-    data.coins   = (data.coins||0)   + 85;
-    data.level   = getLevelFromXP(data.totalXP);
-    data.streak  = 12; data.lastActiveDate = '2026-3-28';
-    if (!data.longestStreak || data.streak > data.longestStreak) data.longestStreak = data.streak;
-    data.streakSkillProgress = (data.streakSkillProgress||0) + 1;
-    if (!data.coinHistory) data.coinHistory = [];
-    data.coinHistory.unshift({ icon:'🚶', label:'10K Steps',      amount:22, date:'3/28/2026' });
-    data.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',   amount:11, date:'3/28/2026' });
-    data.coinHistory.unshift({ icon:'💧', label:'2L Water',       amount:8,  date:'3/28/2026' });
-    data.coinHistory.unshift({ icon:'🏋', label:'Pull Day',       amount:38, date:'3/28/2026' });
-    data.coinHistory.unshift({ icon:'⚖️', label:'Weight Logged',  amount:6,  date:'3/28/2026' });
-    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0,50);
-    const wdata14 = getWeightData();
-    if (!wdata14.log) wdata14.log = [];
-    wdata14.current = 258.8;
-    wdata14.log.unshift({ weight:258.8, date:'3/28/2026', _ts: new Date('2026-03-28').getTime() });
-    saveWeightData(wdata14);
-    saveXPData(data); localStorage.setItem('grind_activity_patch_v14b','1');
-  }
-
-  // Patch v15 — force XP to 5,050 (just inside D rank at 5,000 with new thresholds)
-  if (!localStorage.getItem('grind_xp_patch_v15c')) {
-    data.totalXP = 4000;
-    data.level   = getLevelFromXP(4000);
-    saveXPData(data);
-    localStorage.setItem('grind_xp_patch_v15c','1');
-  }
-  // Patch — 2 eating out redemptions (-240 coins)
-  if (!localStorage.getItem('grind_eatout_patch_v2')) {
-    data.coins = (data.coins||0) - 240;
-    if (!data.coinHistory) data.coinHistory = [];
-    data.coinHistory.unshift({ icon:'🍽️', label:'Eating Out', amount:-120, date:'3/27/2026' });
-    data.coinHistory.unshift({ icon:'🍽️', label:'Eating Out', amount:-120, date:'3/28/2026' });
-    if (data.coinHistory.length > 50) data.coinHistory = data.coinHistory.slice(0,50);
-    saveXPData(data);
-    localStorage.setItem('grind_eatout_patch_v2','1');
-  }
-
-  // Patch — June 3rd: Push, Outdoor, 2L Water, Sports Game, 10K Steps, Weigh 256.6
-  if (!localStorage.getItem('grind_activity_patch_jun3_v1')) {
-    var d3 = getXPData();
-    if (!d3.dailyQuests['2026-6-3']) d3.dailyQuests['2026-6-3'] = {};
-    d3.dailyQuests['2026-6-3'].push    = true;
-    d3.dailyQuests['2026-6-3'].outdoor = true;
-    d3.dailyQuests['2026-6-3'].hydrate = true;
-    d3.dailyQuests['2026-6-3'].ball    = true;
-    d3.dailyQuests['2026-6-3'].steps   = true;
-    d3.dailyQuests['2026-6-3'].weigh   = true;
-    d3.totalXP = (d3.totalXP||0) + 825;
-    d3.coins   = (d3.coins||0)   + 103;
-    d3.level   = getLevelFromXP(d3.totalXP);
-    d3.streak  = 6; d3.lastActiveDate = '2026-6-3';
-    if (!d3.longestStreak || d3.streak > d3.longestStreak) d3.longestStreak = d3.streak;
-    d3.streakSkillProgress = (d3.streakSkillProgress||0) + 1;
-    if (!d3.coinHistory) d3.coinHistory = [];
-    d3.coinHistory.unshift({ icon:'⚖️', label:'Weight Logged',  amount:6,  date:'6/3/2026' });
-    d3.coinHistory.unshift({ icon:'🚶', label:'10K Steps',      amount:22, date:'6/3/2026' });
-    d3.coinHistory.unshift({ icon:'🏀', label:'Sports Game',    amount:31, date:'6/3/2026' });
-    d3.coinHistory.unshift({ icon:'💧', label:'2L Water',       amount:8,  date:'6/3/2026' });
-    d3.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',   amount:11, date:'6/3/2026' });
-    d3.coinHistory.unshift({ icon:'💪', label:'Push Day',       amount:25, date:'6/3/2026' });
-    if (d3.coinHistory.length > 50) d3.coinHistory = d3.coinHistory.slice(0,50);
-    var wd3 = getWeightData();
-    if (!wd3.log) wd3.log = [];
-    wd3.current = 256.6;
-    wd3.log.unshift({ weight:256.6, date:'6/3/2026', _ts:new Date('2026-06-03').getTime() });
-    saveWeightData(wd3); saveXPData(d3);
-    localStorage.setItem('grind_activity_patch_jun3_v1','1');
-  }
-
-  // Patch — June 4th: Outdoor, Sports Game, 2L Water, 10K Steps, Weigh 257.0
-  if (!localStorage.getItem('grind_activity_patch_jun4_v1')) {
-    var d4 = getXPData();
-    if (!d4.dailyQuests['2026-6-4']) d4.dailyQuests['2026-6-4'] = {};
-    d4.dailyQuests['2026-6-4'].outdoor = true;
-    d4.dailyQuests['2026-6-4'].ball    = true;
-    d4.dailyQuests['2026-6-4'].hydrate = true;
-    d4.dailyQuests['2026-6-4'].steps   = true;
-    d4.dailyQuests['2026-6-4'].weigh   = true;
-    d4.totalXP = (d4.totalXP||0) + 625;
-    d4.coins   = (d4.coins||0)   + 78;
-    d4.level   = getLevelFromXP(d4.totalXP);
-    d4.streak  = 7; d4.lastActiveDate = '2026-6-4';
-    if (!d4.longestStreak || d4.streak > d4.longestStreak) d4.longestStreak = d4.streak;
-    d4.streakSkillProgress = (d4.streakSkillProgress||0) + 1;
-    if (!d4.coinHistory) d4.coinHistory = [];
-    d4.coinHistory.unshift({ icon:'⚖️', label:'Weight Logged',  amount:6,  date:'6/4/2026' });
-    d4.coinHistory.unshift({ icon:'🚶', label:'10K Steps',      amount:22, date:'6/4/2026' });
-    d4.coinHistory.unshift({ icon:'💧', label:'2L Water',       amount:8,  date:'6/4/2026' });
-    d4.coinHistory.unshift({ icon:'🏀', label:'Sports Game',    amount:31, date:'6/4/2026' });
-    d4.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',   amount:11, date:'6/4/2026' });
-    if (d4.coinHistory.length > 50) d4.coinHistory = d4.coinHistory.slice(0,50);
-    var wd4 = getWeightData();
-    if (!wd4.log) wd4.log = [];
-    wd4.current = 257.0;
-    wd4.log.unshift({ weight:257.0, date:'6/4/2026', _ts:new Date('2026-06-04').getTime() });
-    saveWeightData(wd4); saveXPData(d4);
-    localStorage.setItem('grind_activity_patch_jun4_v1','1');
-  }
-
-  // Patch — Masjid visits for streak period
-  if (!localStorage.getItem('grind_masjid_patch_v1')) {
-    var md = getMasjidData();
-    md['2026-5-29'] = 2;
-    md['2026-5-30'] = 1;
-    md['2026-6-4']  = 1;
-    md['2026-6-5']  = 2;
-    saveMasjidData(md);
-    // XP: May 29 (2×100=200) + May 30 (1×100=100) + Jun 4 (1×100=100) + Jun 5 (2×100=200) = 600 XP
-    // Coins: 200/8*2 + 100/8 + 100/8 + 200/8*2 = 75 coins total
-    var xpD = getXPData();
-    xpD.totalXP = (xpD.totalXP||0) + 600;
-    xpD.coins   = (xpD.coins||0)   + 72;
-    xpD.level   = getLevelFromXP(xpD.totalXP);
-    if (!xpD.coinHistory) xpD.coinHistory = [];
-    xpD.coinHistory.unshift({ icon:'🕌', label:'Masjid Visit ×2', amount:24, date:'6/5/2026' });
-    xpD.coinHistory.unshift({ icon:'🕌', label:'Masjid Visit',    amount:12, date:'6/4/2026' });
-    xpD.coinHistory.unshift({ icon:'🕌', label:'Masjid Visit',    amount:12, date:'5/30/2026' });
-    xpD.coinHistory.unshift({ icon:'🕌', label:'Masjid Visit ×2', amount:24, date:'5/29/2026' });
-    if (xpD.coinHistory.length > 50) xpD.coinHistory = xpD.coinHistory.slice(0,50);
-    saveXPData(xpD);
-    localStorage.setItem('grind_masjid_patch_v1','1');
-  }
-
-  // Patch — Jun 2 additions: hydrate + sleep
-  if (!localStorage.getItem('grind_patch_jun2_add_v1')) {
-    var da2 = getXPData();
-    if (!da2.dailyQuests['2026-6-2']) da2.dailyQuests['2026-6-2'] = {};
-    da2.dailyQuests['2026-6-2'].hydrate = true;
-    da2.dailyQuests['2026-6-2'].sleep   = true;
-    da2.totalXP = (da2.totalXP||0) + 160;
-    da2.coins   = (da2.coins||0)   + 20;
-    da2.level   = getLevelFromXP(da2.totalXP);
-    if (!da2.coinHistory) da2.coinHistory = [];
-    da2.coinHistory.unshift({ icon:'💤', label:'8hrs Sleep',  amount:12, date:'6/2/2026' });
-    da2.coinHistory.unshift({ icon:'💧', label:'2L Water',    amount:8,  date:'6/2/2026' });
-    if (da2.coinHistory.length > 50) da2.coinHistory = da2.coinHistory.slice(0,50);
-    saveXPData(da2);
-    localStorage.setItem('grind_patch_jun2_add_v1','1');
-  }
-
-  // Patch — Jun 3 addition: sleep
-  if (!localStorage.getItem('grind_patch_jun3_add_v1')) {
-    var da3 = getXPData();
-    if (!da3.dailyQuests['2026-6-3']) da3.dailyQuests['2026-6-3'] = {};
-    da3.dailyQuests['2026-6-3'].sleep = true;
-    da3.totalXP = (da3.totalXP||0) + 100;
-    da3.coins   = (da3.coins||0)   + 12;
-    da3.level   = getLevelFromXP(da3.totalXP);
-    if (!da3.coinHistory) da3.coinHistory = [];
-    da3.coinHistory.unshift({ icon:'💤', label:'8hrs Sleep', amount:12, date:'6/3/2026' });
-    if (da3.coinHistory.length > 50) da3.coinHistory = da3.coinHistory.slice(0,50);
-    saveXPData(da3);
-    localStorage.setItem('grind_patch_jun3_add_v1','1');
-  }
-
-  // Patch — Jun 5: Outdoor, 2L Water, Push, Pull, Weigh 257, Masjid 1
-  if (!localStorage.getItem('grind_patch_jun5_v1')) {
-    var da5 = getXPData();
-    if (!da5.dailyQuests['2026-6-5']) da5.dailyQuests['2026-6-5'] = {};
-    da5.dailyQuests['2026-6-5'].outdoor = true;
-    da5.dailyQuests['2026-6-5'].hydrate = true;
-    da5.dailyQuests['2026-6-5'].push    = true;
-    da5.dailyQuests['2026-6-5'].pull    = true;
-    da5.dailyQuests['2026-6-5'].weigh   = true;
-    da5.totalXP = (da5.totalXP||0) + 600;
-    da5.coins   = (da5.coins||0)   + 75;
-    da5.level   = getLevelFromXP(da5.totalXP);
-    da5.streak  = 8; da5.lastActiveDate = '2026-6-5';
-    if (!da5.longestStreak || da5.streak > da5.longestStreak) da5.longestStreak = da5.streak;
-    da5.streakSkillProgress = (da5.streakSkillProgress||0) + 1;
-    if (!da5.coinHistory) da5.coinHistory = [];
-    da5.coinHistory.unshift({ icon:'⚖️', label:'Weight Logged',  amount:6,  date:'6/5/2026' });
-    da5.coinHistory.unshift({ icon:'🏋', label:'Pull Day',       amount:25, date:'6/5/2026' });
-    da5.coinHistory.unshift({ icon:'💪', label:'Push Day',       amount:25, date:'6/5/2026' });
-    da5.coinHistory.unshift({ icon:'💧', label:'2L Water',       amount:8,  date:'6/5/2026' });
-    da5.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',   amount:11, date:'6/5/2026' });
-    if (da5.coinHistory.length > 50) da5.coinHistory = da5.coinHistory.slice(0,50);
-    var wd5 = getWeightData();
-    if (!wd5.log) wd5.log = [];
-    wd5.current = 257.0;
-    wd5.log.unshift({ weight:257.0, date:'6/5/2026', _ts:new Date('2026-06-05').getTime() });
-    saveWeightData(wd5);
-    // Masjid visit for Jun 5
-    var md5 = getMasjidData();
-    md5['2026-6-5'] = (md5['2026-6-5'] || 0) + 1;
-    saveMasjidData(md5);
-    saveXPData(da5);
-    localStorage.setItem('grind_patch_jun5_v1','1');
-  }
-
-  // Patch — Jun 6: 10K Steps, Masjid Visit, 2L Water, Outdoor
-  if (!localStorage.getItem('grind_patch_jun6_v1')) {
-    var da6 = getXPData();
-    if (!da6.dailyQuests['2026-6-6']) da6.dailyQuests['2026-6-6'] = {};
-    da6.dailyQuests['2026-6-6'].steps   = true;
-    da6.dailyQuests['2026-6-6'].hydrate = true;
-    da6.dailyQuests['2026-6-6'].outdoor = true;
-    da6.totalXP = (da6.totalXP||0) + 325;  // steps+hydrate+outdoor (masjid via logMasjid)
-    da6.coins   = (da6.coins||0)   + 41;
-    da6.level   = getLevelFromXP(da6.totalXP);
-    da6.streak  = 8; da6.lastActiveDate = '2026-6-6';
-    if (!da6.longestStreak || da6.streak > da6.longestStreak) da6.longestStreak = da6.streak;
-    da6.streakSkillProgress = (da6.streakSkillProgress||0) + 1;
-    if (!da6.coinHistory) da6.coinHistory = [];
-    da6.coinHistory.unshift({ icon:'🌳', label:'Outdoor Walk',  amount:11, date:'6/6/2026' });
-    da6.coinHistory.unshift({ icon:'💧', label:'2L Water',      amount:8,  date:'6/6/2026' });
-    da6.coinHistory.unshift({ icon:'🚶', label:'10K Steps',     amount:22, date:'6/6/2026' });
-    if (da6.coinHistory.length > 50) da6.coinHistory = da6.coinHistory.slice(0,50);
-    // Masjid visit for Jun 6
-    var md6 = getMasjidData();
-    md6['2026-6-6'] = (md6['2026-6-6'] || 0) + 1;
-    saveMasjidData(md6);
-    saveXPData(da6);
-    localStorage.setItem('grind_patch_jun6_v1','1');
-  }
-
-  // XP patch v21 — set to 47,518 XP (B rank)
-  if (!localStorage.getItem('grind_xp_patch_v21')) {
-    data.totalXP = 47518;
-    data.level   = getLevelFromXP(47518);
-    saveXPData(data);
-    localStorage.setItem('grind_xp_patch_v21', '1');
-  }
-
-  // ── MEGA DATA PATCH — build_20260607 ──
-  if (localStorage.getItem('grind_mega_v3') !== 'build_20260617') {
-    data.totalXP        = 52518;
+  if ((data.streak || 0) < 19 || !data.dailyQuests || !data.dailyQuests['2026-6-16']) {
+    data.totalXP        = 56500;
     data.coins          = 1700;
-    data.level          = getLevelFromXP(47518);
-    data.streak         = 16;
+    data.level          = getLevelFromXP(52518);
+    data.streak         = 19;
     data.longestStreak  = Math.max(data.longestStreak || 0, 45);
-    data.lastActiveDate = '2026-6-13';
+    data.lastActiveDate = '2026-6-16';
     data.streakSkillProgress = 55;
-    data.lastStreakSkillDate  = '2026-6-13';
-    if (!data.dailyQuests) data.dailyQuests = {};
-
-    // ── Apr 4–19 (streak 17–32) ──
+    data.lastStreakSkillDate  = '2026-6-16';
+    data.dailyQuests = {};
     data.dailyQuests['2026-4-4']  = { outdoor:true, ball:true, steps:true, hydrate:true, sleep:true };
     data.dailyQuests['2026-4-5']  = { push:true, run5k:true, steps:true, cold:true, hydrate:true, outdoor:true };
     data.dailyQuests['2026-4-6']  = { weigh:true, outdoor:true, pull:true, hydrate:true, ball:true, steps:true };
@@ -9147,14 +8527,6 @@ function initXPSystem() {
     data.dailyQuests['2026-4-17'] = { outdoor:true, steps:true, hydrate:true, longrun:true };
     data.dailyQuests['2026-4-18'] = { outdoor:true, run5k:true, steps:true, hydrate:true };
     data.dailyQuests['2026-4-19'] = { hydrate:true, outdoor:true };
-
-    // ── Weekly Apr 13 (W16): lift+run x2, fasted ──
-    if (!data.weeklyQuests) data.weeklyQuests = {};
-    data.weeklyQuests['2026-W15'] = { wk_liftnrun2:true, wk_fasted3:true };
-    data.weeklyQuests['2026-W17'] = { wk_70ksteps:true, wk_fullweek:true, wk_longrun:true };
-    data.weeklyQuests['2026-W23'] = { wk_liftrun:true, wk_fullweek:true };
-
-    // ── Apr 20–30 (streak 33–43) ──
     data.dailyQuests['2026-4-20'] = { outdoor:true, hydrate:true, push:true, pull:true, ball:true, steps:true };
     data.dailyQuests['2026-4-22'] = { push:true, pull:true, outdoor:true, ball:true, hydrate:true };
     data.dailyQuests['2026-4-24'] = { hydrate:true, steps:true, outdoor:true };
@@ -9164,8 +8536,6 @@ function initXPSystem() {
     data.dailyQuests['2026-4-28'] = { outdoor:true, steps:true, hydrate:true, push:true };
     data.dailyQuests['2026-4-29'] = { outdoor:true, steps:true, hydrate:true };
     data.dailyQuests['2026-4-30'] = { pull:true, push:true, outdoor:true, steps:true, hydrate:true };
-
-    // ── May 1–16 ──
     data.dailyQuests['2026-5-1']  = { steps:true, outdoor:true, hydrate:true };
     data.dailyQuests['2026-5-2']  = { outdoor:true, hydrate:true };
     data.dailyQuests['2026-5-3']  = { steps:true, outdoor:true };
@@ -9182,11 +8552,7 @@ function initXPSystem() {
     data.dailyQuests['2026-5-14'] = { pull:true, outdoor:true, hydrate:true, ball:true, steps:true };
     data.dailyQuests['2026-5-15'] = { outdoor:true, steps:true, hydrate:true };
     data.dailyQuests['2026-5-16'] = { ball:true, outdoor:true, steps:true, hydrate:true };
-
-    // ── May 26 (solo day, no streak) ──
     data.dailyQuests['2026-5-26'] = { outdoor:true, hydrate:true };
-
-    // ── May 29 – Jun 6 (current streak) ──
     data.dailyQuests['2026-5-29'] = { push:true, outdoor:true, steps:true };
     data.dailyQuests['2026-5-30'] = { pull:true, outdoor:true, hydrate:true };
     data.dailyQuests['2026-6-1']  = { push:true, outdoor:true, weigh:true };
@@ -9202,14 +8568,21 @@ function initXPSystem() {
     data.dailyQuests['2026-6-11'] = { outdoor:true, push:true, legs:true, steps:true, ball:true, hydrate:true };
     data.dailyQuests['2026-6-12'] = { outdoor:true, hydrate:true, mobility:true };
     data.dailyQuests['2026-6-13'] = { outdoor:true, hydrate:true, mobility:true, ball:true, steps:true };
-
-    // ── Masjid visits ──
+    data.dailyQuests['2026-6-14'] = { push:true, pull:true, outdoor:true, steps:true, hydrate:true };
+    data.dailyQuests['2026-6-15'] = { outdoor:true, mobility:true, hydrate:true };
+    data.dailyQuests['2026-6-16'] = { weigh:true, outdoor:true, push:true, hydrate:true, sleep:true, steps:true };
+    data.weeklyQuests = {};
+    data.weeklyQuests['2026-W15'] = { wk_liftnrun2:true, wk_fasted3:true };
+    data.weeklyQuests['2026-W17'] = { wk_70ksteps:true, wk_fullweek:true, wk_longrun:true };
+    data.weeklyQuests['2026-W23'] = { wk_liftrun:true, wk_fullweek:true };
+    data.weeklyQuests['2026-W24'] = { wk_70ksteps:true, wk_fullweek:true };
     var _md = JSON.parse(localStorage.getItem('masjid_log_v1') || '{}');
-    _md['2026-5-29']=2; _md['2026-5-30']=1; _md['2026-6-4']=1; _md['2026-6-5']=1; _md['2026-6-6']=1; _md['2026-6-8']=1; _md['2026-6-9']=1; _md['2026-6-10']=1; _md['2026-6-12']=1; _md['2026-6-13']=1;
+    _md['2026-5-29']=2; _md['2026-5-30']=1; _md['2026-6-4']=1; _md['2026-6-5']=1;
+    _md['2026-6-6']=1; _md['2026-6-8']=1; _md['2026-6-9']=1; _md['2026-6-10']=1;
+    _md['2026-6-12']=1; _md['2026-6-13']=1; _md['2026-6-15']=1; _md['2026-6-16']=1;
     localStorage.setItem('masjid_log_v1', JSON.stringify(_md));
-
-    // ── Weight log ──
-    localStorage.setItem('grind_weight_v10', JSON.stringify({ current:257.0, log:[
+    localStorage.setItem('grind_weight_v10', JSON.stringify({ current:255.3, log:[
+      { weight:255.3, date:'6/16/2026', _ts:new Date('2026-06-16').getTime() },
       { weight:257.0, date:'6/6/2026',  _ts:new Date('2026-06-06').getTime() },
       { weight:257.0, date:'6/5/2026',  _ts:new Date('2026-06-05').getTime() },
       { weight:257.0, date:'6/4/2026',  _ts:new Date('2026-06-04').getTime() },
@@ -9218,61 +8591,31 @@ function initXPSystem() {
       { weight:259.5, date:'3/24/2026', _ts:new Date('2026-03-24').getTime() },
       { weight:258.8, date:'3/28/2026', _ts:new Date('2026-03-28').getTime() },
     ]}));
-
-    // ── Coin history (recent) ──
     data.coinHistory = [
-      { icon:'👑', label:'Full Week No Miss', amount:88, date:'6/7/2026' },
-      { icon:'🔥', label:'Lift + Run Same Day x2', amount:75, date:'6/7/2026' },
-      { icon:'💤', label:'8hrs Sleep',    amount:12, date:'6/7/2026' },
-      { icon:'🚶', label:'10K Steps',    amount:22, date:'6/7/2026' },
-      { icon:'💧', label:'2L Water',     amount:8,  date:'6/7/2026' },
-      { icon:'🌳', label:'Outdoor Walk', amount:11, date:'6/7/2026' },
-      { icon:'🌳', label:'Outdoor Walk', amount:11, date:'6/6/2026' },
-      { icon:'💧', label:'2L Water',     amount:8,  date:'6/6/2026' },
-      { icon:'🚶', label:'10K Steps',    amount:22, date:'6/6/2026' },
-      { icon:'🕌', label:'Masjid Visit', amount:12, date:'6/6/2026' },
-      { icon:'⚖️', label:'Weigh In',     amount:6,  date:'6/5/2026' },
-      { icon:'🏋', label:'Pull Day',     amount:25, date:'6/5/2026' },
-      { icon:'💪', label:'Push Day',     amount:25, date:'6/5/2026' },
-      { icon:'💧', label:'2L Water',     amount:8,  date:'6/5/2026' },
-      { icon:'🌳', label:'Outdoor Walk', amount:11, date:'6/5/2026' },
-      { icon:'🕌', label:'Masjid Visit', amount:12, date:'6/5/2026' },
-      { icon:'⚖️', label:'Weigh In',     amount:6,  date:'6/4/2026' },
-      { icon:'🚶', label:'10K Steps',    amount:22, date:'6/4/2026' },
-      { icon:'💧', label:'2L Water',     amount:8,  date:'6/4/2026' },
-      { icon:'🏀', label:'Sports Game',  amount:31, date:'6/4/2026' },
-      { icon:'🌳', label:'Outdoor Walk', amount:11, date:'6/4/2026' },
-      { icon:'🕌', label:'Masjid Visit', amount:12, date:'6/4/2026' },
+      { icon:'🌳', label:'Outdoor Walk', amount:11, date:'6/13/2026' },
+      { icon:'💧', label:'3L Water',     amount:10, date:'6/13/2026' },
+      { icon:'🚶', label:'10K Steps',    amount:22, date:'6/13/2026' },
+      { icon:'🕌', label:'Masjid Visit', amount:12, date:'6/13/2026' },
+      { icon:'🌳', label:'Outdoor Walk', amount:11, date:'6/12/2026' },
+      { icon:'💧', label:'3L Water',     amount:10, date:'6/12/2026' },
+      { icon:'🕌', label:'Masjid Visit', amount:12, date:'6/12/2026' },
+      { icon:'🌳', label:'Outdoor Walk', amount:11, date:'6/11/2026' },
+      { icon:'💧', label:'3L Water',     amount:10, date:'6/11/2026' },
+      { icon:'🚶', label:'10K Steps',    amount:22, date:'6/11/2026' },
     ];
-
     saveXPData(data);
-    localStorage.setItem('grind_mega_v3', 'build_20260617');
   }
 
-    checkPunishment();
-  updateHunterCard();
-  setTimeout(checkWeeklyRecap, 1200); // slight delay so app loads first
-  buildQuestGrid();
-  updateResetButtonStates();
-  buildRewardShop();
-  buildRunnerTierCard();
-  buildActivityCalendar();
-  buildBadges();
-    buildSkillTree();
-  buildMasjidTracker();
-  buildBossQuest();
-  buildRaceHistory();
-  buildBookLog();
-  buildBookSkillTree();
+  checkPunishment();
 }
 
-// ── Countdown ──
-let activeTrip = 'la';
+
 const TRIPS = {
   la: { dest:'SoCal',          date:new Date('2026-04-08T00:00:00'), goal:'255 lbs · Run a 5K', sub:'April 8, 2026' },
-  fr: { dest:'TORONTO',        date:new Date('2026-07-11T00:00:00'), goal:'243 lbs · Run a 10K', sub:'July 11, 2026' },
-  br: { dest:'SOUTH AMERICA',  date:new Date('2026-08-29T00:00:00'), goal:'230 lbs · Half Marathon', sub:'Aug 29, 2026' },
+  fr: { dest:'Toronto',        date:new Date('2026-07-11T00:00:00'), goal:'243 lbs · Run a 10K', sub:'July 11, 2026' },
+  br: { dest:'Brazil + Peru',  date:new Date('2026-08-29T00:00:00'), goal:'230 lbs · Half Marathon', sub:'Aug 29, 2026' },
 };
+
 function switchCountdown(trip) {
   activeTrip = trip;
   const t = TRIPS[trip];
@@ -9570,8 +8913,9 @@ setTimeout(positionAccentBar, 100);
 setTimeout(positionAccentBar, 500);
 
 // ── INIT ──
-showPage('roadmap');
 initXPSystem();
+showPage('roadmap');
+updateHunterCard();
 renderWeightProfile();
 
 
@@ -10111,407 +9455,9 @@ function buildStakesOverlay() {
 </script>
 <!-- ── THE STAKES overlay trigger is now inline in the roadmap ── -->
 
-<script>
-// ── ONE-TIME PATCH: March 29 2026 ──
-(function applyMarch29Patch() {
-  const KEY = 'grind_xp_v33';
-  const PATCH_KEY = 'patch_mar29_v1';
-  if (localStorage.getItem(PATCH_KEY)) return; // already applied
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (!raw) { console.log('[PATCH] No existing data — skipping'); return; }
-    const data = JSON.parse(raw);
-
-    // ── 1. March 29 daily quests ──
-    if (!data.dailyQuests) data.dailyQuests = {};
-    if (!data.dailyQuests['2026-3-29']) data.dailyQuests['2026-3-29'] = {};
-    data.dailyQuests['2026-3-29']['hydrate'] = true;
-    data.dailyQuests['2026-3-29']['outdoor'] = true;
-    data.dailyQuests['2026-3-29']['steps']   = true;
-
-    // ── 2. W13 weekly completions ──
-    if (!data.weeklyQuests) data.weeklyQuests = {};
-    if (!data.weeklyQuests['2026-W13']) data.weeklyQuests['2026-W13'] = {};
-    data.weeklyQuests['2026-W13']['wk_70ksteps'] = true;
-    data.weeklyQuests['2026-W13']['wk_fullweek'] = true;
-    data.weeklyQuests['2026-W13']['wk_hydrate7'] = true;
-
-    // ── 3. XP ──
-    // Mar 29 daily (streak mult 1.05 at streak 12):
-    //   hydrate 60 * 1.05 = 63, outdoor 90 * 1.05 = 95, steps 175 * 1.05 = 184 → 342 XP
-    // W13 weeklies (no streak mult):
-    //   wk_70ksteps 500 + wk_fullweek 700 + wk_hydrate7 400 → 1600 XP
-    // Total: 1942 XP
-    data.totalXP = (data.totalXP || 0) + 1942;
-    // Recalc level using inline logic (getLevelFromXP not yet defined at parse time risk)
-    function _lvl(xp) {
-      let l = 1, r = xp;
-      while (r >= Math.floor(220 + 1.459 * Math.pow(l, 1.7))) {
-        r -= Math.floor(220 + 1.459 * Math.pow(l, 1.7)); l++;
-        if (l > 9999) break;
-      }
-      return l;
-    }
-    data.level = _lvl(data.totalXP);
-
-    // ── 4. Coins ──
-    // +41 daily (hydrate 8 + outdoor 11 + steps 22)
-    // +201 weekly (70ksteps 63 + fullweek 88 + hydrate7 50)
-    // -150 Treat Yourself  -100 Clean Eat Out
-    // Net: -8
-    data.coins = Math.max(0, (data.coins || 0) + 41 + 201 - 150 - 100);
-
-    // ── 5. Coin history ──
-    if (!data.coinHistory) data.coinHistory = [];
-    const d29 = '3/29/2026';
-    // Prepend in reverse order so most-recent ends up on top
-    const entries = [
-      { icon:'🥗', label:'Clean Eat Out',                    amount:-100, date:d29, redeemed:true },
-      { icon:'🧋', label:'Treat Yourself',                   amount:-150, date:d29, redeemed:true },
-      { icon:'💧', label:'Hydrate Every Day This Week',      amount:50,   date:d29 },
-      { icon:'👑', label:'Full Week No Miss — 7 Days',       amount:88,   date:d29 },
-      { icon:'🚶', label:'70K Total Steps This Week',        amount:63,   date:d29 },
-      { icon:'🚶', label:'10K Steps',                        amount:22,   date:d29 },
-      { icon:'🌳', label:'Outdoor Walk',                     amount:11,   date:d29 },
-      { icon:'💧', label:'2L Water',                         amount:8,    date:d29 },
-    ];
-    data.coinHistory = entries.concat(data.coinHistory).slice(0, 50);
-
-    // ── 6. Rewards redeemed (mark as used once each) ──
-    if (!data.redeemedRewards) data.redeemedRewards = {};
-    data.redeemedRewards['snack']     = (data.redeemedRewards['snack']     || 0) + 1;
-    data.redeemedRewards['clean_eat'] = (data.redeemedRewards['clean_eat'] || 0) + 1;
-
-    // ── 7. Streak: 13, lastActiveDate = Mar 29 (today = Mar 30 = day 14) ──
-    data.streak         = 13;
-    data.longestStreak  = Math.max(data.longestStreak || 0, 13);
-    data.lastActiveDate = '2026-3-29';
-
-    localStorage.setItem(KEY, JSON.stringify(data));
-    localStorage.setItem(PATCH_KEY, '1');
-    console.log('[PATCH] March 29 patch applied ✓ — streak set to 13, +1942 XP, coins adjusted');
-  } catch(e) { console.error('[PATCH] Failed:', e); }
-})();
-</script>
-
-<script>
-// ── ONE-TIME PATCH: Week of Mar 30 – Apr 2, 2026 ──
-(function applyApr2Patch() {
-  const KEY      = 'grind_xp_v33';
-  const PATCH_KEY = 'patch_apr2_v2';
-  if (localStorage.getItem(PATCH_KEY)) return;
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (!raw) { console.log('[PATCH apr2] No data — skipping'); return; }
-    const data = JSON.parse(raw);
-    if (!data.dailyQuests)   data.dailyQuests   = {};
-    if (!data.weeklyQuests)  data.weeklyQuests  = {};
-    if (!data.coinHistory)   data.coinHistory   = [];
-    if (!data.redeemedRewards) data.redeemedRewards = {};
-
-    // ─────────────────────────────────────────
-    // 1. DAILY QUESTS
-    // ─────────────────────────────────────────
-    // Mar 30: 2mi run, push day, outdoor walk, 10k steps, hoop practice, hydrate
-    data.dailyQuests['2026-3-30'] = {
-      run2:     true,
-      push:     true,
-      outdoor:  true,
-      steps:    true,
-      ballprac: true,
-      hydrate:  true,
-    };
-    // Mar 31: outdoor walk, hydrate, push day
-    data.dailyQuests['2026-3-31'] = {
-      outdoor: true,
-      hydrate: true,
-      push:    true,
-      sleep:   true,
-    };
-    // Apr 1: legs, outdoor walk, 10k steps, cold shower, hoop practice
-    data.dailyQuests['2026-4-1'] = {
-      legs:     true,
-      outdoor:  true,
-      steps:    true,
-      cold:     true,
-      ballprac: true,
-    };
-    // Apr 2: pull day, outdoor walk, 10k steps
-    data.dailyQuests['2026-4-2'] = {
-      pull:    true,
-      outdoor: true,
-      steps:   true,
-    };
-
-    // ─────────────────────────────────────────
-    // 2. XP — force total to 7,000 (early D rank)
-    // ─────────────────────────────────────────
-    // Breakdown for transparency:
-    //   Mar 30 (streak 14, mult 1.10): run2 242 + push 330 + outdoor 99 + steps 193 + ballprac 138 + hydrate 66 = 1068 XP
-    //   Mar 31 (streak 15, mult 1.10): outdoor 99 + hydrate 66 + push 330 = 495 XP
-    //   Apr 1  (streak 16, mult 1.10): legs 330 + outdoor 99 + steps 193 + cold 77 + ballprac 138 = 837 XP
-    //   Apr 2  (streak 17, mult 1.10): pull 330 + outdoor 99 + steps 193 = 622 XP
-    //   Total earned: 3,022 XP — but we force totalXP to 7,000
-    data.totalXP = 7000;
-
-    // Recalc level with NEW formula: floor(300 + 2.5 * level^1.55)
-    function _lvl(xp) {
-      let l = 1, r = xp;
-      while (r >= Math.floor(300 + 2.5 * Math.pow(l, 1.55))) {
-        r -= Math.floor(300 + 2.5 * Math.pow(l, 1.55));
-        l++;
-        if (l > 9999) break;
-      }
-      return l;
-    }
-    data.level = _lvl(data.totalXP);
-
-    // ─────────────────────────────────────────
-    // 3. COINS — forced to 600
-    // ─────────────────────────────────────────
-    data.coins = 600;
-
-    // ─────────────────────────────────────────
-    // 4. COIN HISTORY — prepend newest first
-    // ─────────────────────────────────────────
-    const newEntries = [
-      // Apr 2
-      { icon:'🥗', label:'Clean Eat Out',  amount:-100, date:'04/02/2026', redeemed:true },
-      { icon:'🏋', label:'Pull Day',        amount:38,   date:'04/02/2026' },
-      { icon:'🌳', label:'Outdoor Walk',    amount:11,   date:'04/02/2026' },
-      { icon:'🚶', label:'10K Steps',       amount:22,   date:'04/02/2026' },
-      // Apr 1
-      { icon:'🥗', label:'Clean Eat Out',   amount:-100, date:'04/01/2026', redeemed:true },
-      { icon:'🦵', label:'Leg Day',          amount:38,   date:'04/01/2026' },
-      { icon:'🌳', label:'Outdoor Walk',    amount:11,   date:'04/01/2026' },
-      { icon:'🚶', label:'10K Steps',       amount:22,   date:'04/01/2026' },
-      { icon:'🧊', label:'Cold Shower',     amount:9,    date:'04/01/2026' },
-      { icon:'🏀', label:'Sports Practice', amount:16,   date:'04/01/2026' },
-      // Mar 31
-      { icon:'🥗', label:'Clean Eat Out',   amount:-100, date:'03/31/2026', redeemed:true },
-      { icon:'🥗', label:'Clean Eat Out',   amount:-100, date:'03/31/2026', redeemed:true },
-      { icon:'💪', label:'Push Day',        amount:38,   date:'03/31/2026' },
-      { icon:'🌳', label:'Outdoor Walk',    amount:11,   date:'03/31/2026' },
-      { icon:'💧', label:'2L Water',        amount:8,    date:'03/31/2026' },
-      // Mar 30
-      { icon:'🏃', label:'Run 2 Miles',     amount:28,   date:'03/30/2026' },
-      { icon:'💪', label:'Push Day',        amount:38,   date:'03/30/2026' },
-      { icon:'🌳', label:'Outdoor Walk',    amount:11,   date:'03/30/2026' },
-      { icon:'🚶', label:'10K Steps',       amount:22,   date:'03/30/2026' },
-      { icon:'🏀', label:'Sports Practice', amount:16,   date:'03/30/2026' },
-      { icon:'💧', label:'2L Water',        amount:8,    date:'03/30/2026' },
-    ];
-    data.coinHistory = newEntries.concat(data.coinHistory).slice(0, 50);
-
-    // ─────────────────────────────────────────
-    // 5. WEIGHT LOG
-    // ─────────────────────────────────────────
-    // Weight patches go into the weight storage key
-    const WEIGHT_KEY = 'grind_weight_v10';
-    let wRaw = localStorage.getItem(WEIGHT_KEY);
-    let wData = wRaw ? JSON.parse(wRaw) : { log: [] };
-    if (!wData.log) wData.log = [];
-    // Remove any existing entries for these dates to avoid duplication
-    wData.log = wData.log.filter(e => e.date !== '04/01/2026' && e.date !== '04/02/2026');
-    // Prepend newest first
-    wData.log.unshift({ weight: 256.8, date: '04/02/2026', _ts: Date.now() });
-    wData.log.unshift({ weight: 256.3, date: '04/01/2026', _ts: Date.now() - 86400000 });
-    // Re-sort newest first
-    wData.log.sort((a, b) => (b._ts || 0) - (a._ts || 0));
-    localStorage.setItem(WEIGHT_KEY, JSON.stringify(wData));
-
-    // Also mark weigh quest for Apr 1 and Apr 2 in dailyQuests
-    data.dailyQuests['2026-4-1']['weigh'] = { done: true, xp: 50, coins: 6, icon: '⚖️' };
-    data.dailyQuests['2026-4-2']['weigh'] = { done: true, xp: 50, coins: 6, icon: '⚖️' };
-    data.coinHistory.unshift({ icon:'⚖️', label:'Weigh In — 256.8 lbs', amount:6, date:'04/02/2026' });
-    data.coinHistory.unshift({ icon:'⚖️', label:'Weigh In — 256.3 lbs', amount:6, date:'04/01/2026' });
-    data.coinHistory = data.coinHistory.slice(0, 50);
-
-    // ─────────────────────────────────────────
-    // 6. REWARDS REDEEMED
-    // ─────────────────────────────────────────
-    // 03/31: clean_eat x2, 04/01: clean_eat x1, 04/02: clean_eat x1 → +4 total
-    data.redeemedRewards['clean_eat'] = (data.redeemedRewards['clean_eat'] || 0) + 4;
-
-    // ─────────────────────────────────────────
-    // 7. STREAK — 17 for Apr 2 (today)
-    // ─────────────────────────────────────────
-    data.streak         = 17;
-    data.longestStreak  = Math.max(data.longestStreak || 0, 17);
-    data.lastActiveDate = '2026-4-2';
-
-    localStorage.setItem(KEY, JSON.stringify(data));
-    localStorage.setItem(PATCH_KEY, '1');
-    console.log('[PATCH apr2] Applied ✓ — streak 17, XP forced to 7000, level ' + data.level + ', coins adjusted');
-  } catch(e) { console.error('[PATCH apr2] Failed:', e); }
-})();
-</script>
 
 
-<script>
-// ── ONE-TIME MEGA PATCH: Apr 4 → Jun 2, 2026 ──
-(function applyMegaPatch() {
-  const KEY       = 'grind_xp_v33';
-  const PATCH_KEY = 'patch_jun2_v2';
-  if (localStorage.getItem(PATCH_KEY)) return;
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (!raw) { console.log('[PATCH jun2] No data'); return; }
-    const data = JSON.parse(raw);
-    if (!data.dailyQuests)    data.dailyQuests   = {};
-    if (!data.weeklyQuests)   data.weeklyQuests  = {};
-    if (!data.coinHistory)    data.coinHistory   = [];
-    if (!data.redeemedRewards) data.redeemedRewards = {};
 
-    // ── 1. Daily quest completions ──
-    const dq = data.dailyQuests;
-    dq['2026-4-4']  = { outdoor:true, ball:true, steps:true, hydrate:true, sleep:true };
-    dq['2026-4-5']  = { push:true, run5k:true, steps:true, cold:true, hydrate:true, outdoor:true };
-    dq['2026-4-6']  = { weigh:true, outdoor:true, pull:true, hydrate:true, ball:true, steps:true };
-    dq['2026-4-7']  = { push:true, outdoor:true, ballprac:true };
-    dq['2026-4-8']  = { legs:true, outdoor:true, steps:true };
-    dq['2026-4-9']  = { push:true, run2:true, outdoor:true, steps:true, hydrate:true, weigh:true };
-    dq['2026-4-10'] = { steps:true, outdoor:true, sleep:true };
-    dq['2026-4-11'] = { run2:true, outdoor:true, steps:true };
-    dq['2026-4-12'] = { outdoor:true, push:true, pull:true, legs:true, steps:true, hydrate:true };
-    dq['2026-4-13'] = { hydrate:true, outdoor:true };
-    dq['2026-4-14'] = { sleep:true, steps:true, outdoor:true, hydrate:true };
-    dq['2026-4-15'] = { outdoor:true, hydrate:true, push:true, pull:true, legs:true };
-    dq['2026-4-16'] = { outdoor:true, hydrate:true, run5k:true, steps:true };
-    dq['2026-4-17'] = { outdoor:true, steps:true, hydrate:true, longrun:true };
-    dq['2026-4-18'] = { outdoor:true, run5k:true, steps:true, hydrate:true };
-    dq['2026-4-19'] = { hydrate:true, outdoor:true };
-    dq['2026-4-20'] = { outdoor:true, hydrate:true, push:true, pull:true, ballprac:true, steps:true };
-    dq['2026-4-21'] = {};
-    dq['2026-4-22'] = { push:true, pull:true, outdoor:true, ballprac:true, hydrate:true };
-    dq['2026-4-23'] = {};
-    dq['2026-4-24'] = { hydrate:true, steps:true, outdoor:true };
-    dq['2026-4-25'] = { push:true, pull:true, legs:true, outdoor:true, steps:true, hydrate:true };
-    dq['2026-4-26'] = { steps:true, outdoor:true, hydrate:true };
-    dq['2026-4-27'] = { push:true, outdoor:true, steps:true, hydrate:true };
-    dq['2026-4-28'] = { outdoor:true, steps:true, hydrate:true, push:true };
-    dq['2026-4-29'] = { outdoor:true, steps:true, hydrate:true };
-    dq['2026-4-30'] = { pull:true, push:true, outdoor:true, steps:true, hydrate:true };
-    dq['2026-5-1']  = { steps:true, outdoor:true, hydrate:true };
-    dq['2026-5-2']  = { outdoor:true, hydrate:true };
-    dq['2026-5-3']  = { steps:true, outdoor:true };
-    dq['2026-5-4']  = { outdoor:true };
-    dq['2026-5-5']  = { steps:true, outdoor:true };
-    dq['2026-5-6']  = { outdoor:true, steps:true };
-    dq['2026-5-7']  = { outdoor:true, hydrate:true };
-    dq['2026-5-8']  = { outdoor:true, hydrate:true };
-    dq['2026-5-9']  = { outdoor:true, run5k:true, hydrate:true };
-    dq['2026-5-10'] = { outdoor:true, steps:true, hydrate:true };
-    dq['2026-5-11'] = { push:true, outdoor:true, steps:true, hydrate:true };
-    dq['2026-5-12'] = { run5k:true, outdoor:true, push:true, steps:true };
-    dq['2026-5-13'] = { outdoor:true, hydrate:true, steps:true };
-    dq['2026-5-14'] = { pull:true, outdoor:true, hydrate:true, ball:true, steps:true };
-    dq['2026-5-15'] = { outdoor:true, steps:true, hydrate:true };
-    dq['2026-5-16'] = { ball:true, outdoor:true, steps:true, hydrate:true };
-    // 05/17–05/25: no activity
-    dq['2026-5-26'] = { outdoor:true, hydrate:true };
-    // 05/27–05/28: no activity
-    dq['2026-5-29'] = { outdoor:true, hydrate:true, steps:true };
-    dq['2026-5-30'] = { outdoor:true, hydrate:true, ball:true };
-    dq['2026-5-31'] = { steps:true, outdoor:true, hydrate:true };
-    dq['2026-6-1']  = { push:true, outdoor:true, weigh:true };
-    dq['2026-6-2']  = { outdoor:true };
-
-    // ── 2. Weekly completions ──
-    if (!data.weeklyQuests['2026-W14']) data.weeklyQuests['2026-W14'] = {};
-    data.weeklyQuests['2026-W14']['wk_liftrun'] = true;
-    data.weeklyQuests['2026-W14']['wk_fasted3'] = true;
-
-    if (!data.weeklyQuests['2026-W16']) data.weeklyQuests['2026-W16'] = {};
-    data.weeklyQuests['2026-W16']['wk_70ksteps'] = true;
-    data.weeklyQuests['2026-W16']['wk_ppl']      = true;
-    data.weeklyQuests['2026-W16']['wk_longrun']  = true;
-
-    // ── 3. XP: 7000 base + 28033 = 35033 ──
-    data.totalXP = 42500;
-    function _lvl(xp) {
-      let l=1,r=xp;
-      while(r>=Math.floor(220+1.459*Math.pow(l,1.7))){r-=Math.floor(220+1.459*Math.pow(l,1.7));l++;if(l>9999)break;}
-      return l;
-    }
-    data.level = _lvl(data.totalXP);
-
-    // ── 4. Coins: existing + 3140 earned ──
-    data.coins = 1895;
-
-    // ── 5. Streak state: 5, longestStreak 45, lastActiveDate 2026-6-2 ──
-    data.streak         = 5;
-    data.longestStreak  = Math.max(data.longestStreak || 0, 45);
-    data.lastActiveDate = '2026-6-2';
-
-    // ── 6. Streak skill — 48 active days logged (counting unique days with activity) ──
-    data.streakSkillProgress = (data.streakSkillProgress || 0) + 48;
-    data.lastStreakSkillDate = '2026-6-2';
-
-    // ── 7. Weight log — Jun 1: 256.6 lbs ──
-    const WEIGHT_KEY = 'grind_weight_v10';
-    let wData = JSON.parse(localStorage.getItem(WEIGHT_KEY) || '{"log":[]}');
-    if (!wData.log) wData.log = [];
-    wData.log = wData.log.filter(e => e.date !== '06/01/2026');
-    wData.log.unshift({ weight:256.6, date:'06/01/2026', _ts:new Date('2026-06-01').getTime() });
-    wData.log.sort((a,b)=>(b._ts||0)-(a._ts||0));
-    wData.current = 256.6;
-    localStorage.setItem(WEIGHT_KEY, JSON.stringify(wData));
-
-    // ── 8. Coin history — summary entries ──
-    data.coinHistory = [
-      { icon:'🌳', label:'Outdoor Walk',        amount:11,  date:'06/02/2026' },
-      { icon:'⚖️', label:'Weigh In — 256.6',   amount:6,   date:'06/01/2026' },
-      { icon:'🌳', label:'Outdoor Walk',        amount:11,  date:'06/01/2026' },
-      { icon:'💪', label:'Push Day',            amount:25,  date:'06/01/2026' },
-      { icon:'🌊', label:'Sports Game',         amount:31,  date:'05/30/2026' },
-      { icon:'💧', label:'2L Water',            amount:8,   date:'05/30/2026' },
-      { icon:'🌳', label:'Outdoor Walk',        amount:11,  date:'05/30/2026' },
-      { icon:'🌳', label:'Outdoor Walk',        amount:11,  date:'05/29/2026' },
-      { icon:'💧', label:'2L Water',            amount:8,   date:'05/29/2026' },
-      { icon:'🚶', label:'10K Steps',           amount:22,  date:'05/29/2026' },
-      { icon:'🌳', label:'Outdoor Walk',        amount:11,  date:'05/26/2026' },
-      { icon:'💧', label:'2L Water',            amount:8,   date:'05/26/2026' },
-      { icon:'🌊', label:'Sports Game',         amount:31,  date:'05/16/2026' },
-      { icon:'🌳', label:'Outdoor Walk',        amount:11,  date:'05/16/2026' },
-      { icon:'🚶', label:'10K Steps',           amount:22,  date:'05/16/2026' },
-      { icon:'💧', label:'2L Water',            amount:8,   date:'05/16/2026' },
-      { icon:'🌳', label:'Outdoor Walk',        amount:11,  date:'05/15/2026' },
-      { icon:'🚶', label:'10K Steps',           amount:22,  date:'05/15/2026' },
-      { icon:'💧', label:'2L Water',            amount:8,   date:'05/15/2026' },
-      { icon:'🏋', label:'Pull Day',            amount:25,  date:'05/14/2026' },
-      { icon:'🌊', label:'Sports Game',         amount:31,  date:'05/14/2026' },
-      { icon:'🌳', label:'Outdoor Walk',        amount:11,  date:'05/14/2026' },
-      { icon:'🚶', label:'10K Steps',           amount:22,  date:'05/14/2026' },
-      { icon:'💧', label:'2L Water',            amount:8,   date:'05/14/2026' },
-      { icon:'💪', label:'Push Day',            amount:25,  date:'05/12/2026' },
-      { icon:'🏁', label:'Run a 5K',            amount:44,  date:'05/12/2026' },
-      { icon:'🌳', label:'Outdoor Walk',        amount:11,  date:'05/12/2026' },
-      { icon:'🚶', label:'10K Steps',           amount:22,  date:'05/12/2026' },
-      { icon:'💪', label:'Push Day',            amount:25,  date:'05/11/2026' },
-      { icon:'🌳', label:'Outdoor Walk',        amount:11,  date:'05/11/2026' },
-      { icon:'🚶', label:'10K Steps',           amount:22,  date:'05/11/2026' },
-      { icon:'💧', label:'2L Water',            amount:8,   date:'05/11/2026' },
-      { icon:'💪', label:'Push Day',            amount:25,  date:'04/30/2026' },
-      { icon:'🏋', label:'Pull Day',            amount:25,  date:'04/30/2026' },
-      { icon:'🌳', label:'Outdoor Walk',        amount:11,  date:'04/30/2026' },
-      { icon:'🚶', label:'10K Steps',           amount:22,  date:'04/30/2026' },
-      { icon:'💧', label:'2L Water',            amount:8,   date:'04/30/2026' },
-      { icon:'💧', label:'2L Water',            amount:8,   date:'04/19/2026' },
-      { icon:'🌳', label:'Outdoor Walk',        amount:11,  date:'04/19/2026' },
-      { icon:'🚶', label:'70K Steps — Weekly',  amount:63,  date:'04/19/2026' },
-      { icon:'💪', label:'PPL Complete — Weekly',amount:69, date:'04/19/2026' },
-      { icon:'🏔️', label:'Long Run — Weekly',   amount:69,  date:'04/19/2026' },
-      { icon:'🔥', label:'Lift+Run Same Day — Weekly', amount:75, date:'04/05/2026' },
-      { icon:'⚡', label:'Fasted Workout x3 — Weekly', amount:63, date:'04/05/2026' },
-    ].concat(data.coinHistory).slice(0, 50);
-
-    localStorage.setItem(KEY, JSON.stringify(data));
-    localStorage.setItem(PATCH_KEY, '1');
-    console.log('[PATCH jun2] ✓ XP:35033 lvl:'+data.level+' streak:5 longestStreak:45 coins:'+data.coins);
-  } catch(e) { console.error('[PATCH jun2] Failed:', e); }
-})();
-</script>
 
 </body>
 </html>
