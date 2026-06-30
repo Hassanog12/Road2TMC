@@ -5665,13 +5665,15 @@ function getWeeklyQuestPool() {
     if (q.id === 'wk_pace')    clone.label = 'Run a Mile Under ' + formatPace(tier.paceSec);
     return clone;
   });
-  // ── Override for specific weeks ──
   const thisWeek = getWeekStr();
-  const WEEKLY_OVERRIDES = {
-    '2026-W13': ['wk_70ksteps','wk_fullweek','wk_hydrate7'],
+  // Historical overrides — these specific weeks show exactly the quests the person completed,
+  // since the random pool for that week wouldn't otherwise match.
+  const HISTORICAL_WEEK_OVERRIDES = {
+    '2026-6-15': ['wk_70ksteps','wk_fullweek','wk_4runs'],
+    '2026-6-22': ['wk_pace','wk_fasted3','wk_liftrun'],
   };
-  if (WEEKLY_OVERRIDES[thisWeek]) {
-    return WEEKLY_OVERRIDES[thisWeek].map(id => allPool.find(q => q.id === id)).filter(Boolean);
+  if (HISTORICAL_WEEK_OVERRIDES[thisWeek]) {
+    return HISTORICAL_WEEK_OVERRIDES[thisWeek].map(id => allPool.find(q => q.id === id)).filter(Boolean);
   }
   // Default random selection
   const weekSeed = parseInt(thisWeek.replace(/\D/g,'')) || 20260101;
@@ -6554,12 +6556,21 @@ function buildActivityCalendar() {
     const dStr = d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
     const todayStr = getTodayStr();
     const isToday = dStr === todayStr;
-    const isFuture = d > today && !isToday;
+    let isFuture = d > today && !isToday;
+    // If this is the Sunday of a week with completed weekly quests, don't treat it as future —
+    // the week's results are already locked in even though the calendar date hasn't arrived yet.
+    if (isFuture && i === 6) {
+      const wkMondayPeek = monday.getFullYear() + '-' + (monday.getMonth()+1) + '-' + monday.getDate();
+      const wkDonePeek = data.weeklyQuests && data.weeklyQuests[wkMondayPeek];
+      if (wkDonePeek && Object.keys(wkDonePeek).some(function(wid){ return wkDonePeek[wid]; })) {
+        isFuture = false;
+      }
+    }
     const dayDone = data.dailyQuests[dStr] || {};
     const questIds = Object.keys(dayDone).filter(k => k !== 'masjid' && dayDone[k]);
-    const allQuests = [...BASE_QUESTS, ...WEEKLY_QUESTS];
     // Support both boolean (true) and object ({done,xp,coins,icon}) formats
     // For run quests, only show the highest completed one
+    const allQuests = [...BASE_QUESTS, ...WEEKLY_QUESTS];
     const RUN_CHAIN_CAL = ['halfmarathon','longrun','run10k','run5k','run2','run1'];
     let topRunIcon = null;
     for (const rid of RUN_CHAIN_CAL) {
@@ -6645,19 +6656,6 @@ function buildActivityCalendar() {
       if (bq) tipLines.push({ text: '⚔️ Boss Slain: ' + bq.title, color: '#ff2200' });
     }
 
-    // ── Weekly quest completions (shown on Sunday, the last day of the Mon-Sun week) ──
-    if (i === 6) { // Sunday is index 6 in MON..SUN array
-      const wkMonday = monday.getFullYear() + '-' + (monday.getMonth()+1) + '-' + monday.getDate();
-      const wkDone = data.weeklyQuests && data.weeklyQuests[wkMonday];
-      if (wkDone) {
-        Object.keys(wkDone).forEach(function(wid) {
-          if (!wkDone[wid]) return;
-          const wq = WEEKLY_QUEST_POOL.find(q => q.id === wid);
-          if (wq) tipLines.push({ text: wq.icon + ' ' + wq.label, color: '#8e44ad' });
-        });
-      }
-    }
-
     if (!isFuture) {
       cell.addEventListener('mouseenter', function(e) {
         let tip = document.getElementById('calTooltip');
@@ -6732,26 +6730,28 @@ function buildActivityCalendar() {
   // ── Weekly challenge bar ──
   const weeklyBar = document.getElementById('weeklyCalBar');
   if (weeklyBar) {
-    // Compute week string for the displayed week (monday = first day shown)
+    // Use the real getWeekStr()-equivalent for the displayed week (monday = first day shown)
     function _weekStrFor(d) {
-      const start = new Date(d.getFullYear(), 0, 1);
-      return d.getFullYear() + '-W' + Math.ceil(((d - start) / 86400000 + start.getDay() + 1) / 7);
+      return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
     }
     const shownWeekStr = _weekStrFor(monday);
     const weeklyDone = (data.weeklyQuests && data.weeklyQuests[shownWeekStr]) || {};
 
     // Get the quest pool for the shown week (mirrors getWeeklyQuestPool logic)
-    const CAL_WEEKLY_OVERRIDES = { '2026-W13': ['wk_70ksteps','wk_fullweek','wk_hydrate7'] };
+    const HISTORICAL_WEEK_OVERRIDES_CAL = {
+      '2026-6-15': ['wk_70ksteps','wk_fullweek','wk_4runs'],
+      '2026-6-22': ['wk_pace','wk_fasted3','wk_liftrun'],
+    };
     let shownPool;
-    if (CAL_WEEKLY_OVERRIDES[shownWeekStr]) {
-      shownPool = CAL_WEEKLY_OVERRIDES[shownWeekStr].map(id => WEEKLY_QUEST_POOL.find(q => q.id === id)).filter(Boolean);
+    if (HISTORICAL_WEEK_OVERRIDES_CAL[shownWeekStr]) {
+      shownPool = HISTORICAL_WEEK_OVERRIDES_CAL[shownWeekStr].map(id => WEEKLY_QUEST_POOL.find(q => q.id === id)).filter(Boolean);
     } else {
       const weekSeed = parseInt(shownWeekStr.replace(/\D/g,'')) || 20260101;
       let s = weekSeed;
       shownPool = [];
       const used = new Set();
       for (let attempt = 0; shownPool.length < 3 && attempt < 100; attempt++) {
-        s = (s * 1664525 + 1013904223) | 0;
+        s = (s * 1664525 + 1013904223) & 0xffffffff;
         const idx = Math.abs(s) % WEEKLY_QUEST_POOL.length;
         if (!used.has(idx)) { used.add(idx); shownPool.push(WEEKLY_QUEST_POOL[idx]); }
       }
@@ -6761,9 +6761,14 @@ function buildActivityCalendar() {
     const total = shownPool.length;
     const allDone = completedCount === total && total > 0;
 
-    // Is the shown week in the future? Compare monday to start of current week
+    // Is the shown week in the future? Compare monday to start of current week (date-only, no time component)
     const currentWeekStr = _weekStrFor(new Date());
-    const isFutureWeek = shownWeekStr > currentWeekStr;
+    const mondayDateOnly = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate());
+    const t = new Date();
+    const dow = t.getDay();
+    const daysSinceMon = (dow + 6) % 7;
+    const currentMondayDateOnly = new Date(t.getFullYear(), t.getMonth(), t.getDate() - daysSinceMon);
+    const isFutureWeek = mondayDateOnly.getTime() > currentMondayDateOnly.getTime();
 
     if (total === 0) {
       weeklyBar.innerHTML = '';
