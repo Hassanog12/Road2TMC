@@ -5325,9 +5325,12 @@ function getTodayStr() {
   return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
 }
 function getWeekStr() {
+  // Week boundary resets on Monday — Mon=day0 of new week, Sun=day6 of old week
   const d = new Date();
-  const start = new Date(d.getFullYear(), 0, 1);
-  return d.getFullYear() + '-W' + Math.ceil(((d - start) / 86400000 + start.getDay() + 1) / 7);
+  const dow = d.getDay(); // 0=Sun,1=Mon,...,6=Sat
+  const daysSinceMon = (dow + 6) % 7; // Mon->0, Tue->1, ..., Sun->6
+  const weekStart = new Date(d.getFullYear(), d.getMonth(), d.getDate() - daysSinceMon);
+  return weekStart.getFullYear() + '-' + (weekStart.getMonth()+1) + '-' + weekStart.getDate();
 }
 
 function getRankForXP(xp) {
@@ -5740,8 +5743,13 @@ function buildQuestGrid() {
   // Wellness: hydrate + mobility always show, rotate sleep/cold/noeatout as 3rd slot daily
   var _dow = new Date().getDay();
   var _ds = parseInt(getTodayStr().replace(/-/g,'')) || 1;
-  // Mon/Thu: fasted replaces the rotating 3rd slot
-  var _wt = (_dow === 1 || _dow === 4) ? 'fasted' : (_ds % 5 === 0) ? 'noeatout' : (_ds % 3 === 0) ? 'protein' : (_ds % 2 === 0) ? 'sleep' : 'cold';
+  var _isWhiteDays = false;
+  try {
+    var _hijriDay = parseInt(new Intl.DateTimeFormat('en-US-u-ca-islamic', { day: 'numeric' }).format(new Date()), 10);
+    _isWhiteDays = _hijriDay === 13 || _hijriDay === 14 || _hijriDay === 15;
+  } catch (e) {}
+  // Mon/Thu/White Days: fasted replaces the rotating 3rd slot
+  var _wt = (_dow === 1 || _dow === 4 || _isWhiteDays) ? 'fasted' : (_ds % 5 === 0) ? 'noeatout' : (_ds % 3 === 0) ? 'protein' : (_ds % 2 === 0) ? 'sleep' : 'cold';
   const wellnessQuests = ['hydrate','mobility', _wt].map(id => BASE_QUESTS.find(q => q.id === id)).filter(Boolean);
 
   const rows = [
@@ -6571,7 +6579,16 @@ function buildActivityCalendar() {
         const q = allQuests.find(q => q.id === id);
         return q ? q.icon : null;
       }).filter(Boolean).slice(0,4).join(' ');
-    const hasActivity = questIds.length > 0 || (masjidD2[dStr] || 0) > 0;
+    // Check boss quest completion for this specific day
+    const bossDoneToday = !!localStorage.getItem('boss_quest_done_' + dStr);
+    // Check weekly quest completion (attributed to Sunday, last day of Mon-Sun week)
+    let weeklyDoneThisDay = false;
+    if (i === 6) {
+      const wkMondayCheck = monday.getFullYear() + '-' + (monday.getMonth()+1) + '-' + monday.getDate();
+      const wkDoneCheck = data.weeklyQuests && data.weeklyQuests[wkMondayCheck];
+      if (wkDoneCheck) weeklyDoneThisDay = Object.keys(wkDoneCheck).some(function(wid){ return wkDoneCheck[wid]; });
+    }
+    const hasActivity = questIds.length > 0 || (masjidD2[dStr] || 0) > 0 || bossDoneToday || weeklyDoneThisDay;
 
     // ── Build tooltip content ──
     const allQuestsForTip = [...BASE_QUESTS, ...WEEKLY_QUESTS];
@@ -6618,6 +6635,27 @@ function buildActivityCalendar() {
       if (masjidV > 0) tipLines.push({ text: masjidV + ' Masjid visit' + (masjidV > 1 ? 's' : ''), color: '#c8c3b8' });
     } else {
       tipLines.push({ text: 'No activity', color: '#e74c3c' });
+    }
+
+    // ── Boss quest completion (shown on the specific day it was completed) ──
+    const bossKey = 'boss_quest_done_' + dStr;
+    if (localStorage.getItem(bossKey)) {
+      const bossQuestId = localStorage.getItem(bossKey);
+      const bq = BOSS_QUESTS.find(q => q.id === bossQuestId);
+      if (bq) tipLines.push({ text: '⚔️ Boss Slain: ' + bq.title, color: '#ff2200' });
+    }
+
+    // ── Weekly quest completions (shown on Sunday, the last day of the Mon-Sun week) ──
+    if (i === 6) { // Sunday is index 6 in MON..SUN array
+      const wkMonday = monday.getFullYear() + '-' + (monday.getMonth()+1) + '-' + monday.getDate();
+      const wkDone = data.weeklyQuests && data.weeklyQuests[wkMonday];
+      if (wkDone) {
+        Object.keys(wkDone).forEach(function(wid) {
+          if (!wkDone[wid]) return;
+          const wq = WEEKLY_QUEST_POOL.find(q => q.id === wid);
+          if (wq) tipLines.push({ text: wq.icon + ' ' + wq.label, color: '#8e44ad' });
+        });
+      }
     }
 
     if (!isFuture) {
@@ -6955,6 +6993,7 @@ function resetBossQuest() {
   if (!bq) return;
   var key = 'boss_quest_' + getWeekStr();
   localStorage.removeItem(key);
+  localStorage.removeItem('boss_quest_done_' + getTodayStr());
   // Reverse XP and coins
   var data = getXPData();
   data.totalXP = Math.max(0, (data.totalXP||0) - bq.xp);
@@ -6979,6 +7018,8 @@ function completeBossQuest() {
   if (!bq || isBossQuestDone()) return;
   var key = 'boss_quest_' + getWeekStr();
   localStorage.setItem(key, '1');
+  // Also record which specific date + quest for activity calendar lookup
+  localStorage.setItem('boss_quest_done_' + getTodayStr(), bq.id);
   // Award XP + coins
   var data = getXPData();
   data.totalXP = (data.totalXP||0) + bq.xp;
@@ -8501,15 +8542,15 @@ function checkWeeklyRecap() {
 function initXPSystem() {
   let data = getXPData();
 
-  if ((data.streak || 0) < 19 || !data.dailyQuests || !data.dailyQuests['2026-6-16']) {
-    data.totalXP        = 56500;
-    data.coins          = 1700;
+  if ((data.streak || 0) < 29 || !data.dailyQuests || !data.dailyQuests['2026-6-28']) {
+    data.totalXP        = 69500;
+    data.coins          = 2821;
     data.level          = getLevelFromXP(52518);
-    data.streak         = 19;
+    data.streak         = 29;
     data.longestStreak  = Math.max(data.longestStreak || 0, 45);
-    data.lastActiveDate = '2026-6-16';
+    data.lastActiveDate = '2026-6-28';
     data.streakSkillProgress = 55;
-    data.lastStreakSkillDate  = '2026-6-16';
+    data.lastStreakSkillDate  = '2026-6-28';
     data.dailyQuests = {};
     data.dailyQuests['2026-4-4']  = { outdoor:true, ball:true, steps:true, hydrate:true, sleep:true };
     data.dailyQuests['2026-4-5']  = { push:true, run5k:true, steps:true, cold:true, hydrate:true, outdoor:true };
@@ -8571,17 +8612,39 @@ function initXPSystem() {
     data.dailyQuests['2026-6-14'] = { push:true, pull:true, outdoor:true, steps:true, hydrate:true };
     data.dailyQuests['2026-6-15'] = { outdoor:true, mobility:true, hydrate:true };
     data.dailyQuests['2026-6-16'] = { weigh:true, outdoor:true, push:true, hydrate:true, sleep:true, steps:true };
+    data.dailyQuests['2026-6-17'] = { outdoor:true, ball:true, steps:true, hydrate:true, run2:true };
+    data.dailyQuests['2026-6-18'] = { weigh:true, outdoor:true, run5k:true, hydrate:true, steps:true };
+    data.dailyQuests['2026-6-19'] = { weigh:true, push:true, pull:true, outdoor:true, hydrate:true };
+    data.dailyQuests['2026-6-20'] = { outdoor:true, steps:true, ball:true, hydrate:true };
+    data.dailyQuests['2026-6-21'] = { run5k:true, outdoor:true, steps:true, hydrate:true };
+    data.dailyQuests['2026-6-22'] = { ball:true, hydrate:true, push:true, outdoor:true, steps:true };
+    data.dailyQuests['2026-6-23'] = { ball:true, outdoor:true, weigh:true, run5k:true, steps:true, hydrate:true, protein:true };
+    data.dailyQuests['2026-6-24'] = { run2:true, outdoor:true, steps:true, weigh:true, sleep:true };
+    data.dailyQuests['2026-6-25'] = { weigh:true, outdoor:true, steps:true, fasted:true, hydrate:true };
+    data.dailyQuests['2026-6-26'] = { weigh:true, run1:true, outdoor:true, hydrate:true, steps:true, protein:true, push:true, ball:true };
+    data.dailyQuests['2026-6-27'] = { hydrate:true, outdoor:true };
+    data.dailyQuests['2026-6-28'] = { hydrate:true, outdoor:true };
     data.weeklyQuests = {};
-    data.weeklyQuests['2026-W15'] = { wk_liftnrun2:true, wk_fasted3:true };
-    data.weeklyQuests['2026-W17'] = { wk_70ksteps:true, wk_fullweek:true, wk_longrun:true };
-    data.weeklyQuests['2026-W23'] = { wk_liftrun:true, wk_fullweek:true };
-    data.weeklyQuests['2026-W24'] = { wk_70ksteps:true, wk_fullweek:true };
+    data.weeklyQuests['2026-3-16'] = { wk_liftnrun2:true, wk_fasted3:true };
+    data.weeklyQuests['2026-3-30'] = { wk_70ksteps:true, wk_fullweek:true, wk_longrun:true };
+    data.weeklyQuests['2026-5-25'] = { wk_liftrun:true, wk_fullweek:true };
+    data.weeklyQuests['2026-6-8']  = { wk_70ksteps:true, wk_fullweek:true };
+    data.weeklyQuests['2026-6-15'] = { wk_70ksteps:true, wk_fullweek:true, wk_4runs:true };
+    data.weeklyQuests['2026-6-22'] = { wk_pace:true, wk_fasted3:true };
     var _md = JSON.parse(localStorage.getItem('masjid_log_v1') || '{}');
     _md['2026-5-29']=2; _md['2026-5-30']=1; _md['2026-6-4']=1; _md['2026-6-5']=1;
     _md['2026-6-6']=1; _md['2026-6-8']=1; _md['2026-6-9']=1; _md['2026-6-10']=1;
     _md['2026-6-12']=1; _md['2026-6-13']=1; _md['2026-6-15']=1; _md['2026-6-16']=1;
+    _md['2026-6-17']=1; _md['2026-6-19']=3; _md['2026-6-22']=1; _md['2026-6-23']=1;
+    _md['2026-6-24']=1; _md['2026-6-25']=1; _md['2026-6-26']=4;
     localStorage.setItem('masjid_log_v1', JSON.stringify(_md));
-    localStorage.setItem('grind_weight_v10', JSON.stringify({ current:255.3, log:[
+    localStorage.setItem('grind_weight_v10', JSON.stringify({ current:250.4, log:[
+      { weight:250.4, date:'6/26/2026', _ts:new Date('2026-06-26').getTime() },
+      { weight:249.8, date:'6/25/2026', _ts:new Date('2026-06-25').getTime() },
+      { weight:251.3, date:'6/24/2026', _ts:new Date('2026-06-24').getTime() },
+      { weight:253.3, date:'6/23/2026', _ts:new Date('2026-06-23').getTime() },
+      { weight:252.9, date:'6/19/2026', _ts:new Date('2026-06-19').getTime() },
+      { weight:253.3, date:'6/18/2026', _ts:new Date('2026-06-18').getTime() },
       { weight:255.3, date:'6/16/2026', _ts:new Date('2026-06-16').getTime() },
       { weight:257.0, date:'6/6/2026',  _ts:new Date('2026-06-06').getTime() },
       { weight:257.0, date:'6/5/2026',  _ts:new Date('2026-06-05').getTime() },
@@ -9079,7 +9142,13 @@ function skillNodeTouch() {}
 
 function checkFastedDay() {
   const day = new Date().getDay(); // 0=Sun,1=Mon,2=Tue,3=Wed,4=Thu,5=Fri,6=Sat
-  const isFasted = day === 1 || day === 4; // Mon or Thu
+  let isWhiteDays = false;
+  try {
+    const hijriFmt = new Intl.DateTimeFormat('en-US-u-ca-islamic', { day: 'numeric' });
+    const hijriDay = parseInt(hijriFmt.format(new Date()), 10);
+    isWhiteDays = hijriDay === 13 || hijriDay === 14 || hijriDay === 15;
+  } catch (e) { /* Intl islamic calendar unsupported — skip silently */ }
+  const isFasted = day === 1 || day === 4 || isWhiteDays; // Mon, Thu, or White Days (13-15 Hijri)
   ['fastedBanner-push','fastedBanner-pull','fastedBanner-legs','fastedBanner-running','fastedBanner-mobility'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = isFasted ? 'block' : 'none';
