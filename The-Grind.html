@@ -6557,17 +6557,9 @@ function buildActivityCalendar() {
     const todayStr = getTodayStr();
     const isToday = dStr === todayStr;
     let isFuture = d > today && !isToday;
-    // If this is the Sunday of a week with completed weekly quests, don't treat it as future —
-    // the week's results are already locked in even though the calendar date hasn't arrived yet.
-    if (isFuture && i === 6) {
-      const wkMondayPeek = monday.getFullYear() + '-' + (monday.getMonth()+1) + '-' + monday.getDate();
-      const wkDonePeek = data.weeklyQuests && data.weeklyQuests[wkMondayPeek];
-      if (wkDonePeek && Object.keys(wkDonePeek).some(function(wid){ return wkDonePeek[wid]; })) {
-        isFuture = false;
-      }
-    }
+
     const dayDone = data.dailyQuests[dStr] || {};
-    const questIds = Object.keys(dayDone).filter(k => k !== 'masjid' && dayDone[k]);
+    const questIds = Object.keys(dayDone).filter(k => k !== 'masjid' && dayDone[k] && dayDone[k] !== false);
     // Support both boolean (true) and object ({done,xp,coins,icon}) formats
     // For run quests, only show the highest completed one
     const allQuests = [...BASE_QUESTS, ...WEEKLY_QUESTS];
@@ -6592,14 +6584,28 @@ function buildActivityCalendar() {
       }).filter(Boolean).slice(0,4).join(' ');
     // Check boss quest completion for this specific day
     const bossDoneToday = !!localStorage.getItem('boss_quest_done_' + dStr);
-    // Check weekly quest completion (attributed to Sunday, last day of Mon-Sun week)
-    let weeklyDoneThisDay = false;
-    if (i === 6) {
-      const wkMondayCheck = monday.getFullYear() + '-' + (monday.getMonth()+1) + '-' + monday.getDate();
-      const wkDoneCheck = data.weeklyQuests && data.weeklyQuests[wkMondayCheck];
-      if (wkDoneCheck) weeklyDoneThisDay = Object.keys(wkDoneCheck).some(function(wid){ return wkDoneCheck[wid]; });
-    }
-    const hasActivity = questIds.length > 0 || (masjidD2[dStr] || 0) > 0 || bossDoneToday || weeklyDoneThisDay;
+
+    // Compute whether this day is the boss quest day for its week
+    // Is this cell in the current week?
+    const isBossCurrentWeek = (function() {
+      var t = new Date();
+      var dow = t.getDay();
+      var daysSinceMon = (dow + 6) % 7;
+      var currentMonday = new Date(t.getFullYear(), t.getMonth(), t.getDate() - daysSinceMon);
+      var cellMonday = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate());
+      return cellMonday.getTime() === currentMonday.getTime();
+    })();
+
+    const isBossDay = (function() {
+      var wStr = monday.getFullYear() + '-' + (monday.getMonth()+1) + '-' + monday.getDate();
+      var wSeed = 0;
+      for (var ci = 0; ci < wStr.length; ci++) wSeed = (wSeed * 31 + wStr.charCodeAt(ci)) & 0xffffffff;
+      if (i !== (Math.abs(wSeed) % 7)) return false;
+      // Show on current week always, or past weeks only if completed
+      return isBossCurrentWeek || bossDoneToday;
+    })();
+
+    const hasActivity = questIds.length > 0 || (masjidD2[dStr] || 0) > 0 || bossDoneToday;
 
     // ── Build tooltip content ──
     const allQuestsForTip = [...BASE_QUESTS, ...WEEKLY_QUESTS];
@@ -6648,13 +6654,8 @@ function buildActivityCalendar() {
       tipLines.push({ text: 'No activity', color: '#e74c3c' });
     }
 
-    // ── Boss quest completion (shown on the specific day it was completed) ──
-    const bossKey = 'boss_quest_done_' + dStr;
-    if (localStorage.getItem(bossKey)) {
-      const bossQuestId = localStorage.getItem(bossKey);
-      const bq = BOSS_QUESTS.find(q => q.id === bossQuestId);
-      if (bq) tipLines.push({ text: '⚔️ Boss Slain: ' + bq.title, color: '#ff2200' });
-    }
+    // ── Boss quest tooltip ──
+    // Boss quest info shown separately via ⚔️ icon tooltip — not in main day tipLines
 
     if (!isFuture) {
       cell.addEventListener('mouseenter', function(e) {
@@ -6724,7 +6725,92 @@ function buildActivityCalendar() {
         : isFuture ? '<div style="font-family:Space Mono,monospace;font-size:10px;color:var(--gray4);">—</div>'
         : isToday ? '<div style="font-size:18px;line-height:1;margin-top:2px;opacity:0.8;">⏳</div>'
         : '<div style="font-size:16px;color:#e74c3c;line-height:1;margin-top:2px;opacity:0.7;">✕</div>');
+    // Boss quest tile — grayed ⚔️ on boss day, full color when slain, tile stays green
+    if (isBossDay && !isFuture) {
+      const bossIconEl = document.createElement('div');
+      // Past week completion: show full ⚔️ but NO red background (tile stays green)
+      // Current week not done: grayed out
+      // Current week done: full opacity
+      const isPastCompletion = bossDoneToday && !isBossCurrentWeek;
+      const iconOpacity = (!bossDoneToday) ? 'opacity:0.25;filter:grayscale(1);' : '';
+      bossIconEl.style.cssText = 'position:absolute;bottom:3px;right:3px;font-size:9px;line-height:1;cursor:default;z-index:2;' + iconOpacity;
+      bossIconEl.textContent = '⚔️';
+      cell.style.position = 'relative';
+      cell.appendChild(bossIconEl);
+
+      // Boss icon hover tooltip — uses same calTooltip system, separate from day tooltip
+      const bossLines = bossDoneToday
+        ? (function() {
+            const bqId = localStorage.getItem('boss_quest_done_' + dStr);
+            const bqFound = BOSS_QUESTS.find(function(q){ return q.id === bqId; });
+            return [
+              { text: '⚔️ BOSS SLAIN', color: '#ff2200' },
+              { text: bqFound ? bqFound.title : 'BOSS QUEST', color: '#c8c3b8' }
+            ];
+          })()
+        : [{ text: '⚔️ Boss Quest this week', color: 'var(--muted)' }];
+
+      bossIconEl.addEventListener('mouseenter', function(e) {
+        var tip = document.getElementById('calTooltip');
+        if (!tip) {
+          tip = document.createElement('div');
+          tip.id = 'calTooltip';
+          tip.style.cssText = 'position:fixed;z-index:9000;background:#0a0a0a;border:1px solid #2a2a2a;padding:10px 12px;pointer-events:none;min-width:140px;max-width:220px;';
+          document.body.appendChild(tip);
+        }
+        tip.innerHTML = bossLines.map(function(l){ return '<div style="font-family:Space Mono,monospace;font-size:9px;color:' + l.color + ';line-height:1.8;">' + l.text + '</div>'; }).join('');
+        var rect = bossIconEl.getBoundingClientRect();
+        var tipW = 160;
+        var left = Math.min(rect.left, window.innerWidth - tipW - 8);
+        tip.style.left = left + 'px';
+        tip.style.width = tipW + 'px';
+        var above = rect.top > window.innerHeight / 2;
+        if (above) { tip.style.top = ''; tip.style.bottom = (window.innerHeight - rect.top + 6) + 'px'; }
+        else { tip.style.bottom = ''; tip.style.top = (rect.bottom + 6) + 'px'; }
+        tip.style.display = 'block';
+        e.stopPropagation();
+      });
+      bossIconEl.addEventListener('mouseleave', function() {
+        var tip = document.getElementById('calTooltip');
+        if (tip) tip.style.display = 'none';
+      });
+    }
     cal.appendChild(cell);
+  }
+
+  // ── Boss Trail tile — reflects the SHOWN week, not always current week ──
+  var bossTrailEl = document.getElementById('bossTrailWeekly');
+  if (bossTrailEl) {
+    // Compute boss day for the shown week
+    var btWStr = monday.getFullYear() + '-' + (monday.getMonth()+1) + '-' + monday.getDate();
+    var btSeed = 0;
+    for (var bci = 0; bci < btWStr.length; bci++) btSeed = (btSeed * 31 + btWStr.charCodeAt(bci)) & 0xffffffff;
+    var btBossIdx = Math.abs(btSeed) % 7; // 0=Mon...6=Sun
+    // Get the date string for that boss day in the shown week
+    var btBossDate = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + btBossIdx);
+    var btBossDStr = btBossDate.getFullYear() + '-' + (btBossDate.getMonth()+1) + '-' + btBossDate.getDate();
+    var btSlain = !!localStorage.getItem('boss_quest_done_' + btBossDStr);
+    // Is this shown week in the future?
+    var btNow = new Date();
+    var btDow = btNow.getDay();
+    var btCurrentMonday = new Date(btNow.getFullYear(), btNow.getMonth(), btNow.getDate() - ((btDow+6)%7));
+    var btCellMonday = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate());
+    var btIsFutureWeek = btCellMonday.getTime() > btCurrentMonday.getTime();
+    if (btIsFutureWeek) {
+      bossTrailEl.innerHTML = '';
+    } else if (btSlain) {
+      bossTrailEl.innerHTML =
+        '<div style="padding:5px 10px;background:#0d0000;border:1px solid #ff220044;display:flex;align-items:center;justify-content:space-between;">'
+        + '<span style="font-family:Space Mono,monospace;font-size:7px;letter-spacing:2px;color:#ff220088;text-transform:uppercase;">⚔ Boss Quest</span>'
+        + '<span style="font-family:Space Mono,monospace;font-size:7px;letter-spacing:1px;color:#ff2200aa;">SLAIN · 1/1</span>'
+        + '</div>';
+    } else {
+      bossTrailEl.innerHTML =
+        '<div style="padding:5px 10px;background:rgba(255,255,255,0.03);border:1px solid var(--gray3);display:flex;align-items:center;justify-content:space-between;">'
+        + '<span style="font-family:Space Mono,monospace;font-size:7px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;">⚔ Boss Quest</span>'
+        + '<span style="font-family:Space Mono,monospace;font-size:7px;letter-spacing:1px;color:var(--muted);">0/1 PENDING</span>'
+        + '</div>';
+    }
   }
 
   // ── Weekly challenge bar ──
@@ -6886,7 +6972,7 @@ function getBossQuest() {
   var today = new Date().getDay(); // 0=Sun,1=Mon...6=Sat
   // Convert to Mon=0...Sun=6
   var todayMon = today === 0 ? 6 : today - 1;
-  if (todayMon !== bossDay) return null;
+  if (localStorage.getItem('boss_quest_force_today') !== '1' && todayMon !== bossDay) return null;
   // Pick quest
   var questIdx = (Math.abs(seed >> 3)) % BOSS_QUESTS.length;
   return BOSS_QUESTS[questIdx];
@@ -8547,15 +8633,15 @@ function checkWeeklyRecap() {
 function initXPSystem() {
   let data = getXPData();
 
-  if ((data.streak || 0) < 29 || !data.dailyQuests || !data.dailyQuests['2026-6-28']) {
-    data.totalXP        = 69500;
+  if ((data.streak || 0) < 36 || !data.dailyQuests || !data.dailyQuests['2026-7-4']) {
+    data.totalXP        = 73350;
     data.coins          = 2821;
     data.level          = getLevelFromXP(52518);
-    data.streak         = 29;
+    data.streak         = 36;
     data.longestStreak  = Math.max(data.longestStreak || 0, 45);
-    data.lastActiveDate = '2026-6-28';
+    data.lastActiveDate = '2026-7-4';
     data.streakSkillProgress = 55;
-    data.lastStreakSkillDate  = '2026-6-28';
+    data.lastStreakSkillDate  = '2026-7-4';
     data.dailyQuests = {};
     data.dailyQuests['2026-4-4']  = { outdoor:true, ball:true, steps:true, hydrate:true, sleep:true };
     data.dailyQuests['2026-4-5']  = { push:true, run5k:true, steps:true, cold:true, hydrate:true, outdoor:true };
@@ -8629,6 +8715,12 @@ function initXPSystem() {
     data.dailyQuests['2026-6-26'] = { weigh:true, run1:true, outdoor:true, hydrate:true, steps:true, protein:true, push:true, ball:true };
     data.dailyQuests['2026-6-27'] = { hydrate:true, outdoor:true };
     data.dailyQuests['2026-6-28'] = { hydrate:true, outdoor:true };
+    data.dailyQuests['2026-6-29'] = { outdoor:true, ball:true, hydrate:true };
+    data.dailyQuests['2026-6-30'] = { hydrate:true, outdoor:true, ball:true, push:true };
+    data.dailyQuests['2026-7-1']  = { run1:true, outdoor:true, ball:true, steps:true, hydrate:true, weigh:true };
+    data.dailyQuests['2026-7-2']  = { ball:true, outdoor:true, fasted:true, steps:true, hydrate:true };
+    data.dailyQuests['2026-7-3']  = { outdoor:true, push:true, pull:true, hydrate:true, ball:true, steps:true };
+    data.dailyQuests['2026-7-4']  = { run5k:true, steps:true, hydrate:true, weigh:true, outdoor:true, protein:true, race:{ done:true, xp:500, coins:50, icon:'🏃' } };
     data.weeklyQuests = {};
     data.weeklyQuests['2026-3-16'] = { wk_liftnrun2:true, wk_fasted3:true };
     data.weeklyQuests['2026-3-30'] = { wk_70ksteps:true, wk_fullweek:true, wk_longrun:true };
@@ -8636,14 +8728,17 @@ function initXPSystem() {
     data.weeklyQuests['2026-6-8']  = { wk_70ksteps:true, wk_fullweek:true };
     data.weeklyQuests['2026-6-15'] = { wk_70ksteps:true, wk_fullweek:true, wk_4runs:true };
     data.weeklyQuests['2026-6-22'] = { wk_pace:true, wk_fasted3:true };
+    data.weeklyQuests['2026-6-29'] = { wk_ppl:true };
     var _md = JSON.parse(localStorage.getItem('masjid_log_v1') || '{}');
     _md['2026-5-29']=2; _md['2026-5-30']=1; _md['2026-6-4']=1; _md['2026-6-5']=1;
     _md['2026-6-6']=1; _md['2026-6-8']=1; _md['2026-6-9']=1; _md['2026-6-10']=1;
     _md['2026-6-12']=1; _md['2026-6-13']=1; _md['2026-6-15']=1; _md['2026-6-16']=1;
     _md['2026-6-17']=1; _md['2026-6-19']=3; _md['2026-6-22']=1; _md['2026-6-23']=1;
-    _md['2026-6-24']=1; _md['2026-6-25']=1; _md['2026-6-26']=4;
+    _md['2026-6-24']=1; _md['2026-6-25']=1; _md['2026-6-26']=4; _md['2026-6-29']=2; _md['2026-7-1']=1; _md['2026-7-2']=1; _md['2026-7-3']=1; _md['2026-7-4']=2;
     localStorage.setItem('masjid_log_v1', JSON.stringify(_md));
-    localStorage.setItem('grind_weight_v10', JSON.stringify({ current:250.4, log:[
+    localStorage.setItem('grind_weight_v10', JSON.stringify({ current:250.8, log:[
+      { weight:250.8, date:'7/4/2026',  _ts:new Date('2026-07-04').getTime() },
+      { weight:252.4, date:'7/1/2026',  _ts:new Date('2026-07-01').getTime() },
       { weight:250.4, date:'6/26/2026', _ts:new Date('2026-06-26').getTime() },
       { weight:249.8, date:'6/25/2026', _ts:new Date('2026-06-25').getTime() },
       { weight:251.3, date:'6/24/2026', _ts:new Date('2026-06-24').getTime() },
@@ -8672,6 +8767,33 @@ function initXPSystem() {
       { icon:'🚶', label:'10K Steps',    amount:22, date:'6/11/2026' },
     ];
     saveXPData(data);
+    // Race Day — July 4th 5K
+    if (!localStorage.getItem('grind_race_patch_jul4_v3')) {
+      var raceLog = [];
+      try { raceLog = JSON.parse(localStorage.getItem('grind_race_log_v1') || '[]'); } catch(e) {}
+      var alreadyLogged = raceLog.some(function(r){ return r.dateStr === '2026-7-4' && r.type === '5k'; });
+      if (!alreadyLogged) {
+        raceLog.unshift({
+          type:    '5k',
+          label:   '5K',
+          icon:    '🏃',
+          date:    '7/4/2026',
+          dateStr: '2026-7-4',
+          miles:   3.1,
+          xp:      500,
+          coins:   50
+        });
+        localStorage.setItem('grind_race_log_v1', JSON.stringify(raceLog));
+      }
+      localStorage.setItem('grind_race_patch_jul4_v3', '1');
+    }
+
+    // Boss quest completed Jul 3: Full Body Stretch
+    if (!localStorage.getItem('boss_quest_done_2026-7-3')) {
+      localStorage.setItem('boss_quest_done_2026-7-3', 'bq_stretch');
+      var bossCount = parseInt(localStorage.getItem('boss_quest_count') || '0') + 1;
+      localStorage.setItem('boss_quest_count', bossCount);
+    }
   }
 
   checkPunishment();
@@ -8981,6 +9103,8 @@ setTimeout(positionAccentBar, 100);
 setTimeout(positionAccentBar, 500);
 
 // ── INIT ──
+// DEV: Force boss quest to show today for testing — remove line below to disable
+localStorage.setItem('boss_quest_force_today', '1');
 initXPSystem();
 showPage('roadmap');
 updateHunterCard();
