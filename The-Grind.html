@@ -2073,6 +2073,7 @@ html, body {
           <button id="ctab-la" onclick="switchCountdown('la')" style="flex:1;padding:10px 8px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;background:var(--gold-dim);border:none;border-bottom:2px solid var(--gold);color:var(--gold);cursor:pointer;">🌴 SoCal</button>
           <button id="ctab-fr" onclick="switchCountdown('fr')" style="flex:1;padding:10px 8px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);cursor:pointer;">🇨🇦 Toronto</button>
           <button id="ctab-br" onclick="switchCountdown('br')" style="flex:1;padding:10px 8px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);cursor:pointer;">🌊 S. America</button>
+          <button id="ctab-ma" onclick="switchCountdown('ma')" style="flex:1;padding:10px 8px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);cursor:pointer;">🏁 Marathon</button>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;flex-wrap:wrap;gap:10px;">
           <div>
@@ -5671,6 +5672,7 @@ function getWeeklyQuestPool() {
   const HISTORICAL_WEEK_OVERRIDES = {
     '2026-6-15': ['wk_70ksteps','wk_fullweek','wk_4runs'],
     '2026-6-22': ['wk_pace','wk_fasted3','wk_liftrun'],
+    '2026-6-29': ['wk_ppl','wk_fullweek','wk_4runs'],
   };
   if (HISTORICAL_WEEK_OVERRIDES[thisWeek]) {
     return HISTORICAL_WEEK_OVERRIDES[thisWeek].map(id => allPool.find(q => q.id === id)).filter(Boolean);
@@ -5712,6 +5714,17 @@ function buildQuestGrid() {
       _hydrateQuest.label = '3L Water'; _hydrateQuest.xp = 80;
     } else {
       _hydrateQuest.label = '2L Water'; _hydrateQuest.xp = 60;
+    }
+  }
+  // ── Scale steps quest by rank ──
+  const _stepsQuest = BASE_QUESTS.find(q => q.id === 'steps');
+  if (_stepsQuest) {
+    if (_rank === 'S' || _rank === 'S+' || _rank === 'NL') {
+      _stepsQuest.label = '15K Steps'; _stepsQuest.xp = 245;
+    } else if (_rank === 'A' || _rank === 'B') {
+      _stepsQuest.label = '12K Steps'; _stepsQuest.xp = 210;
+    } else {
+      _stepsQuest.label = '10K Steps'; _stepsQuest.xp = 175;
     }
   }
   const weekStr = getWeekStr();
@@ -6827,6 +6840,8 @@ function buildActivityCalendar() {
     const HISTORICAL_WEEK_OVERRIDES_CAL = {
       '2026-6-15': ['wk_70ksteps','wk_fullweek','wk_4runs'],
       '2026-6-22': ['wk_pace','wk_fasted3','wk_liftrun'],
+      '2026-6-29': ['wk_ppl','wk_fullweek','wk_4runs'],
+    '2026-6-29': ['wk_ppl','wk_fullweek','wk_4runs'],
     };
     let shownPool;
     if (HISTORICAL_WEEK_OVERRIDES_CAL[shownWeekStr]) {
@@ -8633,15 +8648,15 @@ function checkWeeklyRecap() {
 function initXPSystem() {
   let data = getXPData();
 
-  if ((data.streak || 0) < 36 || !data.dailyQuests || !data.dailyQuests['2026-7-4']) {
+  if ((data.streak || 0) < 38 || !data.dailyQuests || !data.dailyQuests['2026-7-6']) {
     data.totalXP        = 73350;
-    data.coins          = 2821;
+    data.coins          = 1500;
     data.level          = getLevelFromXP(52518);
-    data.streak         = 36;
+    data.streak         = 38;
     data.longestStreak  = Math.max(data.longestStreak || 0, 45);
-    data.lastActiveDate = '2026-7-4';
+    data.lastActiveDate = '2026-7-6';
     data.streakSkillProgress = 55;
-    data.lastStreakSkillDate  = '2026-7-4';
+    data.lastStreakSkillDate  = '2026-7-6';
     data.dailyQuests = {};
     data.dailyQuests['2026-4-4']  = { outdoor:true, ball:true, steps:true, hydrate:true, sleep:true };
     data.dailyQuests['2026-4-5']  = { push:true, run5k:true, steps:true, cold:true, hydrate:true, outdoor:true };
@@ -8721,6 +8736,8 @@ function initXPSystem() {
     data.dailyQuests['2026-7-2']  = { ball:true, outdoor:true, fasted:true, steps:true, hydrate:true };
     data.dailyQuests['2026-7-3']  = { outdoor:true, push:true, pull:true, hydrate:true, ball:true, steps:true };
     data.dailyQuests['2026-7-4']  = { run5k:true, steps:true, hydrate:true, weigh:true, outdoor:true, protein:true, race:{ done:true, xp:500, coins:50, icon:'🏃' } };
+    data.dailyQuests['2026-7-5']  = { ball:true, outdoor:true, hydrate:true, steps:true };
+    data.dailyQuests['2026-7-6']  = { outdoor:true, hydrate:true, ball:true, steps:true, fasted:true };
     data.weeklyQuests = {};
     data.weeklyQuests['2026-3-16'] = { wk_liftnrun2:true, wk_fasted3:true };
     data.weeklyQuests['2026-3-30'] = { wk_70ksteps:true, wk_fullweek:true, wk_longrun:true };
@@ -8728,13 +8745,13 @@ function initXPSystem() {
     data.weeklyQuests['2026-6-8']  = { wk_70ksteps:true, wk_fullweek:true };
     data.weeklyQuests['2026-6-15'] = { wk_70ksteps:true, wk_fullweek:true, wk_4runs:true };
     data.weeklyQuests['2026-6-22'] = { wk_pace:true, wk_fasted3:true };
-    data.weeklyQuests['2026-6-29'] = { wk_ppl:true };
+    data.weeklyQuests['2026-6-29'] = { wk_ppl:true, wk_fullweek:true };
     var _md = JSON.parse(localStorage.getItem('masjid_log_v1') || '{}');
     _md['2026-5-29']=2; _md['2026-5-30']=1; _md['2026-6-4']=1; _md['2026-6-5']=1;
     _md['2026-6-6']=1; _md['2026-6-8']=1; _md['2026-6-9']=1; _md['2026-6-10']=1;
     _md['2026-6-12']=1; _md['2026-6-13']=1; _md['2026-6-15']=1; _md['2026-6-16']=1;
     _md['2026-6-17']=1; _md['2026-6-19']=3; _md['2026-6-22']=1; _md['2026-6-23']=1;
-    _md['2026-6-24']=1; _md['2026-6-25']=1; _md['2026-6-26']=4; _md['2026-6-29']=2; _md['2026-7-1']=1; _md['2026-7-2']=1; _md['2026-7-3']=1; _md['2026-7-4']=2;
+    _md['2026-6-24']=1; _md['2026-6-25']=1; _md['2026-6-26']=4; _md['2026-6-29']=2; _md['2026-7-1']=1; _md['2026-7-2']=1; _md['2026-7-3']=1; _md['2026-7-4']=2; _md['2026-7-5']=1; _md['2026-7-6']=2;
     localStorage.setItem('masjid_log_v1', JSON.stringify(_md));
     localStorage.setItem('grind_weight_v10', JSON.stringify({ current:250.8, log:[
       { weight:250.8, date:'7/4/2026',  _ts:new Date('2026-07-04').getTime() },
@@ -8802,8 +8819,9 @@ function initXPSystem() {
 
 const TRIPS = {
   la: { dest:'SoCal',          date:new Date('2026-04-08T00:00:00'), goal:'255 lbs · Run a 5K', sub:'April 8, 2026' },
-  fr: { dest:'Toronto',        date:new Date('2026-07-11T00:00:00'), goal:'243 lbs · Run a 10K', sub:'July 11, 2026' },
+  fr: { dest:'Toronto',        date:new Date('2026-08-07T00:00:00'), goal:'237 lbs · Run a 10K', sub:'Aug 7, 2026'    },
   br: { dest:'Brazil + Peru',  date:new Date('2026-08-29T00:00:00'), goal:'230 lbs · Half Marathon', sub:'Aug 29, 2026' },
+  ma: { dest:'Marathon',       date:new Date('2026-10-24T00:00:00'), goal:'NL Hunter · Sub 5hr',     sub:'Oct 24, 2026' },
 };
 
 function switchCountdown(trip) {
@@ -9104,7 +9122,6 @@ setTimeout(positionAccentBar, 500);
 
 // ── INIT ──
 // DEV: Force boss quest to show today for testing — remove line below to disable
-localStorage.setItem('boss_quest_force_today', '1');
 initXPSystem();
 showPage('roadmap');
 updateHunterCard();
@@ -9553,7 +9570,7 @@ function buildStakesOverlay() {
   // ── TRIPS ──
   const trips = [
     { flag:'🇺🇸', dest:'SoCal', date:'2026-04-08', label:'Apr 8, 2026', weightTarget:255, goal:'Hit 255 lbs · Look right at the beach' },
-    { flag:'🇨🇦', dest:'Toronto', date:'2026-07-11', label:'Jul 11, 2026', weightTarget:243, goal:'Hit 243 lbs · Looking right in Toronto' },
+    { flag:'🇨🇦', dest:'Toronto', date:'2026-08-07', label:'Aug 7, 2026',  weightTarget:237, goal:'Hit 237 lbs · Looking right in Toronto'  },
     { flag:'🌊', dest:'Brazil + Peru', date:'2026-08-29', label:'Aug 29, 2026', weightTarget:230, goal:'Hit 230 lbs · Copacabana body' },
   ];
   const tripsEl = document.getElementById('stakes-trips-block');
